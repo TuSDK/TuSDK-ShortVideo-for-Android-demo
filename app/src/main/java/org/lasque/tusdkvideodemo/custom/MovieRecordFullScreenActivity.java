@@ -10,6 +10,9 @@
 
 package org.lasque.tusdkvideodemo.custom;
 
+import android.os.Bundle;
+import android.widget.ProgressBar;
+
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.encoder.video.TuSDKVideoEncoderSetting;
@@ -18,9 +21,6 @@ import org.lasque.tusdk.core.video.TuSDKVideoResult;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.component.MovieRecordKeepModeActivity;
 import org.lasque.tusdkvideodemo.views.record.MovieRecordView;
-
-import android.os.Bundle;
-import android.widget.ProgressBar;
 
 /**
  * 断点续拍全屏 + 视频编辑全屏
@@ -33,7 +33,7 @@ public class MovieRecordFullScreenActivity extends MovieRecordKeepModeActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		// 设置录制界面背景为透明色
 		setRecordViewBackgroundColor(getRecordView());
 		getRecordView().setSquareSticker(false);
@@ -41,7 +41,13 @@ public class MovieRecordFullScreenActivity extends MovieRecordKeepModeActivity
 		hideNavigationBar();
         TuSdk.messageHub().applyToViewWithNavigationBarHidden(true);
 	}
-	
+
+	@Override
+	protected int getLayoutId()
+	{
+		return R.layout.movie_record_full_screen_activity;
+	}
+
 	@Override
 	protected void onResume() 
 	{

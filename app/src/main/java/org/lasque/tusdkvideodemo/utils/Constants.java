@@ -26,4 +26,10 @@ public class Constants
 	 */
 	public static String[] VIDEOFILTERS = {"None","nature", "pink", "jelly", "ruddy",
 		"sugar", "honey", "clear", "timber", "whitening", "porcelain"};
+
+	/**
+	 * 编辑滤镜 filterCode 列表
+	 */
+	public static String[] EDITORFILTERS = {"None","Olympus_1", "Leica_1", "Gold_1", "Cheerful_1",
+			"White_1", "s1950_1", "Blurred_1", "Newborn_1", "Fade_1", "NewYork_1"};
 }

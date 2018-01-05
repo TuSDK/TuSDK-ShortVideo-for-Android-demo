@@ -20,21 +20,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-        <org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
-            android:id="@+id/lsq_beautyWrap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/lsq__space_25"
-            android:paddingRight="@dimen/lsq__space_25"
-            android:drawableTop="@drawable/lsq_style_default_btn_beauty_selected"
-            app:drawableTopHeight="28dp"
-            app:drawableTopWidth="28dp"
-            android:gravity="center"
-            android:text="@string/lsq_beauty_text"
-            android:textColor="#f4a11a"
-            android:textSize="14sp" />
-                
+
         <org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
             android:id="@+id/lsq_filterWrap"
             android:layout_width="wrap_content"
@@ -42,6 +28,7 @@
             android:layout_weight="1"
             android:paddingLeft="@dimen/lsq__space_25"
             android:paddingRight="@dimen/lsq__space_25"
+            android:drawablePadding="@dimen/lsq__space_5"
             android:drawableTop="@drawable/lsq_style_default_btn_filter_unselected"
             app:drawableTopHeight="28dp"
             app:drawableTopWidth="28dp"
@@ -49,6 +36,24 @@
             android:text="@string/lsq_filter_text"
             android:textColor="@color/lsq_filter_title_default_color"
             android:textSize="14sp" />
+
+
+            <org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
+                android:id="@+id/lsq_effectWrap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/lsq__space_25"
+                android:paddingRight="@dimen/lsq__space_25"
+                android:drawableTop="@drawable/lsq_tab_ic_special_normal"
+                app:drawableTopHeight="28dp"
+                app:drawableTopWidth="28dp"
+                android:gravity="center"
+                android:text="@string/lsq_text_effect"
+                android:drawablePadding="@dimen/lsq__space_5"
+                android:textColor="@color/lsq_filter_title_default_color"
+                android:textSize="14sp" />
+
 
         <org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
             android:id="@+id/lsq_mvWrap"
@@ -62,6 +67,7 @@
             app:drawableTopWidth="28dp"
             android:gravity="center"
             android:text="@string/lsq_text_MV"
+            android:drawablePadding="@dimen/lsq__space_5"
             android:textColor="@color/lsq_filter_title_default_color"
             android:textSize="14sp" />
         
@@ -77,6 +83,7 @@
             app:drawableTopWidth="28dp"
             android:gravity="center"
             android:text="@string/lsq_text_dubbing"
+             android:drawablePadding="@dimen/lsq__space_5"
             android:textColor="@color/lsq_filter_title_default_color"
             android:textSize="14sp" />
    </LinearLayout>

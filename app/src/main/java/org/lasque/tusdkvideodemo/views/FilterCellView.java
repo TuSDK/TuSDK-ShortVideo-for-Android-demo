@@ -37,7 +37,7 @@ public class FilterCellView extends TuSdkCellRelativeLayout<String>
 	private TextView mTitlebView;
 	
 	/** 滤镜边框*/
-	private RelativeLayout mFilterBorderView ;
+	private View mFilterBorderView ;
 	
 	// 标记该滤镜项是否被选中
 	private int flag = -1;
@@ -80,8 +80,8 @@ public class FilterCellView extends TuSdkCellRelativeLayout<String>
 			getTitleView().setText(TuSdkContext.getString("lsq_filter_" + filterCode));
 		}
 		
-		RelativeLayout layout = (RelativeLayout) this.findViewById(R.id.lsq_none_layout);
-		ImageView imageView = (ImageView) this.findViewById(R.id.lsq_item_none);
+		RelativeLayout layout =  this.findViewById(R.id.lsq_none_layout);
+		ImageView imageView = this.findViewById(R.id.lsq_item_none);
 		if (layout != null)
 		{
 			layout.setVisibility(((Integer)getTag() == 0)?View.VISIBLE:View.GONE);
@@ -93,16 +93,16 @@ public class FilterCellView extends TuSdkCellRelativeLayout<String>
 	{
 		if (mThumbView == null)
 		{
-			mThumbView = (TuSdkImageView)findViewById(R.id.lsq_item_image);
+			mThumbView = findViewById(R.id.lsq_item_image);
 		}
 		return mThumbView;
 	}
 	
-	public RelativeLayout getBorderView()
+	public View getBorderView()
 	{
 		if (mFilterBorderView == null)
 		{
-			 mFilterBorderView = (RelativeLayout)findViewById(R.id.lsq_item_border);
+			 mFilterBorderView = findViewById(R.id.lsq_item_border);
 		}
 		return mFilterBorderView;
 	}
@@ -111,7 +111,7 @@ public class FilterCellView extends TuSdkCellRelativeLayout<String>
 	{
 		if (mTitlebView == null)
 		{
-			mTitlebView = (TextView)findViewById(R.id.lsq_item_title);
+			mTitlebView = findViewById(R.id.lsq_item_title);
 		}
 		return mTitlebView;
 	}

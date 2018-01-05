@@ -33,7 +33,7 @@ import org.lasque.tusdk.core.view.widget.TuSdkNavigatorBar.NavigatorBarButtonTyp
 import org.lasque.tusdk.core.view.widget.TuSdkNavigatorBar.TuSdkNavigatorBarDelegate;
 import org.lasque.tusdk.impl.view.widget.TuNavigatorBar;
 import org.lasque.tusdk.video.TuSDKVideo;
-import org.lasque.tusdkvideodemo.album.MovieAlbumActivity;
+import org.lasque.tusdkvideodemo.utils.AlbumUtils;
 import org.lasque.tusdkvideodemo.utils.PermissionUtils;
 
 /**
@@ -162,7 +162,7 @@ public class ComponentListActivity extends ExpandableListActivity implements TuS
        // 需要先打开相册选取
         if(sample.needOpenAlbum)
         {
-			openVideoAlbum();
+			AlbumUtils.openVideoAlbum(mClassName);
             return super.onChildClick(parent, view, group, child, id);
         }
         
@@ -257,17 +257,6 @@ public class ComponentListActivity extends ExpandableListActivity implements TuS
 
 		}
 	};
-
-    /**
-     * 打开相册选取视频
-     */
-	private void openVideoAlbum()
-	{
-		Intent intent = new Intent(this,MovieAlbumActivity.class);
-
-		intent.putExtra("cutClassName",mClassName);
-		startActivity(intent);
-	}
 
 	/**
 	 * 根据 className 打开对应 Activity

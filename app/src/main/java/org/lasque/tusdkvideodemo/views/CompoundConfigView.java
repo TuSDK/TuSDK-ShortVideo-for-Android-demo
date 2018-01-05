@@ -11,6 +11,7 @@ package org.lasque.tusdkvideodemo.views;
 
 import java.util.ArrayList;
 
+import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
@@ -29,7 +30,7 @@ import android.widget.LinearLayout;
 public class CompoundConfigView extends TuSdkRelativeLayout
 {
 	/** 调节栏的高度 */
-	private int mSeekBarHeigth;
+	private int mSeekBarHeigth = TuSdkContext.dip2px(32);
 	
 	/** 配置包装 */
 	private LinearLayout mConfigWrap;
@@ -59,7 +60,7 @@ public class CompoundConfigView extends TuSdkRelativeLayout
     {
         super(context, attrs, defStyle);
     }
-	
+
     public void setDelegate(ConfigSeekbarDelegate delegate)
     {
 		this.mDelegate = delegate;

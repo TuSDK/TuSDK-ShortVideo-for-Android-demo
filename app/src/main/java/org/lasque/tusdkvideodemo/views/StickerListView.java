@@ -25,8 +25,7 @@ import java.util.List;
  * @author Yanlin
  *
  */
-public class StickerListView extends TuSdkTableView<StickerGroup, StickerCellView> implements TuSDKOnlineStickerDownloader.TuSDKOnlineStickerDownloaderDelegate
-{
+public class StickerListView extends TuSdkTableView<StickerGroup, StickerCellView> implements TuSDKOnlineStickerDownloader.TuSDKOnlineStickerDownloaderDelegate, View.OnAttachStateChangeListener {
 	/** 行视图宽度 */
 	private int mCellWidth;
 
@@ -137,6 +136,7 @@ public class StickerListView extends TuSdkTableView<StickerGroup, StickerCellVie
 	protected void onViewBinded(StickerCellView view, int position) 
 	{
 		view.setTag(position);
+		view.addOnAttachStateChangeListener(this);
 	}
 
 	/**
@@ -194,5 +194,20 @@ public class StickerListView extends TuSdkTableView<StickerGroup, StickerCellVie
 			int position = getStickerCellViewPostision(stickerGroupId);
 			this.getAdapter().notifyItemChanged(position);
 		}
+	}
+
+	@Override
+	public void onViewAttachedToWindow(View view)
+	{
+		if (view instanceof StickerCellView && ((StickerCellView)view).isDownlowding())
+			((StickerCellView)view).showProgressAnimation();
+	}
+
+	@Override
+	public void onViewDetachedFromWindow(View view)
+	{
+		// 贴纸视图解绑时清楚动画，避免快速滑动造成动画卡死
+		if (view instanceof StickerCellView)
+			((StickerCellView)view).hideProgressAnimation();
 	}
 }

@@ -23,7 +23,9 @@
     <string name="lsq_filter_set_smoothing">Smoothing</string>
     <string name="lsq_filter_set_whitening">Whitening</string>
     <string name="lsq_filter_set_mixied">Mixied</string>
-    
+    <string name="lsq_filter_set_vignette">Vignette</string>
+
+
     <string name="beauty_on">Beauty Mode On</string>
     <string name="beauty_off">Beauty Mode Off</string>
 	
@@ -94,6 +96,26 @@
     <string name="lsq_filter_timber">Timber</string>
     <string name="lsq_filter_whitening">Whitening</string>
     <string name="lsq_filter_porcelain">Porcelain</string>
+
+    <!-- 短视频编辑滤镜 -->
+    <string name="lsq_filter_Olympus_1">Olympus</string>
+    <string name="lsq_filter_Leica_1">Leica</string>
+    <string name="lsq_filter_Gold_1">Gold</string>
+    <string name="lsq_filter_Cheerful_1">Cheerful</string>
+    <string name="lsq_filter_White_1">White</string>
+    <string name="lsq_filter_s1950_1">1950</string>
+    <string name="lsq_filter_Blurred_1">Blurred</string>
+    <string name="lsq_filter_Newborn_1">Newborn</string>
+    <string name="lsq_filter_Fade_1">Fade_1</string>
+    <string name="lsq_filter_NewYork_1">NewYork</string>
+
+    <!-- 场景特效 -->
+    <string name="lsq_filter_LiveShake01">LiveShake</string>
+    <string name="lsq_filter_LiveMegrim01">LiveMegrim</string>
+    <string name="lsq_filter_EdgeMagic01">EdgeMagic</string>
+    <string name="lsq_filter_LiveFancy01_1">70s</string>
+    <string name="lsq_filter_LiveSoulOut01">LiveSoulOut</string>
+    <string name="lsq_filter_LiveSignal01">LiveSignal</string>
     
     <!-- video editor -->
     <string name="lsq_text_record">Record Video</string>
@@ -123,7 +145,8 @@
     <string name="lsq_text_beauty">Beauty</string>
     <string name="lsq_filter_text">Filter</string>
     <string name="lsq_text_MV">MV</string>
-    
+    <string name="lsq_text_effect">Effect</string>
+
     <!-- MV -->
     <string name="lsq_mv_小猫玩球">Cat</string>
     <string name="lsq_mv_无语乌鸦">Crow</string>
@@ -139,6 +162,7 @@
 	<!-- 主页面 -->
     <string name="lsq_text_recordEdit">Record Video</string>
     <string name="lsq_text_componentList">Component List</string>
+    <string name="lsq_edit_component">Editor Component</string>
 
     <!-- 录音权限  -->
     <string name="lsq_record_dialog_title">Hint</string>
@@ -241,5 +265,7 @@
 
     <string name="lsq_camera_permission_denied">Open camera failed,it may be system Settings or security software that closes permissions. Please turn the external storage、camera and record audio permission on in Settings</string>
     <string name="lsq_camera_denied_title">Open camera failed</string>
+
+    <string name="lsq_repeal">Repeal</string>
 
 </resources>

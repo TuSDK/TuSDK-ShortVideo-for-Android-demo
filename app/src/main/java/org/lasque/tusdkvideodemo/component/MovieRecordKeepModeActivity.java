@@ -26,6 +26,7 @@ import org.lasque.tusdk.core.video.TuSDKVideoResult;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
 import org.lasque.tusdkvideodemo.utils.Constants;
+import org.lasque.tusdkvideodemo.views.CompoundDrawableTextView;
 import org.lasque.tusdkvideodemo.views.record.MovieRecordView;
 import org.lasque.tusdkvideodemo.views.record.MovieRecordView.TuSDKMovieRecordDelegate;
 
@@ -37,14 +38,19 @@ import org.lasque.tusdkvideodemo.views.record.MovieRecordView.TuSDKMovieRecordDe
 public class MovieRecordKeepModeActivity extends SimpleCameraActivity implements TuSDKMovieRecordDelegate, TuSDKRecordVideoCameraDelegate
 {
 	// 录制界面视图
-	private MovieRecordView mRecordView;
-	
+	protected MovieRecordView mRecordView;
+
+	protected int getLayoutId()
+	{
+		return R.layout.movie_record_activity;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.movie_record_activity);
+		setContentView(getLayoutId());
 
         initCamera();
 
@@ -91,7 +97,9 @@ public class MovieRecordKeepModeActivity extends SimpleCameraActivity implements
 			mRecordView.setActived(true);
 			mRecordView.setDelegate(this);
 			mRecordView.setUpCamera(this, mVideoCamera);
-			mRecordView.getMovieImportButton().setVisibility(View.GONE);
+			CompoundDrawableTextView importButton = mRecordView.getMovieImportButton();
+			if (importButton != null)
+				importButton.setVisibility(View.GONE);
 		}
 		return mRecordView;
 	}

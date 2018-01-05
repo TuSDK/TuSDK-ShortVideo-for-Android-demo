@@ -15,7 +15,7 @@
         android:orientation="vertical">
         
 	<!-- 录制视频 -->
-	<RelativeLayout 
+	<RelativeLayout
 	    android:id="@+id/lsq_record_layout"
 	    android:layout_width="match_parent"
 	    android:layout_height="69dp"
@@ -25,7 +25,7 @@
 	    android:layout_marginTop="9dp"
 	    android:background="@drawable/lsq_homepage_btn_normal">
 
-	    <ImageView 
+	    <ImageView
 	        android:id="@+id/lsq_homepage_shot"
 	        android:layout_width="31dp"
 	        android:layout_height="31dp"
@@ -33,7 +33,7 @@
 	       	android:layout_centerVertical="true"
 	        android:layout_marginLeft="25dp"
 	        android:scaleType="centerInside"/>
-	    <TextView 
+	    <TextView
 	       android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_toRightOf="@id/lsq_homepage_shot"
@@ -43,7 +43,7 @@
 	        android:textColor="#553213"
 	        android:layout_centerVertical="true"
 	        />
-	    <ImageView 
+	    <ImageView
 	        android:layout_width="18dp"
 	        android:layout_height="18dp"
 	        android:background="@drawable/lsq_homepage_next_icon"
@@ -51,6 +51,45 @@
 	        android:layout_centerVertical="true"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginRight="12dp"/>
+	</RelativeLayout>
+
+	<!-- 编辑视频 -->
+	<RelativeLayout
+		android:id="@+id/lsq_edit_component"
+		android:layout_width="match_parent"
+		android:layout_height="69dp"
+		android:gravity="center_vertical"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:layout_marginTop="9dp"
+		android:background="@drawable/lsq_homepage_btn_normal">
+
+		<ImageView
+			android:id="@+id/lsq_edit_component_icon"
+			android:layout_width="31dp"
+			android:layout_height="31dp"
+			android:background="@drawable/lsq_edit_component_icon"
+			android:layout_centerVertical="true"
+			android:layout_marginLeft="25dp"
+			android:scaleType="centerInside"/>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/lsq_edit_component_icon"
+			android:layout_marginLeft="16dp"
+			android:text="@string/lsq_edit_component"
+			android:textSize="16sp"
+			android:textColor="#553213"
+			android:layout_centerVertical="true"
+			/>
+		<ImageView
+			android:layout_width="18dp"
+			android:layout_height="18dp"
+			android:background="@drawable/lsq_homepage_next_icon"
+			android:scaleType="centerInside"
+			android:layout_centerVertical="true"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="12dp"/>
 	</RelativeLayout>
 	
 	 <!-- 功能列表-->

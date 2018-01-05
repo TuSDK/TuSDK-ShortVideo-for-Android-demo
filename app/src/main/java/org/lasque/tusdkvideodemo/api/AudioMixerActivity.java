@@ -375,7 +375,7 @@ public class AudioMixerActivity extends Activity
 		 * 设置音频音量
 		 */
 		getAudioEntryList().get(index).setVolume(preogress);
-		if (mMutiAudioPlayer.getState() == State.Idle)
+		if (mMutiAudioPlayer.getState() == TuSDKMutiAudioPlayer.State.Idle)
 			mMutiAudioPlayer.asyncPrepare(getAudioEntryList());
 	}
 	

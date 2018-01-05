@@ -37,7 +37,7 @@ public class StickerCellView extends TuSdkCellRelativeLayout<StickerGroup> imple
 
 	/** 缩略图 */
 	private ImageView mThumbView;
-	
+
 	/** 下载图标 */
 	private ImageView mDownloadView;
 
@@ -103,7 +103,7 @@ public class StickerCellView extends TuSdkCellRelativeLayout<StickerGroup> imple
 			downloadView.setVisibility(View.GONE);
 			getDownloadProgressView().setVisibility(View.GONE);
 
-		} else if( mStickerDownloader != null && mStickerDownloader.containsTask(model.groupId))
+		} else if(isDownlowding())
 		{
 			downloadView.setVisibility(View.GONE);
 			getDownloadProgressView().setVisibility(View.VISIBLE);
@@ -114,7 +114,7 @@ public class StickerCellView extends TuSdkCellRelativeLayout<StickerGroup> imple
 		{
 			if (mContext == null) return;
 
-			Glide.with(mContext).load(model.getPreviewNamePath()).asBitmap().into( this.getImageView());
+			Glide.with(mContext).load(model.getPreviewNamePath()).asBitmap().into(this.getImageView());
 			downloadView.setVisibility(View.VISIBLE);
 			getDownloadProgressView().setVisibility(View.GONE);
 		}
@@ -159,16 +159,16 @@ public class StickerCellView extends TuSdkCellRelativeLayout<StickerGroup> imple
 	private ImageView getImageView()
 	{
 		if (mThumbView == null)
-			mThumbView = (ImageView)findViewById(R.id.lsq_item_image);
-		
+			mThumbView = (ImageView) findViewById(R.id.lsq_item_image);
+
 		return mThumbView;
 	}
-	
+
 	public ImageView getDownloadImageView()
 	{
 		if (mDownloadView == null)
-			mDownloadView = (ImageView)findViewById(R.id.lsq_item_state_image);
-		
+			mDownloadView = (ImageView) findViewById(R.id.lsq_item_state_image);
+
 		return mDownloadView;
 	}
 
@@ -198,7 +198,7 @@ public class StickerCellView extends TuSdkCellRelativeLayout<StickerGroup> imple
 	public void viewNeedRest()
 	{
 		super.viewNeedRest();
-		
+
 		if (this.getImageView() != null)
 		{
 			this.getImageView().setImageBitmap(null);
@@ -217,6 +217,15 @@ public class StickerCellView extends TuSdkCellRelativeLayout<StickerGroup> imple
 	public void onCellDeselected()
 	{
 		this.getBorderView().setBackground(null);
+	}
+
+	/**
+	 * 贴纸是否正在下载
+ 	 * @return
+	 */
+	public boolean isDownlowding()
+	{
+		return mStickerDownloader != null && mStickerDownloader.containsTask(getModel().groupId);
 	}
 }
 

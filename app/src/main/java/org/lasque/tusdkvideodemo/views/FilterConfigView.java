@@ -107,13 +107,14 @@ public class FilterConfigView extends TuSdkRelativeLayout
         return mConfigWrap;
     }
 
-    @Override
-    public void loadView()
+    /**
+     * 设置拖动条高度
+     *
+     * @param seekbarHeight
+     */
+    public void setSeekBarHeight(int seekbarHeight)
     {
-        super.loadView();
-        // 拖动条高度
-        if (mSeekHeigth <= 0)
-            mSeekHeigth = TuSdkContext.dip2px(40);
+        this.mSeekHeigth = seekbarHeight;
     }
 
     /**
@@ -146,7 +147,7 @@ public class FilterConfigView extends TuSdkRelativeLayout
     /**
      * 拖动条高度
      */
-    private int mSeekHeigth;
+    private int mSeekHeigth = TuSdkContext.dip2px(32);
 
     /**
      * 配置视图

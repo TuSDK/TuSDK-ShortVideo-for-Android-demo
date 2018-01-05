@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.GridLayoutManager;
@@ -35,8 +36,8 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
-import org.lasque.tusdk.core.seles.sources.SelesOutInput;
 import org.lasque.tusdk.core.seles.sources.SelesVideoCameraInterface;
+import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
 import org.lasque.tusdk.core.utils.ContextUtils;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs.CameraFlash;
@@ -95,17 +96,17 @@ public class MovieRecordView extends RelativeLayout
 	/**
 	 * 开始录制按钮
 	 */
-	private ImageButton mRecordButton;
+	protected ImageButton mRecordButton;
 
 	/**
 	 * 动态贴纸按钮
 	 */
-	private TuSdkTextButton mStickerButton;
+	protected TuSdkTextButton mStickerButton;
 
 	/**
 	 * 智能美化按钮
 	 */
-	private TuSdkTextButton mFilterButton;
+	protected TuSdkTextButton mFilterButton;
 
 	/**
 	 * 相机底部按钮栏
@@ -116,10 +117,10 @@ public class MovieRecordView extends RelativeLayout
     private boolean mFlashEnabled = false;
 
     // 确认完成按钮
-	private TuSdkTextButton mConfirmButton;
+	protected TuSdkTextButton mConfirmButton;
 	
 	// 回退按钮
-	private TuSdkTextButton mRollBackButton;
+	protected TuSdkTextButton mRollBackButton;
 	
 	private int lastProgress;
 	
@@ -167,7 +168,7 @@ public class MovieRecordView extends RelativeLayout
 	private int mFocusPostion = 1;
 
 	// 记录当前滤镜
-    private SelesOutInput mSelesOutInput;
+    private FilterWrap mSelesOutInput;
 
 	// 滤镜Tab
 	private TuSdkTextButton mFilterTab;
@@ -274,14 +275,21 @@ public class MovieRecordView extends RelativeLayout
 		return mDelegate;
 	}
 
-	private void init(Context context)
+	protected int getLayoutId()
+	{
+		return R.layout.movie_record_view;
+	}
+
+	protected void init(Context context)
 	{
 		mIsFirstEntry = true;
 		
-		LayoutInflater.from(context).inflate(R.layout.movie_record_view, this,
+		LayoutInflater.from(context).inflate(getLayoutId(), this,
 				true);
 		mMovieImportButton = (CompoundDrawableTextView) findViewById(R.id.lsq_movieEditorButton);
-		mMovieImportButton.setOnClickListener(mButtonClickListener);
+		if (mMovieImportButton != null)
+			mMovieImportButton.setOnClickListener(mButtonClickListener);
+
 		mCloseView = (TuSdkTextButton) findViewById(R.id.lsq_closeButton);
 		mCloseView.setOnClickListener(mButtonClickListener);
 
@@ -524,8 +532,9 @@ public class MovieRecordView extends RelativeLayout
 			setEnableAllSeekBar(false);
 			return;
 		}
-		
-		SelesParameters params = mSelesOutInput.getParameter();
+
+		// 滤镜参数
+		SelesParameters params = mSelesOutInput.getFilterParameter();
 		if (params == null)
 		{
 			setEnableAllSeekBar(false);
@@ -577,7 +586,7 @@ public class MovieRecordView extends RelativeLayout
 
 				@Override
 				public void run() {
-					getFilterConfigView().setSelesFilter(mSelesOutInput);
+					getFilterConfigView().setSelesFilter(mSelesOutInput.getFilter());
 					getFilterConfigView().setVisibility(View.VISIBLE);
 				}});
 			
@@ -726,7 +735,7 @@ public class MovieRecordView extends RelativeLayout
 	 */
 	protected void updateShowStatus(boolean isRunning)
 	{
-		int imgID = isRunning ? R.drawable.lsq_style_default_record_btn_record_selected : R.drawable.lsq_style_default_record_btn_record_unselected;
+		int imgID = isRunning ? getRecordSelectedDrawable(): getRecordUnselectedDrawable();
 
 		if (mRecordButton != null)
 			mRecordButton.setBackgroundResource(imgID);
@@ -739,7 +748,7 @@ public class MovieRecordView extends RelativeLayout
     {
         if (mFlashButton != null)
         {
-            int imgID = mFlashEnabled ? R.drawable.lsq_style_default_btn_flash_on : R.drawable.lsq_style_default_btn_flash_off;
+            int imgID = mFlashEnabled ? getFlashSelectedDrawable() : getFlashUnselectedDrawable();
 
             mFlashButton.setImageResource(imgID);
         }
@@ -772,36 +781,36 @@ public class MovieRecordView extends RelativeLayout
 	 * @param button
 	 * @param clickable
 	 */
-	private void updateButtonStatus(TuSdkTextButton button, boolean clickable)
+	protected void updateButtonStatus(TuSdkTextButton button, boolean clickable)
 	{
 		int imgId = 0, colorId = 0;
 		
 		switch (button.getId())
 		{
 		case R.id.lsq_confirmWrap:
-			imgId = clickable? R.drawable.lsq_style_default_btn_finish_selected 
-					: R.drawable.lsq_style_default_btn_finish_unselected;
+			imgId = clickable? getConfirmSelectedDrawable()
+					: getConfirmUnselectedDrawable();
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_unselected_color;
 			button.setClickable(clickable);
 			break;
 			
 		case R.id.lsq_backWrap:
-			imgId = clickable? R.drawable.lsq_style_default_btn_back_selected 
-					: R.drawable.lsq_style_default_btn_back_unselected;
+			imgId = clickable? getCancelSelectedDrawable()
+					: getCancelUnselectedDrawable();
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_unselected_color;
 			button.setClickable(clickable);
 			break;
 			
 		case R.id.lsq_stickerWrap:
-			imgId = clickable? R.drawable.lsq_style_default_btn_sticker 
-					: R.drawable.lsq_style_default_btn_sticker_unselected;
+			imgId = clickable? getStickerSelectedDrawable()
+					: getStickerUnselectedDrawable();
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_unselected_color;
 			button.setClickable(clickable);
 			break;
 			
 		case R.id.lsq_filterWrap:
-			imgId = clickable? R.drawable.auto_selected
-					: R.drawable.auto_default;
+			imgId = clickable? getFilterSelectedDrawable()
+					: getFilterUnselectedDrawable();
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_unselected_color;
 			button.setClickable(clickable);
 			break;
@@ -809,9 +818,142 @@ public class MovieRecordView extends RelativeLayout
 		default:
 			break;
 		}
-		
-		button.setCompoundDrawables(null, TuSdkContext.getDrawable(imgId), null, null);
+
+		updateButtonStyle(button, imgId, colorId, clickable);
+	}
+
+	/**
+	 * 更新按钮的样式：背景图 文字颜色
+	 *
+	 * @param button
+	 * @param imgId
+	 * @param colorId
+	 */
+	protected void updateButtonStyle(TuSdkTextButton button, int imgId, int colorId, boolean clickable)
+	{
+		Drawable drawable = TuSdkContext.getDrawable(imgId);
+		button.setCompoundDrawables(null, drawable, null, null);
 		button.setTextColor(TuSdkContext.getColor(colorId));
+	}
+
+	/**
+	 * 滤镜按钮选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getFilterSelectedDrawable()
+	{
+		return R.drawable.auto_selected;
+	}
+
+	/**
+	 * 滤镜按钮未选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getFilterUnselectedDrawable()
+	{
+		return R.drawable.auto_default;
+	}
+
+	/**
+	 * 贴纸按钮选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getStickerSelectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_sticker;
+	}
+
+	/**
+	 * 贴纸按钮未选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getStickerUnselectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_sticker_unselected;
+	}
+
+	/**
+	 * 撤销按钮选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getCancelSelectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_back_selected;
+	}
+
+	/**
+	 * 撤销按钮未选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getCancelUnselectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_back_unselected;
+	}
+
+	/**
+	 * 确认按钮选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getConfirmSelectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_finish_selected;
+	}
+
+	/**
+	 * 确认按钮未选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getConfirmUnselectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_finish_unselected;
+	}
+
+	/**
+	 * 录制按钮选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getRecordSelectedDrawable()
+	{
+		return R.drawable.lsq_style_default_record_btn_record_selected;
+	}
+
+	/**
+	 * 录制按钮未选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getRecordUnselectedDrawable()
+	{
+		return R.drawable.lsq_style_default_record_btn_record_unselected;
+	}
+
+	/**
+	 * 闪光灯按钮选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getFlashSelectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_flash_on;
+	}
+
+	/**
+	 * 闪光灯按钮未选中时的图标
+	 *
+	 * @return
+	 */
+	protected int getFlashUnselectedDrawable()
+	{
+		return R.drawable.lsq_style_default_btn_flash_off;
 	}
 
 	// 添加视频断点标记
@@ -1243,7 +1385,7 @@ public class MovieRecordView extends RelativeLayout
 	/**
 	 * 贴纸组列表点击事件
 	 */
-	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView> mStickerTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>()
+	private TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView> mStickerTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>()
 	{
 		@Override
 		public void onTableViewItemClick(StickerGroup itemData,
@@ -1322,7 +1464,7 @@ public class MovieRecordView extends RelativeLayout
 	 */
 	private void updateFilterBorderView(FilterCellView lastFilter,boolean isHidden)
 	{
-		RelativeLayout filterBorderView = lastFilter.getBorderView();
+		View filterBorderView = lastFilter.getBorderView();
 		filterBorderView.setVisibility(isHidden ? View.GONE : View.VISIBLE);
 	}
 	
@@ -1440,37 +1582,38 @@ public class MovieRecordView extends RelativeLayout
 	protected TuSDKVideoCameraDelegate mVideoCameraDelegate = new TuSDKVideoCameraDelegate() 
     {
         @Override
-        public void onFilterChanged(SelesOutInput selesOutInput)
+        public void onFilterChanged(FilterWrap selesOutInput)
         {
         	if (selesOutInput == null) return;
-        	
-        	SelesParameters params = selesOutInput.getParameter();
+
+        	// 默认滤镜参数调节
+        	SelesParameters params = selesOutInput.getFilterParameter();
         	List<FilterArg> list = params.getArgs();
         	for (FilterArg arg : list)
         	{
         		if (arg.equalsKey("smoothing") && mSmoothingProgress != -1.0f)
         			arg.setPrecentValue(mSmoothingProgress);
-        		else if (arg.equalsKey("eyeSize")&& mEyeSizeProgress != -1.0f)
-        			arg.setPrecentValue(mEyeSizeProgress);
-        		else if (arg.equalsKey("chinSize")&& mChinSizeProgress != -1.0f)
-        			arg.setPrecentValue(mChinSizeProgress);
         		else if (arg.equalsKey("smoothing") && mSmoothingProgress == -1.0f)
         			mSmoothingProgress = arg.getPrecentValue();
-        		else if (arg.equalsKey("eyeSize") && mEyeSizeProgress == -1.0f)
-        			mEyeSizeProgress = arg.getPrecentValue();
-        		else if (arg.equalsKey("chinSize") && mChinSizeProgress == -1.0f)
-        			mChinSizeProgress = arg.getPrecentValue();
         		else if (arg.equalsKey("mixied") && mMixiedProgress !=  -1.0f)
         			arg.setPrecentValue(mMixiedProgress);
         		else if (arg.equalsKey("mixied") && mMixiedProgress == -1.0f)
-        			mMixiedProgress = arg.getPrecentValue();    
+        			mMixiedProgress = arg.getPrecentValue();
+				else if (arg.equalsKey("eyeSize")&& mEyeSizeProgress != -1.0f)
+					arg.setPrecentValue(mEyeSizeProgress);
+				else if (arg.equalsKey("chinSize")&& mChinSizeProgress != -1.0f)
+					arg.setPrecentValue(mChinSizeProgress);
+				else if (arg.equalsKey("eyeSize") && mEyeSizeProgress == -1.0f)
+					mEyeSizeProgress = arg.getPrecentValue();
+				else if (arg.equalsKey("chinSize") && mChinSizeProgress == -1.0f)
+					mChinSizeProgress = arg.getPrecentValue();
         	}
-        	selesOutInput.setParameter(params);
+			selesOutInput.setFilterParameter(params);
         	
             mSelesOutInput = selesOutInput;
             
             if (getFilterConfigView() != null)
-                getFilterConfigView().setSelesFilter(mSelesOutInput);
+                getFilterConfigView().setSelesFilter(mSelesOutInput.getFilter());
             
             if (mIsFirstEntry || (mBeautyLayout!=null && mBeautyLayout.getVisibility() == View.VISIBLE))
             {
@@ -1524,12 +1667,12 @@ public class MovieRecordView extends RelativeLayout
           else if (seekBar == mEyeSizeBarLayout.getSeekbar())
           {
         	  mEyeSizeProgress = progress;
-        	  applyFilter(mEyeSizeBarLayout,"eyeSize",progress);
+			  applyFilter(mEyeSizeBarLayout,"eyeSize",progress);
           }
           else if (seekBar == mChinSizeBarLayout.getSeekbar())
           {
         	  mChinSizeProgress = progress;
-        	  applyFilter(mChinSizeBarLayout,"chinSize",progress);
+			  applyFilter(mChinSizeBarLayout,"chinSize",progress);
           }
         }
     };
@@ -1539,9 +1682,9 @@ public class MovieRecordView extends RelativeLayout
     	if (viewSeekBar == null || mSelesOutInput == null) return;
     	
     	viewSeekBar.getConfigValueView().setText((int)(progress*100) + "%");
-        SelesParameters params = mSelesOutInput.getParameter();
+        SelesParameters params = mSelesOutInput.getFilterParameter();
         params.setFilterArg(key, progress);
-        mSelesOutInput.submitParameter();
+        mSelesOutInput.submitFilterParameter();
     }
 
 	public void setSquareSticker(boolean isSquareSticker) {

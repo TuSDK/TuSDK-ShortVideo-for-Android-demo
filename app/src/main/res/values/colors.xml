@@ -16,6 +16,9 @@
     <color name="lsq_alpha_black_CO">#C0000000</color>
 
 	<color name="lsq_alpha_black_7f">#7F000000</color>
+
+    <color name="lsq_alpha_white_99">#99ffffff</color>
+
     <!-- split -->
     <color name="lsq_split_bg">#d7d8dc</color>
     <color name="lsq_split_cell">#FF3e3c41</color>
@@ -70,7 +73,7 @@
     <color name="lsq_background_entry_default">#f4a11a</color>
     <color name="lsq_record_title_color">#f4a11a</color>
     
-	<color name="lsq_clip_title_color">#3e3e39</color>
+	<color name="lsq_clip_title_color">#333333</color>
 	<color name="lsq_filter_title_color">#f4a11a</color>
 	<color name="lsq_filter_title_default_color">#9fa0a0</color>
 	
@@ -84,11 +87,22 @@
     <color name="lsq_innerRound_selected_color">#f6a623</color>
     <color name="lsq_ring_color">#ffffff</color>
     <color name="lsq_color_semitransparent">#7f000000</color>
-    <color name="lsq_dubbing_unselected_color">#9B9B9B</color>
-    <color name="lsq_dubbing_bg_color">#EFEFEF</color>
+    <color name="lsq_dubbing_unselected_color">#CCCCCC</color>
+    <color name="lsq_dubbing_bg_color">#F5F5F5</color>
     <color name="lsq_dubbing_record_selected_color">#c17111</color>
     <color name="lsq_voice_record_time_remaining_color">#4a4a4a</color>
     <color name="lsq_color_api_gray">#c0c0c0</color>
     <color name="lsq_color_api_button">#ff9900</color>
-    
+
+    <!-- 场景特效 -->
+
+    <color name="lsq_scence_effect_color_LiveShake01">#b3fa7652</color>
+    <color name="lsq_scence_effect_color_LiveMegrim01">#b3f4a11a</color>
+    <color name="lsq_scence_effect_color_EdgeMagic01">#b3fffd50</color>
+    <color name="lsq_scence_effect_color_LiveFancy01_1">#b35bf254</color>
+    <color name="lsq_scence_effect_color_LiveSoulOut01">#b316cefc</color>
+    <color name="lsq_scence_effect_color_LiveSignal01">#b36ea0f2</color>
+
+    <color name="lsq_scence_effect_color_title">#999999</color>
+
 </resources>

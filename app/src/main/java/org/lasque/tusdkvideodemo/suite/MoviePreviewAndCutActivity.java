@@ -207,9 +207,9 @@ public class MoviePreviewAndCutActivity extends SimpleCameraActivity implements 
 	/** 加载视频缩略图 */
 	public void loadVideoThumbList()
 	{
-		if (mRangeSelectionBar != null && mRangeSelectionBar.getList() == null)
-		{
-			TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56),TuSdkContext.dip2px(56));
+		if (mRangeSelectionBar == null || mRangeSelectionBar.getVideoThumbList().size() > 0) return;
+
+		TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56),TuSdkContext.dip2px(56));
 			
 			TuSDKVideoImageExtractor extractor = TuSDKVideoImageExtractor.createExtractor();
 			
@@ -217,24 +217,18 @@ public class MoviePreviewAndCutActivity extends SimpleCameraActivity implements 
 					.setVideoDataSource(TuSDKMediaDataSource.create(mVideoPath))
 					.setExtractFrameCount(6);
 			
-			
-			mThumbList = new ArrayList<Bitmap>();
-			mRangeSelectionBar.setList(mThumbList);
-			extractor.asyncExtractImageList(new TuSDKVideoImageExtractorDelegate() 
+			extractor.asyncExtractImageList(new TuSDKVideoImageExtractorDelegate()
 			{
 				@Override   
 				public void onVideoImageListDidLoaded(List<Bitmap> images) {
-					mThumbList = images;
-					mRangeSelectionBar.invalidate();
 				}
 				
 				@Override
-				public void onVideoNewImageLoaded(Bitmap bitmap){
-					mThumbList.add(bitmap);
-					mRangeSelectionBar.invalidate();
+				public void onVideoNewImageLoaded(Bitmap bitmap)
+				{
+					mRangeSelectionBar.drawVideoThumb(bitmap);
 				}
-			});	
-		}
+			});
 	}
 
 	/** 开始播放 */

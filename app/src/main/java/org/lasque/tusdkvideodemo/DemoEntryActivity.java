@@ -30,6 +30,9 @@ import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.impl.activity.TuFragmentActivity;
 import org.lasque.tusdk.impl.view.widget.TuProgressHub;
 import org.lasque.tusdk.modules.components.ComponentActType;
+import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
+import org.lasque.tusdkvideodemo.custom.MovieRecordFullScreenActivity;
+import org.lasque.tusdkvideodemo.utils.AlbumUtils;
 import org.lasque.tusdkvideodemo.utils.PermissionUtils;
 
 /**
@@ -39,7 +42,10 @@ public class DemoEntryActivity extends TuFragmentActivity
 {
 	/** 布局ID */
 	public static final int layoutId = R.layout.demo_entry_activity;
-	
+
+	/** 编辑类ClassName */
+	public static final String EDITOR_CLASS = MovieEditorActivity.class.getName();
+
 	public DemoEntryActivity()
 	{
 
@@ -79,6 +85,9 @@ public class DemoEntryActivity extends TuFragmentActivity
 		
 		RelativeLayout componentLayout= (RelativeLayout) findViewById(R.id.lsq_component_layout);
 		componentLayout.setOnClickListener(mClickListener);
+
+		RelativeLayout editorLayout= (RelativeLayout) findViewById(R.id.lsq_edit_component);
+		editorLayout.setOnClickListener(mClickListener);
 	}
 
 	/**
@@ -110,10 +119,22 @@ public class DemoEntryActivity extends TuFragmentActivity
 			case R.id.lsq_component_layout:
 				handleComponentButton();
 				break;
+
+			case R.id.lsq_edit_component:
+				handleEditorButton();
+				break;
 			}
 		}
 	};
-	
+
+	/**
+	 * 处理编辑视频按钮操作
+	 */
+	private void handleEditorButton()
+	{
+		AlbumUtils.openVideoAlbum(EDITOR_CLASS);
+	}
+
 	/**
 	 * 开启录制相机
 	 */
@@ -121,14 +142,13 @@ public class DemoEntryActivity extends TuFragmentActivity
 	{
 		if (PermissionUtils.hasRequiredPermissions(this, getRequiredPermissions()))
 		{
-			Intent intent = new Intent(this, MovieRecordAndImportEditorActivity.class);
+			Intent intent = new Intent(this, MovieRecordFullScreenActivity.class);
 			this.startActivity(intent);
 		}
 		else
 		{
 			PermissionUtils.requestRequiredPermissions(this, getRequiredPermissions());
 		}
-
 	}
 	
 	/**
@@ -179,7 +199,7 @@ public class DemoEntryActivity extends TuFragmentActivity
 		{
 			if (permissionGranted)
 			{
-				Intent intent = new Intent(DemoEntryActivity.this, MovieRecordAndImportEditorActivity.class);
+				Intent intent = new Intent(DemoEntryActivity.this, MovieRecordFullScreenActivity.class);
 				DemoEntryActivity.this.startActivity(intent);
 			}
 			else

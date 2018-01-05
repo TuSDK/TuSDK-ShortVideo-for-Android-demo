@@ -40,8 +40,8 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
-import org.lasque.tusdk.core.seles.sources.SelesOutInput;
 import org.lasque.tusdk.core.seles.sources.SelesVideoCameraInterface;
+import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.FileHelper;
 import org.lasque.tusdk.core.utils.RectHelper;
@@ -56,6 +56,7 @@ import org.lasque.tusdk.core.utils.image.AlbumHelper;
 import org.lasque.tusdk.core.utils.json.JsonHelper;
 import org.lasque.tusdk.core.utils.sqllite.ImageSqlHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoResult;
+import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView.TuSdkTableViewItemClickDelegate;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
@@ -133,7 +134,7 @@ public class MultipleCameraView extends FrameLayout
 	private int mFocusPostion = 1;
 
 	// 记录当前滤镜
-    private SelesOutInput mSelesOutInput;
+    private FilterWrap mSelesOutInput;
 
 	// 滤镜Tab
 	private TuSdkTextButton mFilterTab;
@@ -520,8 +521,8 @@ public class MultipleCameraView extends FrameLayout
 	/**
 	 * 贴纸组列表点击事件
 	 */
-	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>
-	             mStickerTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>() {
+	private TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView> 
+	             mStickerTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>() {
 		@Override
 		public void onTableViewItemClick(StickerGroup itemData,
 				StickerCellView itemView, int position) {
@@ -746,62 +747,62 @@ public class MultipleCameraView extends FrameLayout
 			return true;
 		}
 	};
-	
+
 	/** 滤镜拖动条监听事件 */
-    private FilterConfigViewSeekBarDelegate mConfigSeekBarDelegate = new FilterConfigViewSeekBarDelegate()
-    {
+	private FilterConfigViewSeekBarDelegate mConfigSeekBarDelegate = new FilterConfigViewSeekBarDelegate()
+	{
 
 		@Override
 		public void onSeekbarDataChanged(FilterConfigSeekbar seekbar,FilterArg arg)
 		{
 			if (arg == null) return;
-			
-    		if (arg.equalsKey("smoothing"))
-    			mSmoothingProgress = arg.getPrecentValue();
-    		else if (arg.equalsKey("eyeSize"))
-    			mEyeSizeProgress = arg.getPrecentValue();
-    		else if (arg.equalsKey("chinSize"))
-    			mChinSizeProgress = arg.getPrecentValue();
-    		else if (arg.equalsKey("mixied"))
-    			mMixiedProgress = arg.getPrecentValue();
+
+			if (arg.equalsKey("smoothing"))
+				mSmoothingProgress = arg.getPrecentValue();
+			else if (arg.equalsKey("eyeSize"))
+				mEyeSizeProgress = arg.getPrecentValue();
+			else if (arg.equalsKey("chinSize"))
+				mChinSizeProgress = arg.getPrecentValue();
+			else if (arg.equalsKey("mixied"))
+				mMixiedProgress = arg.getPrecentValue();
 		}
-    	
-    };
-    
+
+	};
+
 	/** 美颜拖动条监听事件 */
 	private TuSeekBar.TuSeekBarDelegate mTuSeekBarDelegate = new TuSeekBar.TuSeekBarDelegate()
 	{
 
-        @Override
-        public void onTuSeekBarChanged(TuSeekBar seekBar, float progress) 
-        {
-            if (seekBar == mSmoothingBarLayout.getSeekbar())
-            {
-          	  mSmoothingProgress = progress;
-          	  applyFilter(mSmoothingBarLayout,"smoothing",progress);
-            }
-            else if (seekBar == mEyeSizeBarLayout.getSeekbar())
-            {
-          	  mEyeSizeProgress = progress;
-          	  applyFilter(mEyeSizeBarLayout,"eyeSize",progress);
-            }
-            else if (seekBar == mChinSizeBarLayout.getSeekbar())
-            {
-          	  mChinSizeProgress = progress;
-          	  applyFilter(mChinSizeBarLayout,"chinSize",progress);
-            }
-        }
+		@Override
+		public void onTuSeekBarChanged(TuSeekBar seekBar, float progress)
+		{
+			if (seekBar == mSmoothingBarLayout.getSeekbar())
+			{
+				mSmoothingProgress = progress;
+				applyFilter(mSmoothingBarLayout,"smoothing",progress);
+			}
+			else if (seekBar == mEyeSizeBarLayout.getSeekbar())
+			{
+				mEyeSizeProgress = progress;
+				applyFilter(mEyeSizeBarLayout,"eyeSize",progress);
+			}
+			else if (seekBar == mChinSizeBarLayout.getSeekbar())
+			{
+				mChinSizeProgress = progress;
+				applyFilter(mChinSizeBarLayout,"chinSize",progress);
+			}
+		}
 	};
-    
-    private void applyFilter(ConfigViewSeekBar viewSeekBar,String key,float progress)
-    {
-    	if (viewSeekBar == null || mSelesOutInput == null) return;
-    	
-    	viewSeekBar.getConfigValueView().setText((int)(progress*100) + "%");
-        SelesParameters params = mSelesOutInput.getParameter();
-        params.setFilterArg(key, progress);
-        mSelesOutInput.submitParameter();
-    }
+
+	private void applyFilter(ConfigViewSeekBar viewSeekBar,String key,float progress)
+	{
+		if (viewSeekBar == null || mSelesOutInput == null) return;
+
+		viewSeekBar.getConfigValueView().setText((int)(progress*100) + "%");
+		SelesParameters params = mSelesOutInput.getFilterParameter();
+		params.setFilterArg(key, progress);
+		mSelesOutInput.submitFilterParameter();
+	}
     
 	/**
 	 * 更新贴纸栏相关视图的显示状态
@@ -1068,7 +1069,7 @@ public class MultipleCameraView extends FrameLayout
 			return;
 		}
 		
-		SelesParameters params = mSelesOutInput.getParameter();
+		SelesParameters params = mSelesOutInput.getFilterParameter();
 		if (params == null)
 		{
 			setEnableAllSeekBar(false);
@@ -1120,7 +1121,7 @@ public class MultipleCameraView extends FrameLayout
 
 				@Override
 				public void run() {
-					getFilterConfigView().setSelesFilter(mSelesOutInput);
+					getFilterConfigView().setSelesFilter(mSelesOutInput.getFilter());
 					getFilterConfigView().setVisibility(View.VISIBLE);
 				}});
 			
@@ -1248,7 +1249,7 @@ public class MultipleCameraView extends FrameLayout
 	 */
 	private void updateFilterBorderView(FilterCellView lastFilter,boolean isHidden)
 	{
-		RelativeLayout filterBorderView = lastFilter.getBorderView();
+		View filterBorderView = lastFilter.getBorderView();
 		filterBorderView.setVisibility(isHidden ? View.GONE : View.VISIBLE);
 	}
 	
@@ -1309,37 +1310,38 @@ public class MultipleCameraView extends FrameLayout
 	 * 滤镜变化时改变滤镜调节栏
 	 * @param selesOutInput
 	 */
-	public void updateViewOnFilterChanged(SelesOutInput selesOutInput)
+	public void updateViewOnFilterChanged(FilterWrap selesOutInput)
 	{
     	if (selesOutInput == null) return;
-    	
-    	SelesParameters params = selesOutInput.getParameter();
+
+    	// 设置滤镜参数
+    	SelesParameters params = selesOutInput.getFilterParameter();
     	List<FilterArg> list = params.getArgs();
     	for (FilterArg arg : list)
     	{
     		if (arg.equalsKey("smoothing") && mSmoothingProgress != -1.0f)
     			arg.setPrecentValue(mSmoothingProgress);
-    		else if (arg.equalsKey("eyeSize")&& mEyeSizeProgress != -1.0f)
-    			arg.setPrecentValue(mEyeSizeProgress);
-    		else if (arg.equalsKey("chinSize")&& mChinSizeProgress != -1.0f)
-    			arg.setPrecentValue(mChinSizeProgress);
     		else if (arg.equalsKey("smoothing") && mSmoothingProgress == -1.0f)
     			mSmoothingProgress = arg.getPrecentValue();
-    		else if (arg.equalsKey("eyeSize") && mEyeSizeProgress == -1.0f)
-    			mEyeSizeProgress = arg.getPrecentValue();
-    		else if (arg.equalsKey("chinSize") && mChinSizeProgress == -1.0f)
-    			mChinSizeProgress = arg.getPrecentValue();
     		else if (arg.equalsKey("mixied") && mMixiedProgress !=  -1.0f)
     			arg.setPrecentValue(mMixiedProgress);
     		else if (arg.equalsKey("mixied") && mMixiedProgress == -1.0f)
-    			mMixiedProgress = arg.getPrecentValue(); 
+    			mMixiedProgress = arg.getPrecentValue();
+			else if (arg.equalsKey("eyeSize")&& mEyeSizeProgress != -1.0f)
+				arg.setPrecentValue(mEyeSizeProgress);
+			else if (arg.equalsKey("chinSize")&& mChinSizeProgress != -1.0f)
+				arg.setPrecentValue(mChinSizeProgress);
+			else if (arg.equalsKey("eyeSize") && mEyeSizeProgress == -1.0f)
+				mEyeSizeProgress = arg.getPrecentValue();
+			else if (arg.equalsKey("chinSize") && mChinSizeProgress == -1.0f)
+				mChinSizeProgress = arg.getPrecentValue();
     	}
-    	selesOutInput.setParameter(params);
+    	selesOutInput.setFilterParameter(params);
     	
         mSelesOutInput = selesOutInput;
         
         if (getFilterConfigView() != null)
-            getFilterConfigView().setSelesFilter(mSelesOutInput);
+            getFilterConfigView().setSelesFilter(mSelesOutInput.getFilter());
 
         if (mIsFirstEntry || (mBeautyLayout!=null && mBeautyLayout.getVisibility() == View.VISIBLE))
         {

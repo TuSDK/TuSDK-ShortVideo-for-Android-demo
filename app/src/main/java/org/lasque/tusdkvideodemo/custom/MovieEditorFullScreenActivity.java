@@ -45,12 +45,18 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		topBarLayout.setBackgroundColor(TuSdkContext.getColor("lsq_color_transparent"));
 		getBottomNavigationLayout().setBackgroundColor(TuSdkContext.getColor("lsq_color_transparent"));
 		getMixingListViewWrap().setBackgroundColor(TuSdkContext.getColor("lsq_color_transparent"));
-		getFilterMVLayoutWrap().setBackgroundColor(TuSdkContext.getColor("lsq_color_transparent"));
+		getFilterMVLayout().setBackgroundColor(TuSdkContext.getColor("lsq_color_transparent"));
 		TuSdkSize tuSdkSize = getVideoSize(mVideoPath);
 		setPreviewSize(getCameraView(),tuSdkSize.width,tuSdkSize.height);
-		isSupportFulllScreen(true);
-	}	
-	
+
+	}
+
+	/** 全屏布局 */
+	protected int getLayoutId()
+	{
+		return R.layout.movie_editor_full_screen_activity;
+	}
+
 	/**
 	 * 根据视频路径获取视频宽高
 	 * 

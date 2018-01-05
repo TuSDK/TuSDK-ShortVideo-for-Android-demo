@@ -9,12 +9,9 @@
  */
 package org.lasque.tusdkvideodemo;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
@@ -113,7 +110,15 @@ public class SimpleCameraActivity extends Activity
 	public float getVideoDuration(String videoPath)
 	{
 		MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-		mediaMetadataRetriever.setDataSource(videoPath);
+		try
+        {
+		    mediaMetadataRetriever.setDataSource(videoPath);
+        }
+        catch (IllegalArgumentException e)
+        {
+            return 0.0f;
+        }
+
 		// 播放时长单位为毫秒
 		String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 		
