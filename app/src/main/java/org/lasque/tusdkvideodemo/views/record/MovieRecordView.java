@@ -195,7 +195,7 @@ public class MovieRecordView extends RelativeLayout
 	
 	private Context mContext;
 	
-	private TuSDKRecordVideoCamera mCamera;
+	protected TuSDKRecordVideoCamera mCamera;
 	
 	// 录制视频动作委托
 	private TuSDKMovieRecordDelegate mDelegate;
@@ -306,7 +306,7 @@ public class MovieRecordView extends RelativeLayout
 		mRecordButton.setLayoutParams(btnParams);
 
 
-		mFilterButton = (TuSdkTextButton) findViewById(R.id.lsq_filterWrap);
+		mFilterButton = (TuSdkTextButton) findViewById(R.id.lsq_tab_filter_btn);
 		mFilterButton.setOnClickListener(mButtonClickListener);
 
 		mStickerButton = (TuSdkTextButton) findViewById(R.id.lsq_stickerWrap);
@@ -442,21 +442,16 @@ public class MovieRecordView extends RelativeLayout
 			switch (event.getAction())
 			{
 				case MotionEvent.ACTION_DOWN:
-					
-					if (!getDelegate().isRecording())
-		            {
-		                getDelegate().startRecording();
-		            }
+
+					onPressRecordButton();
+
 					break;
 					
 				case MotionEvent.ACTION_UP:
 				case MotionEvent.ACTION_CANCEL:
-					
-					updateTopBarStatus(false);
-					if (getDelegate() != null && getDelegate().isRecording())
-					{
-						getDelegate().pauseRecording();
-					}
+
+					onReleaseRecordButton();
+
 					break;   
 	        }
 			return false;
@@ -471,6 +466,31 @@ public class MovieRecordView extends RelativeLayout
 			dispatchClickEvent(v);
 		}
 	};
+
+	/**
+	 * 按下录制按钮
+	 */
+	protected void onPressRecordButton()
+	{
+		if (!getDelegate().isRecording())
+		{
+			getDelegate().startRecording();
+		}
+	}
+
+	/**
+	 * 释放录制按钮
+	 */
+	protected void onReleaseRecordButton()
+	{
+
+		updateTopBarStatus(false);
+		if (getDelegate() != null && getDelegate().isRecording())
+		{
+			getDelegate().pauseRecording();
+		}
+	}
+
 	
 	private void updateSmartBeautyTab(TuSdkTextButton button, boolean clickable)
 	{
@@ -808,7 +828,7 @@ public class MovieRecordView extends RelativeLayout
 			button.setClickable(clickable);
 			break;
 			
-		case R.id.lsq_filterWrap:
+		case R.id.lsq_tab_filter_btn:
 			imgId = clickable? getFilterSelectedDrawable()
 					: getFilterUnselectedDrawable();
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_unselected_color;
@@ -1385,7 +1405,7 @@ public class MovieRecordView extends RelativeLayout
 	/**
 	 * 贴纸组列表点击事件
 	 */
-	private TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView> mStickerTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>()
+	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView> mStickerTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>()
 	{
 		@Override
 		public void onTableViewItemClick(StickerGroup itemData,

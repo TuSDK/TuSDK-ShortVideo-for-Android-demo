@@ -8,12 +8,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/tusdk_view_dubbing_roundcorner_bg">
+        android:background="@drawable/tusdk_view_dubbing_roundcorner_none_bg">
         <org.lasque.tusdk.core.view.TuSdkImageView
             android:id="@+id/lsq_item_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
             android:scaleType="centerCrop" />
     </RelativeLayout>
 
@@ -47,6 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/tusdk_view_filter_selected_border"
+        android:visibility="gone"
         />
 
 </org.lasque.tusdkvideodemo.views.FilterCellView>

@@ -22,4 +22,13 @@
         <attr name="drawableTopWidth" format="dimension"/>
         <attr name="drawableTop" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="ColorSelector">
+        <attr name="dragBarRadius" format="dimension" />
+        <attr name="colorIndicatorWidth" format="dimension"/>
+        <attr name="colorIndicatorHeight" format="dimension"/>
+        <attr name="colorListWidth" format="dimension"/>
+        <attr name="colorListHeight" format="dimension"/>
+        <attr name="colorListPaddingTop" format="dimension"/>
+    </declare-styleable>
 </resources>

@@ -9,15 +9,15 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.TextView;
+
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar.TuSeekBarDelegate;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * 调节栏SeekBar
@@ -27,6 +27,8 @@ import android.widget.TextView;
  */
 public class ConfigViewSeekBar extends 	TuSdkRelativeLayout
 {
+	// SeekBar默认布局
+	private static String mResID = "tusdk_config_seekbar_one";
 
 	public ConfigViewSeekBar(Context context) 
 	{
@@ -68,7 +70,17 @@ public class ConfigViewSeekBar extends 	TuSdkRelativeLayout
 	public static int getLayoutId()
 	{
 		return TuSdkContext
-				.getLayoutResId("tusdk_config_seekbar");
+				.getLayoutResId(mResID);
+	}
+
+	/**
+	 * 设置布局ID
+	 *
+	 * @param resID
+	 */
+	public static void setLayoutId(String resID)
+	{
+		mResID = resID;
 	}
 
 	/** 百分比控制条 */

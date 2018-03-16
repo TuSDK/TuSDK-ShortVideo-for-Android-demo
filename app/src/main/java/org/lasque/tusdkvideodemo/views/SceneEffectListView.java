@@ -7,8 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdkvideodemo.R;
 
@@ -20,10 +18,13 @@ import org.lasque.tusdkvideodemo.R;
 /**
  * 场景特效列表
  */
-public class SceneEffectListView extends TuSdkTableView<SceneEffectListView.SceneEffectData, SceneEffectCellView> implements TuSdkTableView.TuSdkTableViewItemClickDelegate<SceneEffectListView.SceneEffectData, SceneEffectCellView>
+public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellView> implements TuSdkTableView.TuSdkTableViewItemClickDelegate<String, SceneEffectCellView>
 {
     private static final int MIN_PRESS_DURATION_MILLIS = 200;
     private Handler mHandler = new Handler();
+
+    // 撤销按钮是否可被点击
+    private boolean mIsEnableUndoClicked = false;
 
     /** 委托对象 */
     private SceneEffectListViewDelegate mDelegate;
@@ -79,10 +80,14 @@ public class SceneEffectListView extends TuSdkTableView<SceneEffectListView.Scen
     {
         view.setTag(position);
 
-        if (position == 0) return;
+        if (position == 0)
+        {
+            view.updateUndoButton(mIsEnableUndoClicked);
+            return;
+        }
 
 
-        view.setOnTouchListener(new View.OnTouchListener() {
+        view.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -108,6 +113,18 @@ public class SceneEffectListView extends TuSdkTableView<SceneEffectListView.Scen
                 return true;
             }
         });
+    }
+
+    /**
+     * 更新撤销按钮的状态
+     *
+     * @param isEnableClicked
+     */
+    public void updateUndoButtonState(boolean isEnableClicked)
+    {
+        getSdkAdapter().notifyItemChanged(0);
+
+        this.mIsEnableUndoClicked = isEnableClicked;
     }
 
     /**
@@ -150,7 +167,7 @@ public class SceneEffectListView extends TuSdkTableView<SceneEffectListView.Scen
     }
 
     @Override
-    public void onTableViewItemClick(SceneEffectData effectData, SceneEffectCellView itemView, int position)
+    public void onTableViewItemClick(String effectCode, SceneEffectCellView itemView, int position)
     {
         if (position == 0 && mDelegate != null)
                 mDelegate.onUndo();
@@ -169,60 +186,18 @@ public class SceneEffectListView extends TuSdkTableView<SceneEffectListView.Scen
         /**
          * 按下特效
          *
-         * @param effectData
-         *          特效数据
+         * @param code
+         *          特效code
          */
-        void onPressSceneEffect(SceneEffectData effectData);
+        void onPressSceneEffect(String code);
 
         /**
          * 释放特效
          *
-         * @param effectData
-         *          特效数据
+         * @param code
+         *          特效code
          */
-        void onReleaseSceneEffect(SceneEffectData effectData);
-
-    }
-
-    /**
-     * SceneEffectData
-     */
-    public static class SceneEffectData
-    {
-        private int mColor;
-        private String mEffectCode;
-
-        public SceneEffectData(int color, String effectCode)
-        {
-            this.mColor = color;
-            this.mEffectCode = effectCode;
-        }
-
-        public SceneEffectData(String effectCode)
-        {
-            this.mEffectCode = effectCode;
-            this.mColor =  TuSdkContext.getColor(TuSdkContext.getColorResId("lsq_scence_effect_color_"+effectCode));
-        }
-
-        public String getTitle()
-        {
-            return TuSdkContext.getString("lsq_filter_"+mEffectCode);
-        }
-
-        public String getEffectCode()
-        {
-            return mEffectCode;
-        }
-
-        public int getColor()
-        {
-            return mColor;
-        }
-
-        public int getImageResourceId()
-        {
-            return TuSdkContext.getDrawableResId("lsq_scence_effect_"+mEffectCode.toLowerCase());
-        }
+        void onReleaseSceneEffect(String code);
 
     }
 

@@ -268,4 +268,32 @@
 
     <string name="lsq_repeal">Repeal</string>
 
+    <!-- 2.0 快慢速 -->
+    <string name="lsq_camera_speed_rate_slow">Slow</string>
+    <string name="lsq_camera_speed_rate_slow2">Super Slow</string>
+    <string name="lsq_camera_speed_rate_normal">Normal</string>
+    <string name="lsq_camera_speed_rate_fast">Fast</string>
+    <string name="lsq_camera_speed_rate_fast2">Super Fast</string>
+
+    <!-- 2.0 魔法特效 -->
+
+    <!-- 魔法特效 Code 名称 -->
+    <string name="lsq_filter_snow01">Snow</string>
+    <string name="lsq_filter_Love">Love</string>
+    <string name="lsq_filter_Bubbles">Bubbles</string>
+    <string name="lsq_filter_Music">Music</string>
+    <string name="lsq_filter_Star">Star</string>
+    <string name="lsq_filter_Surprise">Surprise</string>
+    <string name="lsq_filter_Flower">Flower</string>
+    <string name="lsq_filter_Magic">Magic</string>
+    <string name="lsq_filter_Money">Money</string>
+    <string name="lsq_filter_Burning">Burning</string>
+    <string name="lsq_filter_Fireball">Fireball</string>
+
+    <string name="lsq_editor_magic">Magic</string>
+    <string name="lsq_magic_size">Size</string>
+    <string name="lsq_magic_color">Color</string>
+    <string name="lsq_magic_text">Magic</string>
+
+
 </resources>

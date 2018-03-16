@@ -62,9 +62,9 @@ import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerLocalPackage;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.utils.ClickAndLongPressedInterface;
 import org.lasque.tusdkvideodemo.utils.ClickAndLongPressedListener;
@@ -521,8 +521,8 @@ public class MultipleCameraView extends FrameLayout
 	/**
 	 * 贴纸组列表点击事件
 	 */
-	private TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView> 
-	             mStickerTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>() {
+	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>
+	             mStickerTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>() {
 		@Override
 		public void onTableViewItemClick(StickerGroup itemData,
 				StickerCellView itemView, int position) {

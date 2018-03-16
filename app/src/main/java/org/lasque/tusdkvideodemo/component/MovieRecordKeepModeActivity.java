@@ -126,7 +126,12 @@ public class MovieRecordKeepModeActivity extends SimpleCameraActivity implements
     	// 1: 1 输出，必须和 regionRatio 保持一致比例
     	// 这里可以根据实际使用场景，设为固定的值，比如 480 * 480
     	encoderSetting.videoSize = TuSdkSize.create(screenSize.width, screenSize.width);
-    	
+
+    	// 这里可以修改帧率和码率; RECORD_MEDIUM2第一个参数代表帧率，第二参数代表码率;选择VideoQuality参数尽量选用RECORD开头(专门为视频录制设计)
+   		// encoderSetting.videoQuality = TuSDKVideoEncoderSetting.VideoQuality.RECORD_MEDIUM2;
+		// 完全自定义帧率和码率
+		// encoderSetting.videoQuality = TuSDKVideoEncoderSetting.VideoQuality.RECORD_MEDIUM2.setFps(30).setBitrate(3000 * 1000);
+
     	mVideoCamera.setVideoEncoderSetting(encoderSetting);
 
 	}
@@ -204,6 +209,7 @@ public class MovieRecordKeepModeActivity extends SimpleCameraActivity implements
 	};
 	*/
 
+	/** ----------- 注意事项：如果视频录制完成后需要跳转到视频编辑页面,需要将录制视频页面销毁掉; 视频编辑跳转视频录制也是如此 ---------------------------*/
 	@Override
 	public void onMovieRecordComplete(TuSDKVideoResult result) 
 	{

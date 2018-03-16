@@ -13,11 +13,14 @@ import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.tusdk.FilterLocalPackage;
 import org.lasque.tusdk.core.view.TuSdkImageView;
 import org.lasque.tusdk.core.view.listview.TuSdkCellRelativeLayout;
+import org.lasque.tusdk.core.view.listview.TuSdkListSelectableCellViewInterface;
+import org.lasque.tusdk.video.editor.TuSDKMediaAudioEffectData;
 import org.lasque.tusdkvideodemo.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView.ScaleType;
@@ -30,7 +33,7 @@ import android.widget.TextView;
  * @author LiuHang
  *
  */
-public class AudioEffectCellView extends TuSdkCellRelativeLayout<AudioEffectCellView.AudioEffectEntity>
+public class AudioEffectCellView extends TuSdkCellRelativeLayout<AudioEffectCellView.AudioEffectEntity> implements TuSdkListSelectableCellViewInterface
 {
 	/** 缩略图 */
 	private TuSdkImageView mThumbView;
@@ -86,7 +89,7 @@ public class AudioEffectCellView extends TuSdkCellRelativeLayout<AudioEffectCell
 		return mMixingCellViewDelegate;
 	}
 	
-	private View.OnLongClickListener mOnlonClickListener = new View.OnLongClickListener()
+	private OnLongClickListener mOnlonClickListener = new OnLongClickListener()
 	{
 
 		@Override
@@ -114,7 +117,7 @@ public class AudioEffectCellView extends TuSdkCellRelativeLayout<AudioEffectCell
 		{
 			if (model.mTypeId == 0) 
 			{
-				RelativeLayout.LayoutParams lp = (LayoutParams) getImageView().getLayoutParams();
+				LayoutParams lp = (LayoutParams) getImageView().getLayoutParams();
 				lp.width = TuSdkContext.dip2px(27);
 				lp.height = TuSdkContext.dip2px(27);
 				getImageView().setLayoutParams(lp);
@@ -133,8 +136,53 @@ public class AudioEffectCellView extends TuSdkCellRelativeLayout<AudioEffectCell
 				getTitleView().setTextColor(TuSdkContext.getColor("lsq_dubbing_unselected_color"));
 			}
 		}
+
+		if ((Integer)getTag() < 2)
+		{
+			getViewById(R.id.lsq_default_background).setBackground(getResources().getDrawable(R.drawable.tusdk_view_dubbing_roundcorner_white_bg));
+		}
 	}
-	
+
+	@Override
+	public void onCellSelected(int position) {
+		// 显示或隐藏边框
+		RelativeLayout filterBorderView = getBorderView();
+		filterBorderView.setVisibility(View.VISIBLE);
+
+		AudioEffectEntity group = getModel();
+		TuSdkImageView mixingImageView = getImageView();
+		String drawableId =  ("lsq_mixing_thumb_"+group.mName.toLowerCase()+"_selected");
+		Drawable drawable = TuSdkContext.getDrawable(drawableId);
+		if (drawable == null)
+			drawable = TuSdkContext.getDrawable("lsq_mixing_thumb_"+group.mName.toLowerCase());
+
+		mixingImageView.setImageDrawable(drawable);
+
+		// 设置字体颜色
+		int textColorId = TuSdkContext.getColor("lsq_filter_title_color");
+		getTitleView().setTextColor(textColorId);
+	}
+
+	@Override
+	public void onCellDeselected() {
+		// 显示或隐藏边框
+		RelativeLayout filterBorderView = getBorderView();
+		filterBorderView.setVisibility(View.GONE);
+
+		AudioEffectEntity group = getModel();
+		TuSdkImageView mixingImageView = getImageView();
+		String drawableId = ("lsq_mixing_thumb_"+group.mName.toLowerCase());
+		Drawable drawable = TuSdkContext.getDrawable(drawableId);
+		if (drawable == null)
+			drawable = TuSdkContext.getDrawable("lsq_mixing_thumb_"+group.mName.toLowerCase());
+
+		mixingImageView.setImageDrawable(drawable);
+
+		// 设置字体颜色
+		int textColorId =  TuSdkContext.getColor("lsq_filter_title_default_color");
+		getTitleView().setTextColor(textColorId);
+	}
+
 	public TuSdkImageView getImageView()
 	{
 		if (mThumbView == null)

@@ -9,20 +9,19 @@
  */
 package org.lasque.tusdkvideodemo.suite;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.RectHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.OnSeekToPreviewListener;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
-import org.lasque.tusdk.video.editor.TuSDKVideoImageExtractor;
-import org.lasque.tusdk.video.editor.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
-import org.lasque.tusdk.video.mixer.TuSDKMediaDataSource;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.OnSeekToPreviewListener;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
 import org.lasque.tusdkvideodemo.component.MovieEditorActivity;

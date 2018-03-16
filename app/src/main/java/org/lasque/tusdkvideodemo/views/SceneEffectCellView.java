@@ -1,13 +1,14 @@
 package org.lasque.tusdkvideodemo.views;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.listview.TuSdkCellRelativeLayout;
-import org.lasque.tusdk.core.view.listview.TuSdkListSelectableCellViewInterface;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdkvideodemo.R;
 
@@ -15,7 +16,7 @@ import org.lasque.tusdkvideodemo.R;
  * Created by sprint on 26/12/2017.
  */
 
-public class SceneEffectCellView extends TuSdkCellRelativeLayout<SceneEffectListView.SceneEffectData>
+public class SceneEffectCellView extends TuSdkCellRelativeLayout<String>
 {
 
     /** 缩略图 */
@@ -29,14 +30,21 @@ public class SceneEffectCellView extends TuSdkCellRelativeLayout<SceneEffectList
         super(context, attrs);
     }
 
+
+//    public SceneEffectData(String effectCode)
+//    {
+//        this.mColor =  TuSdkContext.getColor(TuSdkContext.getColorResId("lsq_scence_effect_color_"+effectCode));
+//        this.mSceneEffectCode = effectCode;
+//    }
+
     @Override
     protected void bindModel()
     {
 
-        SceneEffectListView.SceneEffectData scenceEffectData = getModel();
+        String code = getModel();
 
-        getImageView().setImageResource(scenceEffectData.getImageResourceId());
-        getTitleView().setText(scenceEffectData.getTitle());
+        getImageView().setImageResource(TuSdkContext.getDrawableResId("lsq_scence_effect_"+code));
+        getTitleView().setText(TuSdkContext.getString("lsq_filter_"+code));
 
         // 当前是否为撤销 Cell
         boolean isUndoCell = (Integer) getTag() == 0;
@@ -71,5 +79,22 @@ public class SceneEffectCellView extends TuSdkCellRelativeLayout<SceneEffectList
             mTitleView = (TextView)findViewById(R.id.lsq_item_title);
         }
         return mTitleView;
+    }
+
+    /**
+     * 更新撤销按钮的状态
+     *
+     * @param isEnableClicked
+     */
+    public void updateUndoButton(boolean isEnableClicked)
+    {
+        Drawable cancelUnClickedDrawable = getResources().getDrawable(R.drawable.edit_ic_back);
+        cancelUnClickedDrawable.setAlpha(isEnableClicked ? 255 : 66);
+        // 这一步必须要做,否则不会显示
+        cancelUnClickedDrawable.setBounds(0, 0, cancelUnClickedDrawable.getMinimumWidth(), cancelUnClickedDrawable.getMinimumHeight());
+        getUndoButton().setCompoundDrawables(null, cancelUnClickedDrawable, null, null);
+
+        getUndoButton().setEnabled(isEnableClicked);
+        getUndoButton().setTextColor(getResColor(isEnableClicked ? R.color.lsq_filter_title_color : R.color.lsq_filter_title_color_alpha_20));
     }
 }

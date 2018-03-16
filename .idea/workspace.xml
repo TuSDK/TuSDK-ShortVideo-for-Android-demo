@@ -1,27 +1,215 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="TuSdk" />
+        <option name="name" value="TuSdk" />
+        <option name="packageNamePattern" value="" />
+        <option name="pid" value="" />
+      </filter>
+    </filters>
+  </component>
   <component name="AndroidLayouts">
     <shared>
       <config />
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="info" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="TuSdk" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c4fd78b2-d619-4ca4-9b3d-eb9f8a8cc03c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/libs/TuSDKVideo-2.0.0.jar" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/others/lsq_tutucloud_dl_landmark.dpm" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/others/lsq_tutucloud_dl_landmark_sdm.dpm" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1419.gsce" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1432.gsce" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1471.gsce" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1477.gsce" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_color_bar.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_edit_color.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_edit_ic_pause.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_edit_pause.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_edit_play.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_edit_size.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_edit_turn.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_magic_close.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_magic_save.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_magic_selected.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/lsq_magic_unselected.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/edit_ic_back.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_color_bar.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_edit_color.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_edit_ic_pause.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_edit_pause.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_edit_play.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_edit_size.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_edit_turn.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_magic_close.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_magic_save.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_magic_selected.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi/lsq_magic_unselected.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_bubbles.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_burning.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_fireball.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_flower.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_jiguang02png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_love.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_magic.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_money.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_music.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_snow01.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_star.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_surprise.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Bubbles_179.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Burning_173.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Fireball_177.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Flower_176.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Love01_180.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Magic01_175.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Money_174.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Music_182.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Star_181.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_Surprise_178.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_ZhiBo001_83.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_snow_166.gfilter" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MediaEffectsManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/VideoInfoUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/ColorSelector.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/DubbingLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/DubbingRecodLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEditorLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEffectCellView.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEffectLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEffectListView.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEffectsTimelineView.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MovieEditorTabBar.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-video.so" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/magic_size_seek_bar_background.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/tusdk_view_dubbing_roundcorner_white_bg.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/magic_list_cell_view.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_magic.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_magic_preview_view.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tusdk_config_seekbar_two.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/__local_jars___D__sourcecode_AS_TuSDK_ShortVideo_for_Android_demo_app_libs_TuSDKCore_2_9_0_jar_unspecified_jar.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/libs/TuSDKVideo-1.11.0.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1250.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1373.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1425.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1427.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1455.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1468.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1470.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1474.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1475.gsce" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/stickers/lsq_sticker_0_1503.gsce" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/libs/TuSDKCore-2.9.0.jar" afterPath="$PROJECT_DIR$/app/libs/TuSDKCore-2.9.0.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/libs/TuSDKFace-1.0.0.jar" afterPath="$PROJECT_DIR$/app/libs/TuSDKFace-1.0.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/libs/TuSDKVideo-1.11.0.jar" afterPath="$PROJECT_DIR$/app/libs/TuSDKVideo-1.11.0.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_internal_filters.filter" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_internal_filters.filter" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/edit_ic_back.png" afterPath="$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/edit_ic_back.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_blurred_1.jpg" afterPath="$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_blurred_1.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/generated/mockable-android-26.jar" afterPath="$PROJECT_DIR$/build/generated/mockable-android-26.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/others/lsq_tusdk_configs.json" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/others/lsq_tusdk_configs.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_EdgeMagic_155.gfilter" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_EdgeMagic_155.gfilter" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_LiveFancy01_156.gfilter" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_LiveFancy01_156.gfilter" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_LiveSignal_158.gfilter" afterPath="$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/textures/lsq_filter_LiveSignal_158.gfilter" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/DemoEntryActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/DemoEntryActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/SimpleCameraActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/SimpleCameraActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/AudioMixerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/AudioMixerActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieCutActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieCutActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieMixerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieMixerActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieSplicerActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieSplicerActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieThumbActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/api/MovieThumbActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieRecordKeepModeActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieRecordKeepModeActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MovieEditorFullScreenActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MovieEditorFullScreenActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/suite/MoviePreviewAndCutActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/suite/MoviePreviewAndCutActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/Constants.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/Constants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/AudioEffectCellView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/AudioEffectCellView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/ConfigViewSeekBar.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/ConfigViewSeekBar.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterCellView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterCellView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MovieRangeSelectionBar.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MovieRangeSelectionBar.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectCellView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectCellView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectListView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectListView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/StickerAudioEffectCellView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/StickerAudioEffectCellView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MovieRecordFullScreenView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MovieRecordFullScreenView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MovieRecordView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MovieRecordView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi-v7a/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/armeabi/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/mips64/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-face.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-face.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-image.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-image.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-library.so" afterPath="$PROJECT_DIR$/app/src/main/jniLibs/x86_64/libtusdk-library.so" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/tusdk_view_edit_split_line.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/tusdk_view_edit_split_line.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/audio_mixer_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/audio_mixer_activity.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/beauty_wrap_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/beauty_wrap_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/filter_list_cell_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/filter_list_cell_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/filter_mv_wrap_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/filter_mv_wrap_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_activity.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_audio_effect_cell_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_audio_effect_cell_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_bottom_navigation.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_bottom_navigation.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_dubbing_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_dubbing_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_filter_list_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_filter_list_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_full_screen_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_full_screen_activity.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_scence_effect_layout.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_scence_effect_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_sticker_audio_effect_cell_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_sticker_audio_effect_cell_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_voice_recording.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_editor_voice_recording.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_mixer_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_mixer_activity.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_record_full_screen_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_record_full_screen_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/movie_record_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/movie_record_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/tusdk_config_view.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tusdk_config_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-en/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-en/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-zh-rTW/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-zh-rTW/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/attrs.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/attrs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/libs/TuSDKCore-2.9.0.jar" afterPath="$PROJECT_DIR$/app/libs/TuSDKCore-2.9.1.jar" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/ScenceEffectLayout.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectLayout.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java" afterPath="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/EffectsTimelineView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/tusdk_view_dubbing_roundcorner_bg.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/tusdk_view_dubbing_roundcorner_none_bg.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/tusdk_config_seekbar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/tusdk_config_seekbar_one.xml" />
     </list>
     <ignored path="TuSDK-ShortVideo-for-Android-demo.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -55,37 +243,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="24" column="32" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-627">
-              <caret line="3" column="34" lean-forward="false" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
-              <folding>
-                <element signature="e#1956#1974#0" expanded="true" />
-                <element signature="e#2241#2259#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-          <provider editor-type-id="android-manifest">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SimpleCameraActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/SimpleCameraActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="71" column="28" lean-forward="false" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
+            <state relative-caret-position="684">
+              <caret line="36" column="38" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -94,14 +256,123 @@
       <file leaf-file-name="MultipleCameraView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="24985">
-              <caret line="1409" column="42" lean-forward="false" selection-start-line="1409" selection-start-column="42" selection-end-line="1409" selection-end-column="42" />
+            <state relative-caret-position="119">
+              <caret line="1438" column="4" lean-forward="false" selection-start-line="1438" selection-start-column="4" selection-end-line="1438" selection-end-column="4" />
+              <folding>
+                <element signature="e#8346#8371#0" expanded="false" />
+                <element signature="e#8581#8602#0" expanded="false" />
+                <element signature="e#8813#8835#0" expanded="false" />
+                <element signature="e#13807#13821#0" expanded="true" />
+                <element signature="e#24950#24975#0" expanded="false" />
+                <element signature="e#25370#25395#0" expanded="false" />
+                <element signature="e#26768#26794#0" expanded="false" />
+                <element signature="e#27254#27280#0" expanded="false" />
+                <element signature="e#34292#34324#0" expanded="false" />
+                <element signature="e#34392#34423#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EffectsTimelineView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/EffectsTimelineView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="39" column="17" lean-forward="false" selection-start-line="39" selection-start-column="17" selection-end-line="39" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MovieEditorActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="625" column="58" lean-forward="false" selection-start-line="625" selection-start-column="58" selection-end-line="625" selection-end-column="58" />
+              <folding>
+                <element signature="e#6369#6386#0" expanded="false" />
+                <element signature="e#6542#6565#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+          <provider editor-type-id="android-manifest">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="16" column="78" lean-forward="false" selection-start-line="16" selection-start-column="78" selection-end-line="16" selection-end-column="78" />
+              <folding>
+                <element signature="e#1955#1973#0" expanded="false" />
+                <element signature="e#2240#2258#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MovieEditorFullScreenActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MovieEditorFullScreenActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="279">
+              <caret line="450" column="24" lean-forward="false" selection-start-line="450" selection-start-column="24" selection-end-line="450" selection-end-column="24" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FilterConfigView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="158" column="17" lean-forward="false" selection-start-line="158" selection-start-column="17" selection-end-line="158" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MovieEditorTabBar.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MovieEditorTabBar.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="230">
+              <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Constants.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/Constants.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="399">
+              <caret line="29" column="23" lean-forward="false" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TuApplication.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/TuApplication.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="107">
+              <caret line="57" column="24" lean-forward="false" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -122,6 +393,9 @@
       <find>xmlns:app=&quot;</find>
       <find>xmlns:app=</find>
       <find>SceneEffectsTimelineView</find>
+      <find>mFilterWrap</find>
+      <find>mFocusPostion</find>
+      <find>MediaEffectsManager</find>
     </findStrings>
   </component>
   <component name="GenerateSignedApkSettings">
@@ -1805,7 +2079,6 @@
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/Constants.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterCellView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/smart_beauty_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
@@ -1815,8 +2088,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/movie_record_view.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/multiple_camera_preview_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/multiple_camera_video_preview_view.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MovieEditorFullScreenActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/suite/MoviePreviewAndCutActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/DemoEntryActivity.java" />
@@ -1825,15 +2096,20 @@
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MoviePreviewAndCutFullScreenActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MovieRecordView.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectModel.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEffectsTimelineView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="2052" />
+    <option name="width" value="2060" />
     <option name="height" value="1128" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -1854,6 +2130,16 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1863,20 +2149,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1982,6 +2254,36 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="jniLibs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="arm64-v8a" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -2004,24 +2306,90 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="libs" />
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tusdkvideodemo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="custom" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tusdkvideodemo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="component" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
-      <pane id="AndroidView">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="TuSDK-ShortVideo-for-Android-demo" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -2032,19 +2400,22 @@
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="show.do.not.ask.upgrade.gradle.plugin" value="2.2.3" />
-    <property name="device.picker.selection" value="c013feb19904" />
+    <property name="device.picker.selection" value="291569e6" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="ExportApk.ApkPath" value="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app" />
     <property name="ExportApk.Flavors" value="" />
     <property name="ExportApk.BuildType" value="release" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.lasque.tusdkvideodemo.component" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app\libs" />
       <recent name="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app\src\main\jniLibs" />
+      <recent name="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app\src\main" />
       <recent name="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app\src" />
       <recent name="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app\src\main\res\raw" />
-      <recent name="D:\sourcecode-AS\TuSDK-ShortVideo-for-Android-demo\app\src\main\assets\TuSDK.bundle" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -2130,7 +2501,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1515147872042" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521192875821" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2178,7 +2549,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1515147872042" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521192875821" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2221,6 +2592,27 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -2351,7 +2743,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1515147872042" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521192875822" />
       </method>
     </configuration>
     <list size="1">
@@ -2384,25 +2776,26 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2052" height="1128" extended-state="0" />
+    <frame x="-8" y="-8" width="2060" height="1128" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28526646" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26871794" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295838" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291536" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48069105" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19899498" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2042042" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -2423,36 +2816,37 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295838" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295838" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291536" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19977169" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28455284" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.6403509" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4180328" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -2463,76 +2857,12 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24586">
-          <caret line="1408" column="9" lean-forward="false" selection-start-line="1408" selection-start-column="9" selection-end-line="1408" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1919">
-          <caret line="101" column="46" lean-forward="false" selection-start-line="101" selection-start-column="46" selection-end-line="101" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MultipleCameraActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="49" column="43" lean-forward="false" selection-start-line="49" selection-start-column="43" selection-end-line="49" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/multiple_camera_view.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="24" column="42" lean-forward="false" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/multiple_camera_preview_layout.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1501">
-          <caret line="79" column="42" lean-forward="false" selection-start-line="79" selection-start-column="42" selection-end-line="79" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/smart_beauty_layout.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1444">
-          <caret line="76" column="48" lean-forward="false" selection-start-line="76" selection-start-column="48" selection-end-line="76" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18411">
-          <caret line="1062" column="44" lean-forward="false" selection-start-line="1062" selection-start-column="44" selection-end-line="1062" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/DemoEntryActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2394">
-          <caret line="156" column="48" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="157" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/StickerListView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1577">
@@ -2548,21 +2878,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="5" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="29" column="60" lean-forward="false" selection-start-line="29" selection-start-column="60" selection-end-line="29" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/raw/lsq_filter_thumb_nature.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -2572,13 +2887,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1048">
           <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-71">
-          <caret line="156" column="35" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="157" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -2636,13 +2944,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/others/lsq_tusdk_configs.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="12" column="34" lean-forward="false" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/StickerCellView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="254">
@@ -2662,13 +2963,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
           <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/TuApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
-          <caret line="67" column="32" lean-forward="false" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -2734,27 +3028,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13395">
-          <caret line="705" column="2" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="1963" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="37" column="19" lean-forward="false" selection-start-line="37" selection-start-column="19" selection-end-line="37" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MovieEditorFullScreenActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="722">
-          <caret line="38" column="5" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="176" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/suite/MoviePreviewAndCutActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1558">
@@ -2766,7 +3039,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3135">
           <caret line="194" column="47" lean-forward="false" selection-start-line="194" selection-start-column="47" selection-end-line="194" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2785,25 +3057,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/ScenceEffectLayout.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/ScenceEffectLayout.java" />
+    <entry file="jar://$PROJECT_DIR$/app/libs/TuSDKVideo-1.11.0.jar!/org/lasque/tusdk/api/TuSDKFilterPicture.class" />
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/SimpleCameraActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="25" column="32" lean-forward="false" selection-start-line="25" selection-start-column="32" selection-end-line="25" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/DemoEntryActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="44" column="23" lean-forward="false" selection-start-line="44" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+        <state relative-caret-position="304">
+          <caret line="64" column="28" lean-forward="false" selection-start-line="64" selection-start-column="28" selection-end-line="64" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-image.so">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24985">
-          <caret line="1409" column="42" lean-forward="false" selection-start-line="1409" selection-start-column="42" selection-end-line="1409" selection-end-column="42" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -2816,40 +3083,186 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+    <entry file="file://$PROJECT_DIR$/app/src/main/assets/TuSDK.bundle/others/lsq_tusdk_configs.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="24" column="32" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state relative-caret-position="228">
+          <caret line="12" column="28" lean-forward="false" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/app/libs/TuSDKVideo-1.11.0.jar!/org/lasque/tusdk/api/TuSDKFilterPicture.class">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/DemoEntryActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1361">
+          <caret line="211" column="13" lean-forward="false" selection-start-line="211" selection-start-column="13" selection-end-line="211" selection-end-column="13" />
+          <folding>
+            <element signature="e#1803#1825#0" expanded="false" />
+            <element signature="e#2723#2927#0" expanded="false" />
+            <element signature="e#2926#2927#0" expanded="false" />
+            <element signature="e#4836#5515#0" expanded="false" />
+            <element signature="e#5514#5515#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="5" lean-forward="false" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/TuSDKVideo-2.0.0.jar!/org/lasque/tusdk/video/editor/TuSDKMediaSceneEffectData.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="10" column="67" lean-forward="false" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/SceneEffectsTimelineView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="18" column="6" lean-forward="false" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#944#945#0" expanded="true" />
+            <element signature="e#985#986#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MagicEffectsTimelineView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="43" column="79" lean-forward="false" selection-start-line="43" selection-start-column="79" selection-end-line="43" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/record/MultipleCameraView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="1438" column="4" lean-forward="false" selection-start-line="1438" selection-start-column="4" selection-end-line="1438" selection-end-column="4" />
+          <folding>
+            <element signature="e#8346#8371#0" expanded="false" />
+            <element signature="e#8581#8602#0" expanded="false" />
+            <element signature="e#8813#8835#0" expanded="false" />
+            <element signature="e#13807#13821#0" expanded="true" />
+            <element signature="e#24950#24975#0" expanded="false" />
+            <element signature="e#25370#25395#0" expanded="false" />
+            <element signature="e#26768#26794#0" expanded="false" />
+            <element signature="e#27254#27280#0" expanded="false" />
+            <element signature="e#34292#34324#0" expanded="false" />
+            <element signature="e#34392#34423#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/EffectsTimelineView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
-          <caret line="42" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <caret line="39" column="17" lean-forward="false" selection-start-line="39" selection-start-column="17" selection-end-line="39" selection-end-column="17" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/jniLibs/arm64-v8a/libtusdk-video.so">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/TuApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="57" column="24" lean-forward="false" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/utils/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="29" column="23" lean-forward="false" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/FilterConfigView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="158" column="17" lean-forward="false" selection-start-line="158" selection-start-column="17" selection-end-line="158" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/views/MovieEditorTabBar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/custom/MovieEditorFullScreenActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="279">
+          <caret line="450" column="24" lean-forward="false" selection-start-line="450" selection-start-column="24" selection-end-line="450" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/app/libs/TuSDKVideo-2.0.0.jar!/org/lasque/tusdk/video/editor/TuSDKMovieEditor.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="1064" column="22" lean-forward="false" selection-start-line="1064" selection-start-column="22" selection-end-line="1064" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/component/MovieEditorActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="625" column="58" lean-forward="false" selection-start-line="625" selection-start-column="58" selection-end-line="625" selection-end-column="58" />
+          <folding>
+            <element signature="e#6369#6386#0" expanded="false" />
+            <element signature="e#6542#6565#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-627">
-          <caret line="3" column="34" lean-forward="false" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
-          <folding>
-            <element signature="e#1956#1974#0" expanded="true" />
-            <element signature="e#2241#2259#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
       <provider editor-type-id="android-manifest">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/org/lasque/tusdkvideodemo/SimpleCameraActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="71" column="28" lean-forward="false" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
+        <state relative-caret-position="304">
+          <caret line="16" column="78" lean-forward="false" selection-start-line="16" selection-start-column="78" selection-end-line="16" selection-end-column="78" />
+          <folding>
+            <element signature="e#1955#1973#0" expanded="false" />
+            <element signature="e#2240#2258#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="36" column="38" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="38" />
           <folding />
         </state>
       </provider>

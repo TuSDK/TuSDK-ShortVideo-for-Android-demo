@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.lasque.tusdkvideodemo.views.DubbingLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"> 
@@ -12,5 +12,6 @@
 	 <org.lasque.tusdkvideodemo.views.AudioEffectListView
            android:id="@+id/lsq_mixing_list_view"
            style="@style/lsq_mv_list_view" />
-	</RelativeLayout>   	  
-</LinearLayout>
+	</RelativeLayout>
+
+</org.lasque.tusdkvideodemo.views.DubbingLayout>

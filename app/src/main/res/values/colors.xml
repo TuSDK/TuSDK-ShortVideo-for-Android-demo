@@ -75,6 +75,7 @@
     
 	<color name="lsq_clip_title_color">#333333</color>
 	<color name="lsq_filter_title_color">#f4a11a</color>
+    <color name="lsq_filter_title_color_alpha_20">#33f4a11a</color>
 	<color name="lsq_filter_title_default_color">#9fa0a0</color>
 	
 	<color name="lsq_filter_title_unselected_color">#d9d9d9</color>
@@ -94,7 +95,7 @@
     <color name="lsq_color_api_gray">#c0c0c0</color>
     <color name="lsq_color_api_button">#ff9900</color>
 
-    <!-- 场景特效 -->
+    <!-- 场景特效编辑时颜色 -->
 
     <color name="lsq_scence_effect_color_LiveShake01">#b3fa7652</color>
     <color name="lsq_scence_effect_color_LiveMegrim01">#b3f4a11a</color>
@@ -102,7 +103,21 @@
     <color name="lsq_scence_effect_color_LiveFancy01_1">#b35bf254</color>
     <color name="lsq_scence_effect_color_LiveSoulOut01">#b316cefc</color>
     <color name="lsq_scence_effect_color_LiveSignal01">#b36ea0f2</color>
-
     <color name="lsq_scence_effect_color_title">#999999</color>
+
+    <!-- v2.0 魔法特效 TimeLineView 编辑色 -->
+    <color name="lsq_margic_effect_color_snow01">#b3ffffff</color>
+    <color name="lsq_margic_effect_color_Music">#b33665ff</color>
+    <color name="lsq_margic_effect_color_Star">#b35ffac5</color>
+    <color name="lsq_margic_effect_color_Love">#b3fe0f0f</color>
+    <color name="lsq_margic_effect_color_Bubbles">#b3aaaaaa</color>
+    <color name="lsq_margic_effect_color_Surprise">#b3947bff</color>
+    <color name="lsq_margic_effect_color_Fireball">#b3ffcb5b</color>
+    <color name="lsq_margic_effect_color_Flower">#b3ff9bbe</color>
+    <color name="lsq_margic_effect_color_Money">#b3fce77b</color>
+    <color name="lsq_margic_effect_color_Magic">#b364fdfd</color>
+    <color name="lsq_margic_effect_color_Burning">#b316cefc</color>
+
+    <color name="lsq_magic_size_baground">#eeeeee</color>
 
 </resources>

@@ -244,4 +244,32 @@
 
     <string name="lsq_repeal">撤銷</string>
 
+
+    <!--2.0 -->
+    <string name="lsq_camera_speed_rate_slow">慢</string>
+    <string name="lsq_camera_speed_rate_slow2">極慢</string>
+    <string name="lsq_camera_speed_rate_normal">正常</string>
+    <string name="lsq_camera_speed_rate_fast">快</string>
+    <string name="lsq_camera_speed_rate_fast2">極快</string>
+
+    <!-- 2.0 魔法特效 -->
+
+    <!-- 魔法特效 Code 名称 -->
+    <string name="lsq_filter_snow01">雪花</string>
+    <string name="lsq_filter_Love">甜心</string>
+    <string name="lsq_filter_Bubbles">泡泡</string>
+    <string name="lsq_filter_Music">音符</string>
+    <string name="lsq_filter_Star">星星</string>
+    <string name="lsq_filter_Surprise">驚喜</string>
+    <string name="lsq_filter_Flower">花瓣</string>
+    <string name="lsq_filter_Magic">鬼火</string>
+    <string name="lsq_filter_Money">金幣</string>
+    <string name="lsq_filter_Burning">燃燒</string>
+    <string name="lsq_filter_Fireball">火球</string>
+
+
+    <string name="lsq_editor_magic">魔法</string>
+    <string name="lsq_magic_size">大小</string>
+    <string name="lsq_magic_color">顏色</string>
+
 </resources>

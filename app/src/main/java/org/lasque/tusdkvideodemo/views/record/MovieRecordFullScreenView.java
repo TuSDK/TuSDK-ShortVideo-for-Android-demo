@@ -10,10 +10,15 @@
 package org.lasque.tusdkvideodemo.views.record;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdkvideodemo.R;
 
@@ -27,6 +32,9 @@ public class MovieRecordFullScreenView extends MovieRecordView
 
 	/** 透明度比例 */
 	private final float ALPHA_RATIO = 0.4f;
+
+	/** 视频速度模式视图 */
+	private ViewGroup mSpeedModeBar;
 
 	public MovieRecordFullScreenView(Context context)
 	{
@@ -51,6 +59,78 @@ public class MovieRecordFullScreenView extends MovieRecordView
 
 		updateButtonStatus(mRollBackButton, false);
 		updateButtonStatus(mConfirmButton, false);
+
+		// 速度控制条
+		mSpeedModeBar = findViewById(R.id.lsq_movie_speed_bar);
+
+		int childCount = mSpeedModeBar.getChildCount();
+
+		for (int i = 0;i<childCount;i++)
+		{
+			mSpeedModeBar.getChildAt(i).setOnClickListener(new OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					selectSpeedMode(Integer.parseInt((String)view.getTag()));
+				}
+			});
+		}
+	}
+
+	/**
+	 * 切换速率
+	 *
+	 * @param selectedSpeedMode
+	 */
+	private void selectSpeedMode(int selectedSpeedMode)
+	{
+		int childCount = mSpeedModeBar.getChildCount();
+
+		for (int i = 0;i < childCount;i++)
+		{
+			Button btn = (Button) mSpeedModeBar.getChildAt(i);
+			int speedMode = Integer.parseInt((String)btn.getTag());
+
+			if (selectedSpeedMode == speedMode)
+			{
+				btn.setBackgroundColor(Color.parseColor("#b3f4a11a"));
+				btn.setTextColor(Color.WHITE);
+
+			}else
+			{
+				btn.setBackgroundColor(Color.TRANSPARENT);
+				btn.setTextColor(Color.parseColor("#b3f4a11a"));
+			}
+		}
+
+		// 切换相机速率
+		TuSDKRecordVideoCamera.SpeedMode speedMode = TuSDKRecordVideoCamera.SpeedMode.values()[selectedSpeedMode];
+		mCamera.setSpeedMode(speedMode);
+	}
+
+	/**
+	 * 按下录制按钮
+	 */
+	@Override
+	protected void onPressRecordButton()
+	{
+		super.onPressRecordButton();
+
+		if (mSpeedModeBar != null)
+			mSpeedModeBar.setVisibility(View.GONE);
+
+	}
+
+	/**
+	 * 释放录制按钮
+	 */
+	@Override
+	protected void onReleaseRecordButton()
+	{
+		super.onReleaseRecordButton();
+		if (mSpeedModeBar != null)
+			mSpeedModeBar.setVisibility(View.VISIBLE);
 	}
 
 	/** ----------------------- 修改按钮的透明度 ------------------------------------------------**/

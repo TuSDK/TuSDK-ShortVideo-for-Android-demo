@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.TuSdkImageView;
 import org.lasque.tusdk.core.view.listview.TuSdkCellRelativeLayout;
+import org.lasque.tusdk.core.view.listview.TuSdkListSelectableCellViewInterface;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerLocalPackage;
 import org.lasque.tusdkvideodemo.R;
@@ -28,7 +29,7 @@ import org.lasque.tusdkvideodemo.R;
  * @author LiuHang
  *
  */
-public class StickerAudioEffectCellView extends TuSdkCellRelativeLayout<StickerGroup>
+public class StickerAudioEffectCellView extends TuSdkCellRelativeLayout<StickerGroup> implements TuSdkListSelectableCellViewInterface
 {
 	/** 缩略图 */
 	private ImageView mThumbView;
@@ -171,5 +172,20 @@ public class StickerAudioEffectCellView extends TuSdkCellRelativeLayout<StickerG
 
 			StickerLocalPackage.shared().cancelLoadImage(this.getImageView());
 		}
+	}
+
+	@Override
+	public void onCellSelected(int position)
+	{
+		// 显示或隐藏边框
+		getBorderView().setVisibility(View.VISIBLE);
+
+	}
+
+	@Override
+	public void onCellDeselected() {
+		// 显示或隐藏边框
+		getBorderView().setVisibility(View.GONE);
+
 	}
 }

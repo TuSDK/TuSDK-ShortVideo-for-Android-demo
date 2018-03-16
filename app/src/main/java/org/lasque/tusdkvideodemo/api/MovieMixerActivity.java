@@ -19,17 +19,17 @@ import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoResult;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
-import org.lasque.tusdk.movie.player.TuSDKMutiAudioPlayer;
-import org.lasque.tusdk.movie.player.TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate;
-import org.lasque.tusdk.video.mixer.TuSDKAudioEntry;
-import org.lasque.tusdk.video.mixer.TuSDKMP4MovieMixer;
-import org.lasque.tusdk.video.mixer.TuSDKMP4MovieMixer.ErrorCode;
-import org.lasque.tusdk.video.mixer.TuSDKMP4MovieMixer.OnMP4MovieMixerDelegate;
-import org.lasque.tusdk.video.mixer.TuSDKMP4MovieMixer.State;
-import org.lasque.tusdk.video.mixer.TuSDKMediaDataSource;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
+import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer;
+import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioEntry;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.ErrorCode;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.OnMP4MovieMixerDelegate;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.State;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.CompoundConfigView;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams;
@@ -357,7 +357,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	{
 		if (mVoiceConfigView == null)
 		{
-			mVoiceConfigView = (CompoundConfigView) findViewById(R.id.lsq_voice_config_view);
+			mVoiceConfigView = (CompoundConfigView) findViewById(R.id.lsq_voice_volume_config_view);
 		}
 
 		return mVoiceConfigView;

@@ -75,7 +75,62 @@
 	    android:layout_marginRight="24dp"
 	   android:layout_marginBottom="38dp"
         android:layout_alignParentBottom="true">
-		
+
+	   <LinearLayout
+		   android:id="@+id/lsq_movie_speed_bar"
+		   android:layout_width="match_parent"
+		   android:layout_height="44dp"
+		   android:background="#b3ffffff"
+		   android:layout_marginBottom="@dimen/lsq__space_30"
+		   android:layout_above="@+id/lsq_buttonwrap">
+		   <Button
+			   android:layout_width="wrap_content"
+			   android:layout_height="match_parent"
+			   android:layout_weight="1"
+			   android:textAlignment="center"
+			   android:textColor="#f4a11a"
+			   android:textSize="15sp"
+			   android:tag="4"
+			   android:background="@android:color/transparent"
+			   android:text="@string/lsq_camera_speed_rate_slow2"/>
+		   <Button
+			   android:layout_width="wrap_content"
+			   android:layout_height="match_parent"
+			   android:layout_weight="1"
+			   android:textColor="#f4a11a"
+			   android:textSize="15sp"
+			   android:background="@android:color/transparent"
+			   android:tag="3"
+			   android:text="@string/lsq_camera_speed_rate_slow"/>
+		   <Button
+			   android:layout_width="wrap_content"
+			   android:layout_height="match_parent"
+			   android:layout_weight="1"
+			   android:textColor="@color/lsq_color_white"
+			   android:textSize="15sp"
+			   android:background="#b3f4a11a"
+			   android:tag="0"
+			   android:text="@string/lsq_camera_speed_rate_normal"/>
+		   <Button
+			   android:layout_width="wrap_content"
+			   android:layout_height="match_parent"
+			   android:layout_weight="1"
+			   android:textColor="#f4a11a"
+			   android:textSize="15sp"
+			   android:background="@android:color/transparent"
+			   android:tag="1"
+			   android:text="@string/lsq_camera_speed_rate_fast"/>
+		   <Button
+			   android:layout_width="wrap_content"
+			   android:layout_height="match_parent"
+			   android:layout_weight="1"
+			   android:textColor="#f4a11a"
+			   android:textSize="15sp"
+			   android:tag="2"
+			   android:background="@android:color/transparent"
+			   android:text="@string/lsq_camera_speed_rate_fast2"/>
+	   </LinearLayout>
+
 		<RelativeLayout
 			android:id="@+id/lsq_buttonwrap"
 			android:layout_width="match_parent"
@@ -89,7 +144,7 @@
 				android:drawableTop="@drawable/lsq_sticker_full" />
 
 			<org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
-				android:id="@+id/lsq_filterWrap"
+				android:id="@+id/lsq_tab_filter_btn"
 				style="@style/lsq_camera_OptionButton_full_screen"
 				android:layout_marginLeft="20dp"
 				android:layout_toRightOf="@+id/lsq_stickerWrap"

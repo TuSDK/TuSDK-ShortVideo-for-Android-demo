@@ -622,6 +622,17 @@ public class MovieRangeSelectionBar extends View
         
         invalidate();
     }
+
+    public int getLeftCursorPercent()
+    {
+        return mLeftPercent;
+    }
+
+    public int getRightCursorPercent()
+    {
+        return mRightPercent;
+    }
+
     /**
      * 
      * 设置MovieRangeSelectionBar的使用情况

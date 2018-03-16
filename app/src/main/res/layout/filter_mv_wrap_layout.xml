@@ -8,6 +8,7 @@
       <!-- MV列表 -->          
       <org.lasque.tusdkvideodemo.views.StickerAudioEffectListView
         android:id="@+id/lsq_mv_list_view"
-        style="@style/lsq_mv_list_view"/>
+        style="@style/lsq_mv_list_view"
+          />
 
 </RelativeLayout>

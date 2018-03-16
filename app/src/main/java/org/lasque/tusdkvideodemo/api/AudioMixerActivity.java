@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.decoder.TuSDKAudioInfo;
@@ -21,13 +22,11 @@ import org.lasque.tusdk.core.encoder.audio.TuSDKAACAudioFileEncoder;
 import org.lasque.tusdk.core.encoder.audio.TuSDKAudioEncoderSetting;
 import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
-import org.lasque.tusdk.movie.player.TuSDKMutiAudioPlayer;
-import org.lasque.tusdk.movie.player.TuSDKMutiAudioPlayer.State;
-import org.lasque.tusdk.movie.player.TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate;
-import org.lasque.tusdk.video.mixer.TuSDKAudioEntry;
-import org.lasque.tusdk.video.mixer.TuSDKAudioMixer;
-import org.lasque.tusdk.video.mixer.TuSDKAudioMixer.OnAudioMixerDelegate;
-import org.lasque.tusdk.video.mixer.TuSDKAverageAudioMixer;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioEntry;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioMixer;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioMixer.OnAudioMixerDelegate;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAverageAudioMixer;
+import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.CompoundConfigView;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams;
@@ -105,7 +104,7 @@ public class AudioMixerActivity extends Activity
 	{
 		if (mVoiceConfigView == null)
 		{
-			mVoiceConfigView = (CompoundConfigView) findViewById(R.id.lsq_voice_config_view);
+			mVoiceConfigView = (CompoundConfigView) findViewById(R.id.lsq_voice_volume_config_view);
 		}
 
 		return mVoiceConfigView;
@@ -314,15 +313,15 @@ public class AudioMixerActivity extends Activity
 	/**
 	 * 多音轨混合播放器Delegate
 	 */
-	private TuSDKMutiAudioPlayerDelegate mMutiAudioPlayerDelegate = new TuSDKMutiAudioPlayerDelegate() 
+	private TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate mMutiAudioPlayerDelegate = new TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate()
 	{
 		/**
 		 * 播放器状态改变事件
 		 */
 		@Override
-		public void onStateChanged(State state) {
+		public void onStateChanged(TuSDKMutiAudioPlayer.State state) {
 			
-			if (state == State.PrePared)
+			if (state == TuSDKMutiAudioPlayer.State.PrePared)
 				startMutiAudioPlayer();
 		}
 	};

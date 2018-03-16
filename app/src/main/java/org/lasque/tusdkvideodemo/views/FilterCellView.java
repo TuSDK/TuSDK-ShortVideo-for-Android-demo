@@ -9,26 +9,26 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.seles.tusdk.FilterLocalPackage;
-import org.lasque.tusdk.core.view.TuSdkImageView;
-import org.lasque.tusdk.core.view.listview.TuSdkCellRelativeLayout;
-import org.lasque.tusdkvideodemo.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.seles.tusdk.FilterLocalPackage;
+import org.lasque.tusdk.core.view.TuSdkImageView;
+import org.lasque.tusdk.core.view.listview.TuSdkCellRelativeLayout;
+import org.lasque.tusdk.core.view.listview.TuSdkListSelectableCellViewInterface;
+import org.lasque.tusdkvideodemo.R;
+
 /**
  * @author Yanlin
  *
  */
-public class FilterCellView extends TuSdkCellRelativeLayout<String>
+public class FilterCellView extends TuSdkCellRelativeLayout<String> implements TuSdkListSelectableCellViewInterface
 {
 	/** 缩略图 */
 	private TuSdkImageView mThumbView;
@@ -60,26 +60,42 @@ public class FilterCellView extends TuSdkCellRelativeLayout<String>
 	@Override
 	protected void bindModel() 
 	{
+		bindModelTypeOne();
+
+		bindModelTypeTwo();
+	}
+
+	/**
+	 * 绑定第一种类型的数据
+	 */
+	protected void bindModelTypeOne()
+	{
 		String filterCode = this.getModel();
-		
+
 		if (filterCode == null) return;
-		
+
 		filterCode = filterCode.toLowerCase();
-		
-		String filterImageName = "lsq_filter_thumb_" + filterCode;
-		
+
+		String filterImageName = getThumbPrefix() + filterCode;
+
 		Bitmap filterImage = TuSdkContext.getRawBitmap(filterImageName);
-		
+
 		if (this.getImageView() != null && filterImage != null)
 		{
 			getImageView().setImageBitmap(filterImage);
 		}
-		
+
 		if (this.getTitleView() != null)
 		{
-			getTitleView().setText(TuSdkContext.getString("lsq_filter_" + filterCode));
+			getTitleView().setText(TuSdkContext.getString(getTextPrefix()+ filterCode));
 		}
-		
+	}
+
+	/**
+	 * 绑定第二种类型的数据
+	 */
+	protected void bindModelTypeTwo()
+	{
 		RelativeLayout layout =  this.findViewById(R.id.lsq_none_layout);
 		ImageView imageView = this.findViewById(R.id.lsq_item_none);
 		if (layout != null)
@@ -88,7 +104,48 @@ public class FilterCellView extends TuSdkCellRelativeLayout<String>
 			imageView.setVisibility(((Integer)getTag() == 0)?View.VISIBLE:View.GONE);
 		}
 	}
-	
+
+	/**
+	 * 缩略图前缀
+	 *
+	 * @return
+	 */
+	protected String getThumbPrefix()
+	{
+		return "lsq_filter_thumb_";
+	}
+
+	/**
+	 * Item名称前缀
+	 *
+	 * @return
+	 */
+	protected String getTextPrefix()
+	{
+		return "lsq_filter_";
+	}
+
+	@Override
+	public void onCellSelected(int position)
+	{
+		View filterBorderView = getBorderView();
+		filterBorderView.setVisibility(View.VISIBLE);
+
+		TextView titleView = getTitleView();
+		titleView.setBackground(TuSdkContext.getDrawable("tusdk_view_filter_selected_text_roundcorner"));
+	}
+
+	@Override
+	public void onCellDeselected()
+	{
+		View filterBorderView = getBorderView();
+		filterBorderView.setVisibility(View.GONE);
+
+		setFlag(-1);
+		getTitleView().setBackground(TuSdkContext.getDrawable("tusdk_view_filter_unselected_text_roundcorner"));
+		getImageView().invalidate();
+	}
+
 	public TuSdkImageView getImageView()
 	{
 		if (mThumbView == null)

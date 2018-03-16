@@ -35,27 +35,28 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.lasque.tusdk.api.movie.postproc.muxer.TuSDKMovieClipper;
+import org.lasque.tusdk.api.movie.postproc.muxer.TuSDKMovieClipper.TuSDKMovieClipperListener;
+import org.lasque.tusdk.api.movie.postproc.muxer.TuSDKMovieClipper.TuSDKMovieClipperOption;
+import org.lasque.tusdk.api.movie.postproc.muxer.TuSDKMovieClipper.TuSDKMovieSegment;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.RectHelper;
 import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
-import org.lasque.tusdk.movie.muxer.TuSDKMovieClipper;
-import org.lasque.tusdk.movie.muxer.TuSDKMovieClipper.TuSDKMovieClipperListener;
-import org.lasque.tusdk.movie.muxer.TuSDKMovieClipper.TuSDKMovieClipperOption;
-import org.lasque.tusdk.movie.muxer.TuSDKMovieClipper.TuSDKMovieSegment;
 import org.lasque.tusdk.video.editor.TuSDKTimeRange;
-import org.lasque.tusdk.video.editor.TuSDKVideoImageExtractor;
-import org.lasque.tusdk.video.editor.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
-import org.lasque.tusdk.video.mixer.TuSDKMediaDataSource;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar;
 import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.OnCursorChangeListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -467,10 +468,12 @@ public class MovieCutActivity extends Activity
 	{
 		if (segmentList == null ) return null;
 
-		for (TuSDKMovieSegment segment : segmentList)
+		Iterator<TuSDKMovieSegment> iterator = segmentList.iterator();
+		while (iterator.hasNext())
 		{
-			if (!isValid(segment))
-				segmentList.remove(segment);
+			TuSDKMovieSegment nextSegment = iterator.next();
+			if (!isValid(nextSegment))
+				iterator.remove();
 		}
 
 		return segmentList;

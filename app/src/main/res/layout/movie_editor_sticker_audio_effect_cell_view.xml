@@ -37,27 +37,25 @@
 			/>
 </RelativeLayout>
 
+	<!--  MV 无效果布局 -->
+	<org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
+			android:id="@+id/lsq_mv_none_btn"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:drawablePadding="5dp"
+			android:layout_centerInParent="true"
+			android:gravity="center"
+			android:textSize="12sp"
+			android:drawableTop="@drawable/lsq_style_default_btn_sticker_off"
+			android:text="@string/lsq_mv_none"
+			android:textColor="@color/lsq_filter_title_color" />
 
-<!--  MV 无效果布局 -->
-<org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
-		android:id="@+id/lsq_mv_none_btn"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:drawablePadding="5dp"
-		android:layout_centerInParent="true"
-		android:gravity="center"
-		android:textSize="12sp"
-		android:drawableTop="@drawable/lsq_style_default_btn_sticker_off"
-		android:text="@string/lsq_mv_none"
-		android:textColor="@color/lsq_filter_title_color" />
+	<!-- MV 边框 -->
+	<RelativeLayout
+		  android:id="@+id/lsq_item_border"
+		  android:layout_width="match_parent"
+		  android:layout_height="match_parent"
+		  android:background="@drawable/tusdk_view_filter_selected_border"
+		  android:visibility="gone" />
 
-   
-<!-- MV 边框 -->
-<RelativeLayout
-	  android:id="@+id/lsq_item_border"
-	  android:layout_width="match_parent"
-	  android:layout_height="match_parent"
-	  android:background="@drawable/tusdk_view_filter_selected_border"
-	  android:visibility="gone"
-   />
 </org.lasque.tusdkvideodemo.views.StickerAudioEffectCellView>

@@ -12,7 +12,6 @@ package org.lasque.tusdkvideodemo;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -101,30 +100,6 @@ public class SimpleCameraActivity extends Activity
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
-    
-	/**
-	 * 根据视频路径获取视频时长
-	 * @param videoPath
-	 * @return
-	 */
-	public float getVideoDuration(String videoPath)
-	{
-		MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-		try
-        {
-		    mediaMetadataRetriever.setDataSource(videoPath);
-        }
-        catch (IllegalArgumentException e)
-        {
-            return 0.0f;
-        }
-
-		// 播放时长单位为毫秒
-		String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-		
-		// 注意：视频时长需要转成float类型，转成int类型时间会少掉
-		return duration == null ? 0 : Float.parseFloat(duration) / 1000;
-	}
 
 	/**
 	 * 根据 className 打开对应 Activity

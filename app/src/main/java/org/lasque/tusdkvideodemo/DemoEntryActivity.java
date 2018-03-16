@@ -30,7 +30,7 @@ import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.impl.activity.TuFragmentActivity;
 import org.lasque.tusdk.impl.view.widget.TuProgressHub;
 import org.lasque.tusdk.modules.components.ComponentActType;
-import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
+import org.lasque.tusdkvideodemo.custom.MovieEditorFullScreenActivity;
 import org.lasque.tusdkvideodemo.custom.MovieRecordFullScreenActivity;
 import org.lasque.tusdkvideodemo.utils.AlbumUtils;
 import org.lasque.tusdkvideodemo.utils.PermissionUtils;
@@ -44,7 +44,7 @@ public class DemoEntryActivity extends TuFragmentActivity
 	public static final int layoutId = R.layout.demo_entry_activity;
 
 	/** 编辑类ClassName */
-	public static final String EDITOR_CLASS = MovieEditorActivity.class.getName();
+	public static final String EDITOR_CLASS = MovieEditorFullScreenActivity.class.getName();
 
 	public DemoEntryActivity()
 	{
