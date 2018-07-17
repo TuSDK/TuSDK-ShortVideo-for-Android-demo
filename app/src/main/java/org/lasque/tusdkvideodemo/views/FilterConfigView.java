@@ -9,23 +9,22 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.LinearLayout;
+import java.util.ArrayList;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterParameterInterface;
 import org.lasque.tusdk.core.seles.sources.SelesOutInput;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper.OnSafeClickListener;
 import org.lasque.tusdkvideodemo.views.FilterConfigSeekbar.FilterConfigSeekbarDelegate;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.LinearLayout;
 
 /**
  * 滤镜配置视图
@@ -129,7 +128,7 @@ public class FilterConfigView extends TuSdkRelativeLayout
         {
             return;
         }
-        TLog.i("");
+
         this.showViewIn(true);
         loadView();
         this.resetConfigView(this.getConfigWrap(), (FilterParameterInterface) filter);

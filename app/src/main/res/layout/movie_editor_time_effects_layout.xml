@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.lasque.tusdkvideodemo.views.TimeEffectsLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/lsq_time_effects_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/lsq_time_effects_sequence_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="正常模式" />
+
+
+        <Button
+            android:id="@+id/lsq_time_effects_reverse_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="时光倒流"/>
+        <Button
+            android:id="@+id/lsq_time_effects_repeat_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="反复" />
+
+
+        <Button
+            android:id="@+id/lsq_time_effects_slow_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="慢动作"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/lsq_time_effects_ll">
+        <EditText
+            android:id="@+id/lsq_time_effects_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="开始时间(微秒)"
+            android:text="2000"/>
+        <EditText
+            android:id="@+id/lsq_time_effects_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="持续时间(微秒)"
+            android:text="500"/>
+        <EditText
+            android:id="@+id/lsq_time_effects_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="次数"
+            android:text="2"/>
+    </LinearLayout>
+
+</org.lasque.tusdkvideodemo.views.TimeEffectsLayout>

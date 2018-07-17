@@ -9,13 +9,14 @@
  */
 package org.lasque.tusdkvideodemo.album;
 
+import java.io.Serializable;
+
 /**
  * 视频参数信息
  *
  */
 
-public class MovieInfo
-{
+public class MovieInfo implements Serializable {
     private String mPath;
     private int mDuration;
 

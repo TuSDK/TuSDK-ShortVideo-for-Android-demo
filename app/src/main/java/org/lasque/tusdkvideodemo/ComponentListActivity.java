@@ -33,8 +33,13 @@ import org.lasque.tusdk.core.view.widget.TuSdkNavigatorBar.NavigatorBarButtonTyp
 import org.lasque.tusdk.core.view.widget.TuSdkNavigatorBar.TuSdkNavigatorBarDelegate;
 import org.lasque.tusdk.impl.view.widget.TuNavigatorBar;
 import org.lasque.tusdk.video.TuSDKVideo;
+import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.utils.AlbumUtils;
 import org.lasque.tusdkvideodemo.utils.PermissionUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 功能列表界面
@@ -160,9 +165,9 @@ public class ComponentListActivity extends ExpandableListActivity implements TuS
         mClassName = sample.className;
         
        // 需要先打开相册选取
-        if(sample.needOpenAlbum)
+        if(sample.OpenAlbumForPicNum >= 1)
         {
-			AlbumUtils.openVideoAlbum(mClassName);
+			AlbumUtils.openVideoAlbum(mClassName,sample.OpenAlbumForPicNum);
             return super.onChildClick(parent, view, group, child, id);
         }
         
@@ -270,7 +275,7 @@ public class ComponentListActivity extends ExpandableListActivity implements TuS
 
         try {
             intent = new Intent(ComponentListActivity.this, Class.forName(className));
-            intent.putExtra("videoPath", path);
+			intent.putExtra("videoPath", path);
         } catch (ClassNotFoundException e) {
         	e.printStackTrace();
         }

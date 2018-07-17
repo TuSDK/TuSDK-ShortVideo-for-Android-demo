@@ -15,6 +15,7 @@ import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
+import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
 
 /**
@@ -22,8 +23,12 @@ import org.lasque.tusdkvideodemo.R;
  */
 public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnClickListener
 {
+
+    private TuSDKMovieEditor mMovieEditor;
+
+
     // 魔法预览界面
-    private MagicEffectsTimelineView mTimeLineView;
+    private EffectsTimelineView mTimeLineView;
 
     // 魔法预览界面返回按钮
     private ImageView mMagicPreviewBack;
@@ -79,6 +84,14 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
         super(context, attrs, defStyle);
     }
 
+    /**
+     * 设置MovieEditor
+     * @param movieEditor
+     */
+    public void setMovieEditor(TuSDKMovieEditor movieEditor) {
+        this.mMovieEditor = movieEditor;
+    }
+
     @Override
     public void loadView()
     {
@@ -86,7 +99,7 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
 
         // 动画时间轴视图
         mTimeLineView = getViewById(R.id.lsq_magic_preview_timelineView);
-        mTimeLineView.setDelegate(mEffectsTimelineViewDelegate);
+        mTimeLineView.setDelegate(mMagicEffectsTimelineViewDelegate);
         mMagicPreviewBack = (ImageView) findViewById(R.id.lsq_magic_back);
         mMagicPreviewBack.setOnClickListener(this);
         mMagicSizeBtn = (ImageView) findViewById(R.id.lsq_magic_edit_size_btn);
@@ -119,16 +132,21 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
         this.mDelegate = delegate;
     }
 
-    private EffectsTimelineView.EffectsTimelineViewDelegate mEffectsTimelineViewDelegate = new EffectsTimelineView.EffectsTimelineViewDelegate()
+
+
+    /** 魔法特效时间轴变化 */
+    protected EffectsTimelineView.EffectsTimelineViewDelegate mMagicEffectsTimelineViewDelegate = new EffectsTimelineView.EffectsTimelineViewDelegate()
     {
         @Override
         public void onProgressCursorWillChaned()
         {
+            mMovieEditor.pausePreview();
         }
 
         @Override
-        public void onProgressChaned(float progress)
+        public void onProgressChaned(final float progress)
         {
+            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoDurationTimeUs() * progress));
         }
 
         @Override
@@ -160,7 +178,7 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
      *
      * @return
      */
-    public MagicEffectsTimelineView getTimelineView()
+    public EffectsTimelineView getTimelineView()
     {
         return mTimeLineView;
     }
@@ -228,7 +246,7 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
      *
      * @param delegate
      */
-    public void setTimelineDelegate(SceneEffectsTimelineView.EffectsTimelineViewDelegate delegate)
+    public void setTimelineDelegate(EffectsTimelineView.EffectsTimelineViewDelegate delegate)
     {
         mTimeLineView.setDelegate(delegate);
     }

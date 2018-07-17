@@ -22,19 +22,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.decoder.TuSDKMoviePacketReader;
+import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
+import org.lasque.tusdk.video.editor.TuSDKMediaParticleEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdk.video.editor.TuSDKTimeRange;
 import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.component.MediaEffectsManager;
 import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
 import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
+import org.lasque.tusdkvideodemo.views.EffectsTimelineView;
 import org.lasque.tusdkvideodemo.views.MagicEditorLayout;
 import org.lasque.tusdkvideodemo.views.MagicEffectCellView;
 import org.lasque.tusdkvideodemo.views.MagicEffectLayout;
-import org.lasque.tusdkvideodemo.views.MagicEffectsTimelineView;
 import org.lasque.tusdkvideodemo.views.MovieEditorTabBar;
 
 import static org.lasque.tusdkvideodemo.views.MovieEditorTabBar.TabType.ParticleEffectTabType;
@@ -57,7 +59,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	/** 当前正在编辑的魔法特效code */
 	private String mCurrentMagicCode;
 	/** 当前正在编辑的魔法特效数据 */
-	private MagicEffectsTimelineView.MagicEffectModel mCurrentMagicEffectModel;
+	private TuSDKMediaParticleEffectData mCurrentMagicEffectModel;
 
 	// 编辑页主要UI视图
 	private RelativeLayout mEditorMainLayout;
@@ -110,7 +112,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	{
 		initParticleEffectEditLayout();
 
-		initParticlePreviewLayout();
+		initMagicEffectEditorLayout();
 
 		// 底部栏默认选中魔法特效
 		getTabBar().updateButtonStatus(getTabBar().getMagicTab(), true);
@@ -118,7 +120,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	}
 
 	/**
-	 *
+	 * 魔法特效编辑
 	 */
 	private View.OnTouchListener mMagicEditorLayoutTouchListener = new View.OnTouchListener() {
 		@Override
@@ -136,14 +138,14 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 						@Override
 						public void run() {
 
-							startPreView();
+							startEffectsPreview();
 
 							// 编辑魔法特效时禁用循环播放功能
 							mMovieEditor.setLooping(false);
 
 							// 构建魔法特效
-							mCurrentMagicEffectModel = new MagicEffectsTimelineView.MagicEffectModel(mCurrentMagicCode);
-							mCurrentMagicEffectModel.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(mMovieEditor.getCurrentSampleTimeUs(),0l));
+							mCurrentMagicEffectModel = new TuSDKMediaParticleEffectData(mCurrentMagicCode);
+							mCurrentMagicEffectModel.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(mMovieEditor.getCurrentSampleTimeUs(),Long.MAX_VALUE));
 
 							mCurrentMagicEffectModel.setSize(mMagicEffectEditorLayout.getSize());
 							mCurrentMagicEffectModel.setColor(mMagicEffectEditorLayout.getColor());
@@ -152,11 +154,19 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 							// 预览魔法特效
 							mMovieEditor.applyMediaEffect(mCurrentMagicEffectModel);
 
+							//构建TimeLineViewModel
+							EffectsTimelineView.EffectsTimelineSegmentViewModel magicEffectSegment = new EffectsTimelineView.EffectsTimelineSegmentViewModel("lsq_margic_effect_color_"+mCurrentMagicCode);
+							magicEffectSegment.setMediaEffectData(mCurrentMagicEffectModel);
+							float startProgress = (float)mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
+							float endProgress = (float) mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
+							magicEffectSegment.makeProgressRange(startProgress,endProgress);
+
+
 							mMagicEffectEditorLayout.getTimelineView().setEditable(true);
-							mMagicEffectEditorLayout.getTimelineView().addEffectMode(mCurrentMagicEffectModel);
+							mMagicEffectEditorLayout.getTimelineView().addEffectMode(magicEffectSegment);
 
 							mMagicEffectLayout.getTimelineView().setEditable(true);
-							mMagicEffectLayout.getTimelineView().addEffectMode(mCurrentMagicEffectModel);
+							mMagicEffectLayout.getTimelineView().addEffectMode(magicEffectSegment);
 
 
 
@@ -190,7 +200,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 					if (mCurrentMagicEffectModel == null) return true;
 
 					// 更新魔法特效触发位置（预览）
-					mMovieEditor.updateParticleEmitPosition(pointF);
+					mMovieEditor.updateParticleEmitPosition(mCurrentMagicEffectModel,pointF);
 
 					// 记录魔法特效触发位置
 					mCurrentMagicEffectModel.putPoint(mMovieEditor.getCurrentSampleTimeUs(),pointF);
@@ -202,6 +212,27 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		}
 	};
 
+
+	/**
+	 * 获取到视频信息
+	 *
+	 * @param videoInfo
+	 */
+	@Override
+	protected void onVideoInfoReady(TuSDKVideoInfo videoInfo)
+	{
+		super.onVideoInfoReady(videoInfo);
+
+		mMagicEffectEditorLayout.getTimelineView().setDurationTimueUs(videoInfo.durationTimeUs);
+		getMagicEffectLayout().getTimelineView().setDurationTimueUs(videoInfo.durationTimeUs);
+	}
+
+	/**
+	 *  TuSDKMovieEditor 状态改变通知
+	 *
+	 * @param status TuSDKMovieEditorStatus
+	 *
+	 */
 	@Override
 	public void onMovieEditorStatusChanged(TuSDKMovieEditor.TuSDKMovieEditorStatus status)
 	{
@@ -216,21 +247,29 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	/**
 	 * 视频播放进度改变通知
 	 *
-	 * @param durationTime
+	 * @param duratioimTimeUs
 	 * 			持续时间
 	 * @param progress
 	 *  		当前进度
 	 */
 	@Override
-	public void onMovieEditProgressChanged(float durationTime, float progress)
+	public void onMovieEditProgressChanged(long duratioimTimeUs, float progress)
 	{
-		super.onMovieEditProgressChanged(durationTime, progress);
+		super.onMovieEditProgressChanged(duratioimTimeUs, progress);
 
 		mMagicEffectEditorLayout.getTimelineView().setProgress(progress);
-		mMagicEffectEditorLayout.getTimelineView().updateLastEffectModelEndTime(durationTime);
+
+		if (mMovieEditor.getPlayMode() == TuSDKMoviePacketReader.ReadMode.SequenceMode)
+			mMagicEffectEditorLayout.getTimelineView().updateLastEffectModelEndTime(duratioimTimeUs);
+		else
+			mMagicEffectEditorLayout.getTimelineView().updateLastEffectModelStartTime(duratioimTimeUs);
 
 		mMagicEffectLayout.getTimelineView().setProgress(progress);
-		mMagicEffectLayout.getTimelineView().updateLastEffectModelEndTime(durationTime);
+
+		if (mMovieEditor.getPlayMode() == TuSDKMoviePacketReader.ReadMode.SequenceMode)
+			mMagicEffectLayout.getTimelineView().updateLastEffectModelEndTime(duratioimTimeUs);
+		else
+			mMagicEffectLayout.getTimelineView().updateLastEffectModelStartTime(duratioimTimeUs);
 
 	}
 
@@ -314,13 +353,13 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	/**
 	 * 初始化魔法预览界面
 	 */
-	private void initParticlePreviewLayout()
+	private void initMagicEffectEditorLayout()
 	{
 		mMagicEffectEditorLayout = (MagicEditorLayout) findViewById(R.id.lsq_magic_preview_layout);
+		mMagicEffectEditorLayout.setMovieEditor(mMovieEditor);
 		mMagicEffectEditorLayout.loadView();
 		mMagicEffectEditorLayout.setDelegate(mMagicPreviewLayoutDelegate);
 		mMagicEffectEditorLayout.setOnTouchListener(mMagicEditorLayoutTouchListener);
-		mMagicEffectEditorLayout.getTimelineView().setDuration(mCutTimeRange.duration());
 
 		mEditorMainLayout = (RelativeLayout) findViewById(R.id.lsq_editor_main_layout);
 	}
@@ -343,12 +382,12 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		public void onSizeSeekBarProgressChanged(ConfigViewSeekBar seekbar)
 		{
 
-
+			TLog.e("onSizeSeekBarProgressChanged:%s",seekbar.getSeekbar().getProgress());
 		}
 
 		@Override
 		public void onColorSeekBarProgressChanged(int color) {
-
+			TLog.e("onColorSeekBarProgressChanged:%s",color);
 		}
 
 		@Override
@@ -377,7 +416,6 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	private void initParticleEffectEditLayout()
 	{
 		getMagicEffectLayout().loadView();
-		getMagicEffectLayout().getTimelineView().setDuration(mCutTimeRange.duration());
 		getMagicEffectLayout().setDelegate(mMagicTableItemClickDelegate);
 	}
 
@@ -407,7 +445,8 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	 */
 	private void removeLastParticleEffect()
 	{
-		mMovieEditor.removeMediaEffect(mMagicEffectEditorLayout.getTimelineView().lastEffectMode());
+		if(mMagicEffectEditorLayout.getTimelineView().lastEffectMode() != null)
+			mMovieEditor.removeMediaEffect(mMagicEffectEditorLayout.getTimelineView().lastEffectMode().getCurrentMediaEffectData());
 		mMagicEffectLayout.getTimelineView().removeLastEffectMode();
 		mMagicEffectEditorLayout.getTimelineView().removeLastEffectMode();
 	}
@@ -422,7 +461,8 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		mMagicEffectEditorLayout.setVisibility(isShown ? View.VISIBLE : View.GONE);
 		mEditorMainLayout.setVisibility(isShown ? View.GONE : View.VISIBLE);
 		mTopBarLayout.setVisibility(isShown ? View.GONE : View.VISIBLE);
-		mActionButton.setOnClickListener(isShown ? null : this);
+//		mActionButton.setOnClickListener(isShown ? null : this);
+		setActionButtonStatus(isShown == true ? false : (mMovieEditor.isPreviewing() == true ? false : true));
 	}
 
 	/**
@@ -435,6 +475,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		if (mMagicEffectLayout == null)
 		{
 			mMagicEffectLayout = findViewById(R.id.lsq_editor_magic_layout);
+			mMagicEffectLayout.setMovieEditor(mMovieEditor);
 		}
 
 		return mMagicEffectLayout;
@@ -466,6 +507,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		mScenceEffectLayout.setVisibility(View.GONE);
 		mFilterLayout.setVisibility(View.GONE);
 		mDubbingLayout.setVisibility(View.GONE);
+		mTextEffectsLayout.setVisibility(View.GONE);
 		getVoiceVolumeConfigView().setVisibility(View.INVISIBLE);
 		getMVLayout().setVisibility(View.GONE);
 		getFilterConfigView().setVisibility(View.INVISIBLE);
@@ -473,8 +515,6 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 		getMagicEffectLayout().setVisibility(View.VISIBLE);
 
 		/**  设置场景特效 */
-		MediaEffectsManager.getMediaEffectManager().setMagicEffectDataList(mMagicEffectEditorLayout.getTimelineView().getAllMediaEffectData());
-
 		applyMediaEffects();
 	}
 

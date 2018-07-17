@@ -283,4 +283,14 @@ public class MovieRecordKeepModeActivity extends SimpleCameraActivity implements
 	{
 		this.finish();
 	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+
+		// 销毁页面时记得销毁下载器
+		if (mRecordView != null)
+			mRecordView.getStickerListView().getStickerDownLoader().destroy();
+	}
 }

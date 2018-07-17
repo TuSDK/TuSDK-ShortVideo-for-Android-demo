@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.video.editor.TuSDKMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSDKTimeRange;
@@ -26,12 +28,12 @@ import java.util.List;
  * Created by sprint on 26/12/2017.
  */
 
-public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelineView.EffectModelInterface> extends FrameLayout
+public class EffectsTimelineView extends FrameLayout
 {
-    // 离顶部的间距
+    // 顶部间距
     private final int PADDING_TOP = 5;
 
-    // 离顶部的间距
+    // 底部间距
     private final int PADDING_BOTTOM = 5;
 
     // 当前是否可以编辑
@@ -42,14 +44,14 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
     /** 光标视图 */
     private CursorBar mCursorBar;
 
-    // 持续时间 单位：秒
-    protected float mDuration = 10;
+    // 持续时间
+    protected long mDurationTimeUs = 0;
 
     // 委托事件
     private EffectsTimelineViewDelegate mDelegate;
 
     // 特效分布集合
-    private ArrayList<T> mEffectModeList = new ArrayList<T>(5);
+    private ArrayList<EffectsTimelineSegmentViewModel> mEffectModeList = new ArrayList<>(5);
 
     /**
      * EffectsTimelineViewDelegate 委托对象
@@ -88,20 +90,24 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
 
             // 设置背景颜色
             mPaint.setColor(TuSdkContext.getColor("lsq_alpha_white_99"));
-            canvas.drawRect(0, PADDING_TOP, getWidth(), getHeight()-PADDING_BOTTOM , mPaint);
+            canvas.drawRect(0, PADDING_TOP, getWidth(), getHeight() - PADDING_BOTTOM , mPaint);
 
-            if (mDuration == 0) return;
+            if (mDurationTimeUs == 0) return;
 
             for (int i = 0; i< mEffectModeList.size() ; i ++)
             {
-                T magicModel = mEffectModeList.get(i);
+                EffectsTimelineSegmentViewModel segmentModel = mEffectModeList.get(i);
 
-                float left = (magicModel.getAtTimeRange().start / mDuration) * getWidth();
-                float width = (magicModel.getAtTimeRange().end / mDuration) * getWidth();
+                if (segmentModel.getProgressRange() == null) return;
 
-                mPaint.setColor(magicModel.getLabelColor());
+//                float left = ((float) magicModel.getProgressRange().startProgress() / (float) mDurationTimeUs) * getWidth();
+//                float width = ((float) magicModel.getAtTimeRange().getEndTimeUS() / (float) mDurationTimeUs) * getWidth();
+                float left = ( segmentModel.getProgressRange().startProgress * getWidth());
+                float width = ( segmentModel.getProgressRange().endProgress * getWidth());
 
-                canvas.drawRect(left, 0, width, getHeight(), mPaint);
+                mPaint.setColor(segmentModel.getLabelColor());
+
+                canvas.drawRect(left, 0, Math.abs(width), getHeight(), mPaint);
             }
 
         }
@@ -284,7 +290,7 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
         this.addView(mCoverBar);
 
         // 颜色条
-        lp =  new SceneEffectsTimelineView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        lp =  new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         lp.gravity = Gravity.CENTER_VERTICAL;
         lp.topMargin = TuSdkContext.dip2px(4);
         lp.bottomMargin = TuSdkContext.dip2px(4);
@@ -385,7 +391,7 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
      * @return MagicModel
      *
      */
-    public T lastEffectMode()
+    public EffectsTimelineSegmentViewModel lastEffectMode()
     {
         if (this.mEffectModeList.size() == 0) return null;
 
@@ -397,7 +403,7 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
      *
      * @return
      */
-    public List<T> getAllMediaEffectData()
+    public List<EffectsTimelineSegmentViewModel> getAllMediaEffectData()
     {
         return mEffectModeList;
     }
@@ -407,7 +413,7 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
      *
      * @param effectModel
      */
-    public void addEffectMode(T effectModel)
+    public void addEffectMode(EffectsTimelineSegmentViewModel effectModel)
     {
         if (!mEditable) return;
 
@@ -435,39 +441,129 @@ public class EffectsTimelineView<T extends TuSDKMediaEffectData & EffectsTimelin
     }
 
     /**
-     * 更新最后一个场景特效结束时间
+     * 更新最后一个场景特效开始时间
      *
-     * @param endTime
+     * @param startTimeUs
      */
-    public void updateLastEffectModelEndTime(float endTime)
+    public void updateLastEffectModelStartTime(final long startTimeUs)
     {
         if (!mEditable) return;
 
-        T sceneEffectModel = lastEffectMode();
+        EffectsTimelineSegmentViewModel sceneEffectModel = lastEffectMode();
 
-        if (sceneEffectModel == null || endTime < sceneEffectModel.getAtTimeRange().end) return;
+        if (sceneEffectModel == null) return;
 
-        sceneEffectModel.getAtTimeRange().end = endTime;
+        if (sceneEffectModel.getProgressRange() == null) {
+            EffectsTimelineSegmentViewModel.ProgressRange progressRange = new EffectsTimelineSegmentViewModel.ProgressRange();
+            progressRange.startProgress = ((float)startTimeUs/(float)mDurationTimeUs);
+            progressRange.startProgress = ((float)startTimeUs/(float)mDurationTimeUs);
+            sceneEffectModel.setProgressRange(progressRange);
+        }
 
-        this.postColorBarInvalidate();
+        sceneEffectModel.getProgressRange().setStartProgress(((float)startTimeUs/(float)mDurationTimeUs));
 
+        postColorBarInvalidate();
     }
 
     /**
-     * 设置持续时间 单位：秒
+     * 更新最后一个场景特效结束时间
      *
-     * @param duration
+     * @param endTimeUs
      */
-    public void setDuration(float duration)
+    public void updateLastEffectModelEndTime(final long endTimeUs)
     {
-        this.mDuration = duration;
+        if (!mEditable) return;
+
+        EffectsTimelineSegmentViewModel sceneEffectModel = lastEffectMode();
+
+        if (sceneEffectModel == null) return;
+
+        if (sceneEffectModel.getProgressRange() == null)
+        {
+            sceneEffectModel.setProgressRange(new EffectsTimelineSegmentViewModel.ProgressRange());
+            sceneEffectModel.getProgressRange().startProgress = ((float)endTimeUs/(float)mDurationTimeUs);
+        }
+
+        sceneEffectModel.getProgressRange().setEndProgress(((float)endTimeUs/(float)mDurationTimeUs));
+
+        postColorBarInvalidate();
+    }
+
+    /**
+     * 设置持续时间
+     *
+     * @param durationTimeUs
+     */
+    public void setDurationTimueUs(long durationTimeUs)
+    {
+        this.mDurationTimeUs = durationTimeUs;
         mColorBar.postInvalidate();
     }
 
-    public static interface EffectModelInterface
+    public interface EffectModelInterface
     {
-        public int getLabelColor();
+        int getLabelColor();
 
-        public TuSDKTimeRange getAtTimeRange();
+        TuSDKTimeRange getAtTimeRange();
+    }
+
+
+    /**
+     *
+     */
+    public static class EffectsTimelineSegmentViewModel
+    {
+        private int mColor;
+        private ProgressRange mProgressRange;
+        private TuSDKMediaEffectData mMediaEffectData;
+
+        public EffectsTimelineSegmentViewModel(String effectCode)
+        {
+            this.mColor = TuSdkContext.getColor(TuSdkContext.getColorResId(effectCode));
+        }
+
+        public int getLabelColor()
+        {
+            return mColor;
+        }
+
+        public TuSDKMediaEffectData getCurrentMediaEffectData() {
+            return mMediaEffectData;
+        }
+
+        public void setMediaEffectData(TuSDKMediaEffectData mMediaEffectData){
+            this.mMediaEffectData = mMediaEffectData;
+        }
+
+        public ProgressRange getProgressRange()
+        {
+            return mProgressRange;
+        }
+
+        public void setProgressRange(ProgressRange progressRange) {
+            this.mProgressRange = progressRange;
+        }
+
+        public void makeProgressRange(float startProgress,float endProgress){
+            if(mProgressRange == null)
+                mProgressRange = new ProgressRange();
+
+            mProgressRange.startProgress = startProgress;
+            mProgressRange.endProgress = endProgress;
+        }
+
+        public static class ProgressRange
+        {
+            private float startProgress;
+            private float endProgress;
+
+            public void setEndProgress(float endProgress) {
+                this.endProgress = endProgress;
+            }
+
+            public void setStartProgress(float startProgress) {
+                this.startProgress = startProgress;
+            }
+        }
     }
 }

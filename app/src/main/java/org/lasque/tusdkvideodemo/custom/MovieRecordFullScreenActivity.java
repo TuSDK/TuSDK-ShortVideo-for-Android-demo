@@ -11,6 +11,7 @@
 package org.lasque.tusdkvideodemo.custom;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import org.lasque.tusdk.core.TuSdk;
@@ -37,6 +38,8 @@ public class MovieRecordFullScreenActivity extends MovieRecordKeepModeActivity
 		// 设置录制界面背景为透明色
 		setRecordViewBackgroundColor(getRecordView());
 		getRecordView().setSquareSticker(false);
+		getRecordView().isShowRatioButton(true);
+		getRecordView().setRatioType(getRecordView().getRatioType());
 		
 		hideNavigationBar();
         TuSdk.messageHub().applyToViewWithNavigationBarHidden(true);

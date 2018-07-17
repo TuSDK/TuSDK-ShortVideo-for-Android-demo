@@ -24,6 +24,7 @@ import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoI
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
+import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
 import org.lasque.tusdkvideodemo.views.HVScrollView;
 import org.lasque.tusdkvideodemo.views.HVScrollView.OnScrollChangeListener;

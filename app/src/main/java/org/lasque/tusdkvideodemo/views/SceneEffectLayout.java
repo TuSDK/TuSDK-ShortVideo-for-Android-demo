@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
+import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.component.MediaEffectsManager;
 import org.lasque.tusdkvideodemo.utils.Constants;
 
 import java.util.Arrays;
@@ -15,8 +17,10 @@ import java.util.Arrays;
 
 public class SceneEffectLayout extends TuSdkRelativeLayout
 {
+    private TuSDKMovieEditor mMovieEditor;
+
     /** 场景特效时间轴视图 */
-    private SceneEffectsTimelineView mSceneEffectsTimelineView;
+    private EffectsTimelineView mSceneEffectsTimelineView;
 
     /** 场景特效列表视图 */
     private SceneEffectListView mListView;
@@ -37,6 +41,7 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
 
         // 动画时间轴视图
         mSceneEffectsTimelineView = getViewById(R.id.lsq_scence_effect_timelineView);
+        mSceneEffectsTimelineView.setDelegate(mEffectsTimelineViewDelegate);
 
         /** 场景特效列表视图 */
         mListView = getViewById(R.id.lsq_scene_effect_list_view);
@@ -54,7 +59,7 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
      *
      * @return
      */
-    public SceneEffectsTimelineView getSceneEffectsTimelineView()
+    public EffectsTimelineView getSceneEffectsTimelineView()
     {
         return mSceneEffectsTimelineView;
     }
@@ -80,12 +85,33 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
     }
 
     /**
-     * 设置场景特效时间轴动画委托
-     *
-     * @param delegate
+     * 设置MovieEditor
+     * @param movieEditor
      */
-    public void setDelegate(SceneEffectsTimelineView.EffectsTimelineViewDelegate delegate)
+    public void setMovieEditor(TuSDKMovieEditor movieEditor)
     {
-        mSceneEffectsTimelineView.setDelegate(delegate);
+        this.mMovieEditor = movieEditor;
     }
+
+    /** 场景特效时间轴变化 */
+    protected EffectsTimelineView.EffectsTimelineViewDelegate mEffectsTimelineViewDelegate = new EffectsTimelineView.EffectsTimelineViewDelegate()
+    {
+        @Override
+        public void onProgressCursorWillChaned()
+        {
+            mMovieEditor.pausePreview();
+        }
+
+        @Override
+        public void onProgressChaned(final float progress)
+        {
+            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoDurationTimeUs() * progress));
+        }
+
+        @Override
+        public void onEffectNumChanged(int effectNum)
+        {
+            mListView.updateUndoButtonState(effectNum == 0 ? false :true);
+        }
+    };
 }

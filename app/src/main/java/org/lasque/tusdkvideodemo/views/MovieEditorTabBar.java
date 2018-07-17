@@ -28,6 +28,11 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     protected TuSdkTextButton mScenceEffectTabBtn;
     // 魔法效果按钮
     private TuSdkTextButton mMagicTabBtn;
+    // 文字贴纸按钮
+    private TuSdkTextButton mTextTabBtn;
+
+    //是否启用
+    private boolean mEnable = false;
 
     private TabType mSelectedTabType = TabType.FilterTabType;
 
@@ -37,7 +42,8 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
         MVTabType,
         DubbingTabType,
         SenceEffectTabType,
-        ParticleEffectTabType
+        ParticleEffectTabType,
+        TextEffectTabType
     }
 
     public interface MovieEditorTabBarDelegate
@@ -71,10 +77,8 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     {
         super.loadView();
 
-
         mFilterTabBtn = findViewById(R.id.lsq_tab_filter_btn);
         mFilterTabBtn.setOnClickListener(this);
-
 
         mMvTabBtn = findViewById(R.id.lsq_tab_mv_btn);
         mMvTabBtn.setOnClickListener(this);
@@ -87,6 +91,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
         mMagicTabBtn =  findViewById(R.id.lsq_tab_magic_btn);
         mMagicTabBtn.setOnClickListener(this);
+
+        mTextTabBtn = findViewById(R.id.lsq_tab_text_effect_btn);
+        mTextTabBtn.setOnClickListener(this);
     }
 
     public TuSdkTextButton getMagicTab()
@@ -137,6 +144,11 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
                         : R.drawable.lsq_magic_unselected;
                 colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
                 break;
+            case R.id.lsq_tab_text_effect_btn:
+                imgId = clickable?R.drawable.lsq_editor_bottom_tab_text_selected
+                        :R.drawable.lsq_editor_bottom_tab_text;
+                colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
+                break;
         }
 
         button.setCompoundDrawables(null, TuSdkContext.getDrawable(imgId), null, null);
@@ -146,11 +158,14 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     @Override
     public void onClick(View view)
     {
+        if(!getEnable()) return;
+
         updateButtonStatus(mFilterTabBtn, mFilterTabBtn == view);
         updateButtonStatus(mMvTabBtn, mMvTabBtn == view);
         updateButtonStatus(mDubbingTabBtn, mDubbingTabBtn == view);
         updateButtonStatus(mScenceEffectTabBtn,mScenceEffectTabBtn == view);
         updateButtonStatus(mMagicTabBtn,mMagicTabBtn == view);
+        updateButtonStatus(mTextTabBtn,mTextTabBtn == view);
 
         if (mDelegate == null) return;
 
@@ -170,6 +185,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
                 break;
             case R.id.lsq_tab_magic_btn:
                 mSelectedTabType = TabType.ParticleEffectTabType;
+                break;
+            case R.id.lsq_tab_text_effect_btn:
+                mSelectedTabType = TabType.TextEffectTabType;
                 break;
         }
 
@@ -198,5 +216,17 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
         dubbingDrawable.setBounds(0, 0, TuSdkContext.dip2px(28), TuSdkContext.dip2px(28));
         button.setCompoundDrawables(null, dubbingDrawable, null, null);
         button.setTextColor(TuSdkContext.getColor(colorId));
+    }
+
+    /**
+     * 是否可用
+     * @param mEnable true 可用
+     */
+    public void setEnable(boolean mEnable) {
+        this.mEnable = mEnable;
+    }
+
+    public boolean getEnable(){
+        return mEnable;
     }
 }

@@ -24,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 
 import java.util.ArrayList;
@@ -58,8 +59,8 @@ public class MovieRangeSelectionBar extends View
     private final int CLICK_LEFT_CURSOR = 1;
     private final int CLICK_RIGHT_CURSOR = 2;
     private final int CLICK_PLAY_CURSOR = 3;
-    
-	/** 定义滑动方向  */
+
+    /** 定义滑动方向  */
     private enum DIRECTION 
     {
         LEFT , RIGHT;
@@ -83,6 +84,8 @@ public class MovieRangeSelectionBar extends View
     private int mPlayPercent = 50;
     /** View宽度 */
     private int mRangeSelectionBarWidthMeasure;
+    /** View高度 */
+    private int mRangeSelectionBarHeightMeasure;
 	/** MovieRangeSelectionBar WIDTH */
     private int mRangeSelectionBarWidth;
 	/** MovieRangeSelectionBar HEIGHT */
@@ -93,6 +96,8 @@ public class MovieRangeSelectionBar extends View
 	private String mSeekBarSelectColorBg = "#f4a11a";
 	/** 当前播放点位置的填充色 */
 	private String mPlayCursorColorBg = "#f4a11a";
+    /** 蒙层的颜色**/
+    private String mShadowColor = "#231815";
     /** 左光标移动指针ID */
     private int mLeftPointerID = -1;
     /** 右光标移动指针ID */
@@ -207,12 +212,24 @@ public class MovieRangeSelectionBar extends View
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Style.FILL);
         
-        int shadowColor=TuSdkContext.getColor("shadow_color");
         mShadowPaint.setAntiAlias(true);
-        mShadowPaint.setColor(shadowColor);
+        mShadowPaint.setColor(Color.parseColor(getShadowColor()));
         mShadowPaint.setAlpha(153);
     }
-    
+
+    public void setShadowColor(String colorId){
+        mShadowColor = colorId;
+        if(mShadowPaint !=null)
+        {
+            mShadowPaint.setColor(Color.parseColor(mShadowColor));
+            postInvalidate();
+        }
+    }
+
+    public String getShadowColor(){
+        return mShadowColor;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
@@ -433,7 +450,9 @@ public class MovieRangeSelectionBar extends View
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
         mRangeSelectionBarWidthMeasure = MeasureSpec.getSize(widthMeasureSpec);
-        
+        mRangeSelectionBarHeightMeasure = MeasureSpec.getSize(heightMeasureSpec);
+
+
         mRangeSelectionBarWidth = ((int) (mSelectionBarRect.right - mSelectionBarRect.left));
         mRangeSelectionBarHeight = ((int) (mSelectionBarRect.top - mSelectionBarRect.bottom)); 
         if (mListener != null)
@@ -441,9 +460,9 @@ public class MovieRangeSelectionBar extends View
         	mListener.onSeeekBarChanged(mRangeSelectionBarWidth, mRangeSelectionBarHeight);
         }
         
-        initUpdate();
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        
+        initUpdate();
     }
     
     private void trggleLeftCallback(int percent)
@@ -520,6 +539,7 @@ public class MovieRangeSelectionBar extends View
     {
     	
     	mSelectionBarHeight = getHeight() > 0 ? getHeight() : TuSdkContext.dip2px(65);
+    	mSelectionBarHeight = mRangeSelectionBarHeightMeasure;
     	mPlayCursorOffsetW = TuSdkContext.dip2px(3);
     	mLeftCursorOffsetW = TuSdkContext.dip2px(20);
     	mRightCursorOffsetW = TuSdkContext.dip2px(20);

@@ -44,7 +44,7 @@ public class Constants
 	 * 场景特效code 列表
 	 */
 	public static String[] SCENE_EFFECT_CODES = {"None","LiveShake01","LiveMegrim01", "EdgeMagic01", "LiveFancy01_1", "LiveSoulOut01",
-			"LiveSignal01"};
+			"LiveSignal01","LiveLightning01","LiveXRay01","LiveHeartbeat01","LiveMirrorImage01","LiveSlosh01","LiveOldTV01"};
 
 
 

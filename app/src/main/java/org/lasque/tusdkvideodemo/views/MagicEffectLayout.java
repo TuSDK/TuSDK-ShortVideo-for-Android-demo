@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
+import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.utils.Constants;
 
@@ -17,7 +19,9 @@ import java.util.Arrays;
 
 public class MagicEffectLayout extends TuSdkRelativeLayout
 {
-    private MagicEffectsTimelineView mTimelineView;
+    private TuSDKMovieEditor mMovieEditor;
+
+    private EffectsTimelineView mTimelineView;
 
     private MagicEffectListView mMagicEffectListView;
 
@@ -38,19 +42,23 @@ public class MagicEffectLayout extends TuSdkRelativeLayout
         // 动画时间轴视图
         mTimelineView = getViewById(R.id.lsq_magic_effect_timelineView);
         mTimelineView.setDelegate(mEffectsTimelineViewDelegate);
+        mTimelineView.setDelegate(mEffectsTimelineViewDelegate);
         initMagicEffectListView();
     }
 
-    private EffectsTimelineView.EffectsTimelineViewDelegate mEffectsTimelineViewDelegate = new EffectsTimelineView.EffectsTimelineViewDelegate()
+    /** 场景特效时间轴变化 */
+    protected EffectsTimelineView.EffectsTimelineViewDelegate mEffectsTimelineViewDelegate = new EffectsTimelineView.EffectsTimelineViewDelegate()
     {
         @Override
         public void onProgressCursorWillChaned()
         {
+            mMovieEditor.pausePreview();
         }
 
         @Override
-        public void onProgressChaned(float progress)
+        public void onProgressChaned(final float progress)
         {
+            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoDurationTimeUs() * progress));
         }
 
         @Override
@@ -60,12 +68,13 @@ public class MagicEffectLayout extends TuSdkRelativeLayout
         }
     };
 
+
     /**
      * 魔法特效时间轴视图
      *
      * @return
      */
-    public MagicEffectsTimelineView getTimelineView()
+    public EffectsTimelineView getTimelineView()
     {
         return mTimelineView;
     }
@@ -89,6 +98,15 @@ public class MagicEffectLayout extends TuSdkRelativeLayout
     public void setDelegate(EffectsTimelineView.EffectsTimelineViewDelegate delegate)
     {
         getTimelineView().setDelegate(delegate);
+    }
+
+    /**
+     *
+     * @param movieEditor
+     */
+    public void setMovieEditor(TuSDKMovieEditor movieEditor)
+    {
+        this.mMovieEditor = movieEditor;
     }
 
     /**

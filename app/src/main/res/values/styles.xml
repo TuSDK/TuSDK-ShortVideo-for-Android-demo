@@ -137,5 +137,49 @@
         <item name="android:layout_height">40dp</item>
         <item name="android:layout_marginTop">20dp</item>
     </style>
-    
+
+    <!-- edit entry Option -->
+    <style name="lsq_edit_entryOptionButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textColor">@color/lsq_scence_effect_color_title</item>
+        <item name="android:textSize">10sp</item>
+
+    </style>
+
+    <style name="lsq_edit_textFeatureButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textColor">@color/lsq_color_white</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="lsq_edit_input">
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:maxLength">5</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="lsq_video_format">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/lsq_color_white</item>
+    </style>
+
 </resources>

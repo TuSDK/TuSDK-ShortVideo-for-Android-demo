@@ -10,8 +10,8 @@
 package org.lasque.tusdkvideodemo.component;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +26,10 @@ import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
+import org.lasque.tusdk.core.decoder.TuSDKMoviePacketReader;
+import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
+import org.lasque.tusdk.core.delegate.TuSDKVideoLoadDelegate;
+import org.lasque.tusdk.core.delegate.TuSDKVideoSaveDelegate;
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
 import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
@@ -34,13 +38,18 @@ import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption.WaterMarkPosition;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoResult;
-import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
+import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView.TuSdkTableViewItemClickDelegate;
+import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerLocalPackage;
 import org.lasque.tusdk.video.editor.TuSDKMediaAudioEffectData;
+import org.lasque.tusdk.video.editor.TuSDKMediaEffectData;
+import org.lasque.tusdk.video.editor.TuSDKMediaFilterEffectData;
+import org.lasque.tusdk.video.editor.TuSDKMediaSceneEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMediaStickerAudioEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMediaStickerEffectData;
+import org.lasque.tusdk.video.editor.TuSDKMediaTextEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor.TuSDKMovieEditorDelegate;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor.TuSDKMovieEditorSoundStatus;
@@ -50,7 +59,6 @@ import org.lasque.tusdk.video.editor.TuSDKTimeRange;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
 import org.lasque.tusdkvideodemo.utils.Constants;
-import org.lasque.tusdkvideodemo.utils.VideoInfoUtils;
 import org.lasque.tusdkvideodemo.views.AudioEffectCellView;
 import org.lasque.tusdkvideodemo.views.CompoundConfigView;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams;
@@ -58,22 +66,21 @@ import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
 import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
 import org.lasque.tusdkvideodemo.views.DubbingLayout;
 import org.lasque.tusdkvideodemo.views.DubbingRecodLayout;
-import org.lasque.tusdkvideodemo.views.EffectsTimelineView.EffectsTimelineViewDelegate;
+import org.lasque.tusdkvideodemo.views.EffectsTimelineView;
 import org.lasque.tusdkvideodemo.views.FilterCellView;
 import org.lasque.tusdkvideodemo.views.FilterConfigSeekbar;
 import org.lasque.tusdkvideodemo.views.FilterConfigView;
 import org.lasque.tusdkvideodemo.views.FilterConfigView.FilterConfigViewSeekBarDelegate;
 import org.lasque.tusdkvideodemo.views.FilterListView;
-import org.lasque.tusdkvideodemo.views.MagicEffectsTimelineView;
 import org.lasque.tusdkvideodemo.views.MovieEditorTabBar;
 import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar;
 import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.OnCursorChangeListener;
 import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.Type;
 import org.lasque.tusdkvideodemo.views.SceneEffectLayout;
 import org.lasque.tusdkvideodemo.views.SceneEffectListView;
-import org.lasque.tusdkvideodemo.views.SceneEffectsTimelineView;
 import org.lasque.tusdkvideodemo.views.StickerAudioEffectCellView;
 import org.lasque.tusdkvideodemo.views.StickerAudioEffectListView;
+import org.lasque.tusdkvideodemo.views.TextEffectLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,6 +89,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import at.grabner.circleprogress.CircleProgressView;
+
+import static org.lasque.tusdk.video.editor.TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeAudio;
+import static org.lasque.tusdk.video.editor.TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeFilter;
+import static org.lasque.tusdk.video.editor.TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeSticker;
 import static org.lasque.tusdkvideodemo.views.MovieEditorTabBar.TabType.FilterTabType;
 
 /**
@@ -101,15 +113,18 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 
      /** 视频路径 */
     protected String mVideoPath;
-    /** 视频裁切区域 */
-    protected TuSDKTimeRange mCutTimeRange;
      /** 编辑器 */
     protected TuSDKMovieEditor mMovieEditor;
+
+    /** 视频信息 */
+    private TuSDKVideoInfo mVideoInfo;
 
 	/************************************  Views  ************************************ /
 
 	/** 底部 TabBar */
 	protected MovieEditorTabBar mTabBar;
+	/** 顶部 TopBar **/
+	protected RelativeLayout mTopBar;
 	/** 保存按钮 */
 	protected TextView mSaveButton;
 	/** 标题  TextView */
@@ -124,6 +139,10 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
     private FilterConfigView mConfigView;
 	/** 贴纸栏视图 */
 	protected StickerAudioEffectListView mMvListView;
+	/** 文字特效视图 */
+	protected TextEffectLayout mTextEffectsLayout;
+	/** 文字区域视图 **/
+	protected StickerView mStickerView;
 
     protected LinearLayout mFilterLayout;
 
@@ -155,13 +174,35 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
     private float mMixiedProgress = -1.0f;
 
     /** 用于记录焦点位置 */
-    public int mFocusPostion = 1;
+    public int mFocusPostion = 0;
+
+    /** 记录点击文字按钮前的状态 **/
+    private MovieEditorTabBar.TabType mCurrentTabType;
+
+	private CircleProgressView mCircleView;
+
+	//是否原比例
+	protected boolean isRatioAdaption =true ;
+	//进行输出的比例
+	private RectF mOutputRegion;
 
 	/** MV音效资源  */
 	@SuppressLint("UseSparseArrays")
 	private Map<Integer, Integer> mMusicMap = new HashMap<Integer, Integer>();
 
-    protected int getLayoutId()
+	private boolean mActionButtonIsShow = true;
+
+	protected void setActionButtonStatus(boolean isShow)
+	{
+		this.mActionButtonIsShow = isShow;
+
+		if(mActionButtonIsShow)
+			mActionButton.setVisibility(View.VISIBLE);
+		else
+			mActionButton.setVisibility(View.GONE);
+	}
+
+	protected int getLayoutId()
     {
     	return R.layout.movie_editor_activity;
     }
@@ -188,13 +229,23 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
         mBackTextView.setOnClickListener(this);
 
 
-        mRangeSelectionBar =  this.findViewById(R.id.lsq_rangeseekbar);
+		mCircleView = (CircleProgressView) findViewById(R.id.circleView);
+		mCircleView.setTextSize(50);
+		mCircleView.setAutoTextSize(true);
+		mCircleView.setTextColor(Color.WHITE);
+
+
+		mTopBar = findViewById(R.id.lsq_topBar);
+
+		mRangeSelectionBar =  this.findViewById(R.id.lsq_rangeseekbar);
         mRangeSelectionBar.setShowPlayCursor(false);
         mRangeSelectionBar.setType(Type.MV);
         mRangeSelectionBar.setLeftSelection(0);
         mRangeSelectionBar.setPlaySelection(0);
         mRangeSelectionBar.setRightSelection(100);
-        mRangeSelectionBar.setOnCursorChangeListener(mOnCursorChangeListener);
+        mRangeSelectionBar.setOnCursorChangeListener(onMVRangeSelectionBarListener);
+
+		mStickerView = this.findViewById(R.id.lsq_stickerView);
 
 		hideNavigationBar();
         // 设置弹窗提示是否在隐藏虚拟键的情况下使用
@@ -202,17 +253,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 
         setCameraViewSize(TuSdkContext.getScreenSize().width, TuSdkContext.getScreenSize().width);
 
-        Intent intent = getIntent();
-		mVideoPath = intent.getStringExtra("videoPath");
-
-		// 视频裁切区域时间
-		mCutTimeRange = TuSDKTimeRange.makeRange(intent.getFloatExtra("startTime", 0) / (float)1000, intent.getFloatExtra("endTime", 0) / (float)1000);
-
-		// 如果没有传递开始和结束时间，默认视频编辑时长为总时长
-		if(mCutTimeRange.duration() == 0 && mVideoPath != null)
-		{
-			mCutTimeRange = TuSDKTimeRange.makeRange(0, VideoInfoUtils.getVideoDuration(mVideoPath));
-		}
+		mVideoPath = getIntent().getStringExtra("videoPath");
 
 		// 初始化编辑器
         initMovieEditor();
@@ -233,8 +274,12 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		// 配音视图
 		initDubbingLayout();
 
+		// 加载文字贴图
+		initTextEffectLayout();
+
 		// 加载视频缩略图
         loadVideoThumbList();
+
 
 		updateSelectedTabType();
 	}
@@ -285,6 +330,9 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
         if (mScenceEffectLayout != null)
             mScenceEffectLayout.getSceneEffectsTimelineView().clearVideoThumbList();
 
+        if(mTextEffectsLayout !=null)
+        	mTextEffectsLayout.clearVideoThumbList();
+
         if(mVideoThumbList != null)
         {
             for (Bitmap bitmap : mVideoThumbList)
@@ -309,17 +357,26 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
         float movieRight = getIntent().getFloatExtra("movieRight", 1.0f);
         float movieBottom = getIntent().getFloatExtra("movieBottom", 1.0f);
 
-        boolean isRatioAdaption = getIntent().getBooleanExtra("ratioAdaption", true);
 
-        TuSDKMovieEditorOptions defaultOptions = TuSDKMovieEditorOptions.defaultOptions();
+        isRatioAdaption = getIntent().getBooleanExtra("ratioAdaption", true);
+
+		mOutputRegion = new RectF(movieLeft,movieTop, movieRight, movieBottom);
+
+		// 视频裁切区域时间
+		TuSDKTimeRange cutTimeRange = TuSDKTimeRange.makeRange(getIntent().getFloatExtra("startTime", 0) / (float)1000, getIntent().getFloatExtra("endTime", 0) / (float)1000);
+
+
+		TuSDKMovieEditorOptions defaultOptions = TuSDKMovieEditorOptions.defaultOptions();
         defaultOptions.setMoviePath(mVideoPath)
-                .setCutTimeRange(mCutTimeRange)
+                .setCutTimeRange(cutTimeRange)
                 // 是否需要按原视频比例显示
-                .setOutputRegion(isRatioAdaption ? null : new RectF(movieLeft,movieTop, movieRight, movieBottom) )
+                .setOutputRegion(isRatioAdaption ? null : mOutputRegion)
                 .setIncludeAudioInVideo(true) // 设置是否保存或者播放原音
                 .setLoopingPlay(true) // 设置是否循环播放视频
-                .setAutoPlay(true) // 设置视频加载完成后是否自动播放
+                .setAutoPlay(false) // 设置视频加载完成后是否自动播放
                 .setClearAudioDecodeCacheInfoOnDestory(false); // 设置MovieEditor销毁时是否自动清除缓存音频解码信息
+
+
 
 
         mMovieEditor = new TuSDKMovieEditor(this.getBaseContext(), getCameraView(), defaultOptions);
@@ -331,12 +388,15 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		mMovieEditor.setWaterMarkImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark));
 		mMovieEditor.setWaterMarkPosition(WaterMarkPosition.TopRight);
 		mMovieEditor.setDelegate(this);
+		mMovieEditor.setSaveDelegate(mSaveDelegate);
+		mMovieEditor.setLoadDelegate(mLoadDelegate);
 
 		mMovieEditor.loadVideo();
 
 	}
 
-    /**
+
+	/**
      * 切换滤镜
      *
      * @param code
@@ -344,14 +404,14 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
      */
     protected void switchFilter(String code)
     {
-    	// 切换滤镜前, 将场景特效和魔法效果全部清空
-		MediaEffectsManager.getMediaEffectManager().setSceneEffectDataList(new ArrayList<SceneEffectsTimelineView.SceneEffectModel>());
-		MediaEffectsManager.getMediaEffectManager().setMagicEffectDataList(new ArrayList<MagicEffectsTimelineView.MagicEffectModel>());
-
 		// 切换滤镜前必须打开视频预览, 滤镜切换依赖于视频的编解码
 		// 如果视频暂停情况下切换滤镜会导致切换失败，onFilterChanged方法也不会回调
 		startEffectsPreview();
-		mMovieEditor.switchFilter(code);
+		TuSDKMediaFilterEffectData mediaFilterEffectData = new TuSDKMediaFilterEffectData(code);
+		mediaFilterEffectData.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(0,Long.MAX_VALUE));
+		mMovieEditor.removeMediaEffectsWithType(TuSDKMediaEffectDataTypeFilter);
+		mMovieEditor.addMediaEffectData(mediaFilterEffectData);
+
     }
 
 	/**
@@ -359,18 +419,26 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	 */
 	private void updateMediaEffectsTimeRange()
     {
-        float startTime = mRangeSelectionBar.getLeftCursorPercent() * mCutTimeRange.duration() / 100;
-		float endTime = mRangeSelectionBar.getRightCursorPercent() * mCutTimeRange.duration() / 100;
+		if (mVideoInfo == null) return;
 
-        TuSDKTimeRange timeRange = TuSDKTimeRange.makeRange(startTime, endTime);
+		long startTimeUs = (long)((mRangeSelectionBar.getLeftCursorPercent() / 100.0f) * mVideoInfo.durationTimeUs);
+		long endTimeUs =  (long)((mRangeSelectionBar.getRightCursorPercent() / 100.0f) * mVideoInfo.durationTimeUs);
 
-        // 设置音频特效播放区间
-        if (MediaEffectsManager.getMediaEffectManager().getAudioEffectData() != null)
-            MediaEffectsManager.getMediaEffectManager().getAudioEffectData().setAtTimeRange(timeRange);
+		TuSDKTimeRange timeRange = TuSDKTimeRange.makeTimeUsRange(startTimeUs, endTimeUs);
 
-        // 设置贴纸特效播放区间
-        if (MediaEffectsManager.getMediaEffectManager().getStickerAudioEffectData() != null)
-            MediaEffectsManager.getMediaEffectManager().getStickerAudioEffectData().setAtTimeRange(timeRange);
+		// TODO : 更新音效和贴纸时间
+		// 设置音频特效播放区间
+		if (mMovieEditor.mediaEffectsWithType(TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeAudio) != null)
+		{
+			for(TuSDKMediaEffectData mediaEffectData:mMovieEditor.mediaEffectsWithType(TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeAudio))
+				mediaEffectData.setAtTimeRange(timeRange);
+		}
+		// 设置贴纸特效播放区间
+		if (mMovieEditor.mediaEffectsWithType(TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeSticker) != null)
+		{
+			for(TuSDKMediaEffectData mediaEffectData:mMovieEditor.mediaEffectsWithType(TuSDKMediaEffectData.TuSDKMediaEffectDataType.TuSDKMediaEffectDataTypeSticker))
+				mediaEffectData.setAtTimeRange(timeRange);
+		}
     }
 
 	/**
@@ -378,9 +446,9 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	 */
 	protected void startPreView()
 	{
-		if (mMovieEditor == null || mMovieEditor.isPreviewing()) return;
+		if (mMovieEditor == null) return;
 
-		mMovieEditor.removeAllMediaEffects();
+//		mMovieEditor.removeAllMediaEffects();
 
 		mMovieEditor.startPreview();
 	}
@@ -390,12 +458,13 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	 */
 	protected void startEffectsPreview()
 	{
-		if (mMovieEditor == null || mMovieEditor.isPreviewing()) return;
+		if (mMovieEditor == null ) return;
 
 		// 添加设置的特效信息
 		applyMediaEffects();
 
 		mMovieEditor.startPreview();
+
 	}
 
 	/**
@@ -414,9 +483,6 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	protected void applyMediaEffects()
 	{
         updateMediaEffectsTimeRange();
-
-        // 设置特效数据
-        mMovieEditor.setMediaEffectList(MediaEffectsManager.getMediaEffectManager().getAllMediaEffectList());
 	}
 
 	/**
@@ -426,9 +492,6 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	{
 		if (mMovieEditor == null || mMovieEditor.isRecording()) return;
 
-		String msg = getStringFromResource("new_movie_saving");
-		TuSdk.messageHub().setStatus(MovieEditorActivity.this, msg);
-
         // 设置特效数据
 		applyMediaEffects();
 
@@ -437,41 +500,99 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 
 	}
 
-    /**
-     * 视频处理完成
-     *
-     * @param result
-     *            生成的新视频信息，预览时该对象为 null
-     */
-    @Override
-    public void onMovieEditComplete(TuSDKVideoResult result)
-    {
-        String msg = result == null ? getStringFromResource("new_movie_error_saving")
-                : getStringFromResource("new_movie_saved");
-        TuSdk.messageHub().showError(MovieEditorActivity.this, msg);
+	/**  视频保存事件委托 */
+	private TuSDKVideoSaveDelegate mSaveDelegate = new TuSDKVideoSaveDelegate()
+	{
+		@Override
+		public void onProgressChaned(float percentage)
+		{
+			mCircleView.setVisibility(View.VISIBLE);
+			mCircleView.setText((percentage * 100)+"%");
+			mCircleView.setValue(percentage);
 
-        setResult(RESULT_OK);
-        finish();
-    }
+		}
+
+		@Override
+		public void onSaveResult(TuSDKVideoResult result)
+		{
+			mCircleView.setVisibility(View.GONE);
+
+			setResult(RESULT_OK);
+			finish();
+		}
+
+		@Override
+		public void onResultFail(Exception e)
+		{
+
+		}
+	};
+
+	/** 视频加载回调 */
+	private TuSDKVideoLoadDelegate mLoadDelegate = new TuSDKVideoLoadDelegate()
+	{
+		@Override
+		public void onProgressChaned(float percentage)
+		{
+			mCircleView.setVisibility(View.VISIBLE);
+			mCircleView.setText((percentage * 100)+"%");
+			mCircleView.setValue(percentage);
+		}
+
+		@Override
+		public void onLoadComplete(TuSDKVideoInfo videoInfo)
+		{
+
+			getTabBar().setEnable(true);
+
+			mCircleView.setVisibility(View.GONE);
+
+			onVideoInfoReady(videoInfo);
+
+			//同步文字的StickerView
+			mStickerView.resizeForVideo(TuSdkSize.create(videoInfo.width,videoInfo.height),isRatioAdaption);
+		}
+	};
+
+	/**
+	 * 获取到视频信息
+	 *
+	 * @param videoInfo
+	 */
+	protected void onVideoInfoReady(TuSDKVideoInfo videoInfo)
+	{
+		this.mVideoInfo = videoInfo;
+
+		getScenceEffectLayout().getSceneEffectsTimelineView().setDurationTimueUs(videoInfo.durationTimeUs);
+	}
 
 	/**
 	 * 视频处理进度事件
 	 *
-	 * @param durationTimes
-	 *            当前时间 单位：秒
+	 * @param durationTimeUs
+	 *            当前时间 单位：微秒
 	 * @param progress
 	 * 				当前进度
 	 */
 	@Override
-    public void onMovieEditProgressChanged(float durationTimes, float progress)
+    public void onMovieEditProgressChanged(long durationTimeUs, float progress)
     {
         if(!mRangeSelectionBar.isShowPlayCursor())
             mRangeSelectionBar.setShowPlayCursor(true);
 
         mRangeSelectionBar.setPlaySelection((int)(progress * 100));
 
+		if(!mTextEffectsLayout.isShowPlayCursor())
+			mTextEffectsLayout.setShowPlayCursor(true);
+        mTextEffectsLayout.setPlaySelection((int)(progress * 100));
+
+
         mScenceEffectLayout.getSceneEffectsTimelineView().setProgress(progress);
-        mScenceEffectLayout.getSceneEffectsTimelineView().updateLastEffectModelEndTime(durationTimes);
+
+        if (mMovieEditor.getPlayMode() == TuSDKMoviePacketReader.ReadMode.SequenceMode)
+			mScenceEffectLayout.getSceneEffectsTimelineView().updateLastEffectModelEndTime(durationTimeUs);
+        else
+			mScenceEffectLayout.getSceneEffectsTimelineView().updateLastEffectModelStartTime(durationTimeUs);
 
     }
 
@@ -485,26 +606,25 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
     public void onMovieEditorStatusChanged(TuSDKMovieEditorStatus status)
     {
         TuSdk.messageHub().dismissRightNow();
-
-        mActionButton.setVisibility((status == TuSDKMovieEditorStatus.Previewing || status == TuSDKMovieEditorStatus.Recording) ? View.INVISIBLE : View.VISIBLE);
+		if(mActionButtonIsShow) {
+			mActionButton.setVisibility((status == TuSDKMovieEditorStatus.Previewing || status == TuSDKMovieEditorStatus.Recording) ? View.INVISIBLE : View.VISIBLE);
+		}
 
         switch (status)
         {
             case Loaded:
-
                 // 首次进入时，选中 MV 和滤镜默认效果
                 selectNormalFilterAndNormalMv();
-
+				mCircleView.setVisibility(View.GONE);
                 mSaveButton.setEnabled(true);
 
             break;
-            case Recording:
-                TuSdk.messageHub().setStatus(MovieEditorActivity.this,getStringFromResource("new_movie_saving"));
-            break;
             case LoadVideoFailed:
+				mCircleView.setVisibility(View.GONE);
                 TuSdk.messageHub().showError(MovieEditorActivity.this, getStringFromResource("lsq_loadvideo_failed"));
              break;
             case RecordingFailed:
+				mCircleView.setVisibility(View.GONE);
                 mMovieEditor.stopPreview();
                 TuSdk.messageHub().showError(MovieEditorActivity.this, getStringFromResource("new_movie_error_saving"));
                  break;
@@ -568,6 +688,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
         {
             mTabBar = findViewById(R.id.lsq_bottom_navigator);
             mTabBar.loadView();
+            mTabBar.setEnable(false);
         }
 
 		return mTabBar;
@@ -578,10 +699,8 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	 */
 	private void initScenceEffectLayout()
 	{
-		getScenceEffectLayout().getSceneEffectsTimelineView().setDuration(mCutTimeRange.duration());
 		getScenceEffectLayout().setDelegate(mSceneEffectListViewDelegate);
-		getScenceEffectLayout().setDelegate(mEffectsTimelineViewDelegate);
-
+		getScenceEffectLayout().setMovieEditor(mMovieEditor);
 	}
 
 	public SceneEffectLayout getScenceEffectLayout()
@@ -689,9 +808,13 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 			}
 			else if(arg.getKey().equals("dubbingIntensity"))
 			{
-				if (MediaEffectsManager.getMediaEffectManager().getAudioEffectData() == null) return;
-
-                MediaEffectsManager.getMediaEffectManager().getAudioEffectData().setVolume(arg.getPercentValue());
+				List<TuSDKMediaAudioEffectData> audioEffectDataList =  mMovieEditor.mediaEffectsWithType(TuSDKMediaEffectDataTypeAudio);
+				if(audioEffectDataList != null)
+				{
+					for (TuSDKMediaAudioEffectData mediaEffectData :audioEffectDataList) {
+						mediaEffectData.setVolume(arg.getPercentValue());
+					}
+				}
 			}
 		}
 	};
@@ -707,12 +830,16 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 				&& (mScenceEffectLayout != null || mRangeSelectionBar.getVideoThumbList().size() == 0))
 		{
 
+			// 视频裁切区域时间
+			TuSDKTimeRange cutTimeRange = TuSDKTimeRange.makeRange(getIntent().getFloatExtra("startTime", 0) / (float)1000, getIntent().getFloatExtra("endTime", 0) / (float)1000);
+
+
 			TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56), TuSdkContext.dip2px(56));
 			TuSDKVideoImageExtractor extractor = TuSDKVideoImageExtractor.createExtractor();
 			extractor.setOutputImageSize(tuSdkSize);
 			extractor.setVideoDataSource(TuSDKMediaDataSource.create(mVideoPath));
 			extractor.setExtractFrameCount(6);
-			extractor.setTimeRange(mCutTimeRange);
+			extractor.setTimeRange(cutTimeRange);
 
 			extractor.asyncExtractImageList(this);
 
@@ -728,6 +855,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	public void onVideoNewImageLoaded(Bitmap bitmap)
 	{
 		mRangeSelectionBar.drawVideoThumb(bitmap);
+		mTextEffectsLayout.drawVideoThumb(bitmap);
 		mScenceEffectLayout.getSceneEffectsTimelineView().drawVideoThumb(bitmap);
 	}
 
@@ -805,11 +933,14 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	/**
 	 *  混音列表点击事件
 	 */
-	private TuSdkTableViewItemClickDelegate<AudioEffectCellView.AudioEffectEntity, AudioEffectCellView> mMixingTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<AudioEffectCellView.AudioEffectEntity, AudioEffectCellView>()
+	private TuSdkTableViewItemClickDelegate<AudioEffectCellView.AudioEffectEntity, AudioEffectCellView> mMixingTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<AudioEffectCellView.AudioEffectEntity, AudioEffectCellView>()
 	{
 		@Override
 		public void onTableViewItemClick(AudioEffectCellView.AudioEffectEntity itemData, AudioEffectCellView itemView, final int position)
 		{
+
+			if(TuSdkViewHelper.isFastDoubleClick()) return;
+
 			mDubbingLayout.getDubbingListView().setSelectedPosition(position);
 
 			// 停止预览
@@ -830,11 +961,13 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	/**
 	 * MV 列表点击事件
 	 */
-	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerAudioEffectCellView> mMvTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerAudioEffectCellView>()
+	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerAudioEffectCellView> mMvTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<StickerGroup, StickerAudioEffectCellView>()
 	{
 		@Override
 		public void onTableViewItemClick(final StickerGroup itemData, StickerAudioEffectCellView itemView, final int position)
 		{
+			if(TuSdkViewHelper.isFastDoubleClick()) return;
+
 			getMvListView().setSelectedPosition(position);
 
 			// 选中当前 MV
@@ -859,6 +992,8 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		@Override
 		public void onTableViewItemClick(String itemData, FilterCellView itemView, int position)
 		{
+			if(TuSdkViewHelper.isFastDoubleClick()) return;
+
 			startPreView();
 
 			mFocusPostion = position;
@@ -879,7 +1014,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
     {
     	if (position == 0)
     	{
-    		mMovieEditor.removeAllMediaEffects();
+    		mMovieEditor.removeMediaEffectsWithType(TuSDKMediaEffectDataTypeAudio);
     		setDubbingSeekbarProgress(0.0f);
     	}
     	else if (position == 1)
@@ -910,7 +1045,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 
         TuSDKMediaAudioEffectData audioEffectData = new TuSDKMediaAudioEffectData(TuSDKMediaDataSource.create(audioPathUri));
 
-        MediaEffectsManager.getMediaEffectManager().setAudioEffectData(audioEffectData);
+		mMovieEditor.addMediaEffectData(audioEffectData);
 
         applyMediaEffects();
 
@@ -921,10 +1056,12 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	/** 处理自己录音按钮操作 */
     private void handleAudioRecordBtn()
     {
+    	if (mVideoInfo == null) return;
+
 		mDubbingRecodLayout.setVisibility(View.VISIBLE);
 
 		// 设置最大录制时长
-		mDubbingRecodLayout.setMaxRecordTime(mCutTimeRange.duration());
+		mDubbingRecodLayout.setMaxRecordTime(mVideoInfo.durationTimeUs / 1000000l);
 		mDubbingRecodLayout.updateAudioProgressBar(0);
 
     	// 将原音强度设为0
@@ -943,23 +1080,25 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	{
 		if (position < 0) return;
 
-		if (position == 0 )
-		{
-			MediaEffectsManager.getMediaEffectManager().setStickerAudioEffectData(null);
-		}
-		else
+		mMovieEditor.removeMediaEffectsWithType(TuSDKMediaEffectDataTypeAudio);
+		mMovieEditor.removeMediaEffectsWithType(TuSDKMediaEffectDataTypeSticker);
+
+		if(position >= 0)
 		{
 			int groupId = (int) itemData.groupId;
 
 			if (mMusicMap!=null && mMusicMap.containsKey(groupId))
 			{
-				Uri	uri = Uri.parse("android.resource://" + getPackageName() + "/" + mMusicMap.get(groupId));
-
-                MediaEffectsManager.getMediaEffectManager().setStickerAudioEffectData(new TuSDKMediaStickerAudioEffectData(TuSDKMediaDataSource.create(uri), itemData));
+				//带音效的MV
+				Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + mMusicMap.get(groupId));
+				TuSDKMediaStickerAudioEffectData stickerAudioEffectDat = new TuSDKMediaStickerAudioEffectData(new TuSDKMediaDataSource(uri), itemData);
+				mMovieEditor.addMediaEffectData(stickerAudioEffectDat);
 			}
 			else
 			{
-                MediaEffectsManager.getMediaEffectManager().setStickerEffectData(new TuSDKMediaStickerEffectData(itemData));
+				//纯贴纸的MV
+				TuSDKMediaStickerEffectData stickerEffectData = new TuSDKMediaStickerEffectData(itemData);
+				mMovieEditor.addMediaEffectData(stickerEffectData);
 			}
 		}
 
@@ -1022,11 +1161,44 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 			mConfigView = (FilterConfigView)findViewById(R.id.lsq_filter_config_view);
 			mConfigView.setBackgroundResource(R.color.lsq_alpha_white_99);
 			mConfigView.setSeekBarDelegate(mConfigSeekBarDelegate);
-//			getFilterConfigView().invalidate();
 		}
 
 		return mConfigView;
 	}
+
+
+	/**
+	 * 初始化文字特效
+	 */
+	private void initTextEffectLayout(){
+		mTextEffectsLayout = findViewById(R.id.lsq_text_effects_layout);
+
+
+		//绑定相关
+		mTextEffectsLayout.setMovieEditor(mMovieEditor);
+		mTextEffectsLayout.setActivity(this);
+		mTextEffectsLayout.setStickerView(mStickerView);
+
+		//设置文字的初始样式
+		mTextEffectsLayout.setText("请输入文字");
+		mTextEffectsLayout.setTextColor("#ffffff");
+		mTextEffectsLayout.setTextPaddings(20);
+		mTextEffectsLayout.setTextShadowColor("#fff222");
+		mTextEffectsLayout.setTextSize(20);
+		mTextEffectsLayout.setColorBarHeight(TuSdkContext.dip2px(20));
+		mTextEffectsLayout.setColorIndicatorWidth(TuSdkContext.dip2px(20));
+		mTextEffectsLayout.setColorIndicatorHeight(TuSdkContext.dip2px(20));
+		mTextEffectsLayout.setColorBarPaddingTop(TuSdkContext.dip2px(5));
+		mTextEffectsLayout.loadView();
+
+		mTextEffectsLayout.setOnTextStickerApplyListener(new TextEffectLayout.OnTextStickerApplyListener() {
+			@Override
+			public void onApply(TuSDKMediaTextEffectData textMediaEffectData) {
+				mMovieEditor.addMediaEffectData(textMediaEffectData);
+			}
+		});
+	}
+
 
     /**
      * 切换Tab事件
@@ -1035,6 +1207,12 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
      */
     @Override
     public void onSelectedTabType(MovieEditorTabBar.TabType tabType) {
+
+    	if(tabType != MovieEditorTabBar.TabType.TextEffectTabType)
+    	{
+			mCurrentTabType = tabType;
+		}
+
 
 	    switch (tabType)
         {
@@ -1050,7 +1228,32 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
             case MVTabType:
                 toggleMVMode();
                 break;
+			case TextEffectTabType:
+				toggleTextEffectMode();
         }
+    }
+
+	/**
+	 * 文字特效
+	 */
+	private void toggleTextEffectMode() {
+
+		mRangeSelectionBar.setVisibility(View.GONE);
+		mTextEffectsLayout.setVisibility(View.VISIBLE);
+
+		getTabBar().setVisibility(View.GONE);
+		getMVLayout().setVisibility(View.GONE);
+
+		mFilterLayout.setVisibility(View.GONE);
+		mDubbingLayout.setVisibility(View.GONE);
+		getVoiceVolumeConfigView().setVisibility(View.GONE);
+		getFilterConfigView().setVisibility(View.GONE);
+		mScenceEffectLayout.setVisibility(View.GONE);
+
+		//选择文字之后默认添加一个Item
+		mTextEffectsLayout.addStickerItemView();
+
+//		startEffectsPreview();
     }
 
 	/**
@@ -1066,6 +1269,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		mScenceEffectLayout.setVisibility(View.GONE);
 		mRangeSelectionBar.setVisibility(View.GONE);
 		mDubbingLayout.setVisibility(View.GONE);
+		mTextEffectsLayout.setVisibility(View.GONE);
 
 		if (mFocusPostion == 0)
 			getFilterConfigView().setVisibility(View.GONE);
@@ -1086,6 +1290,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		getVoiceVolumeConfigView().setVisibility(View.VISIBLE);
 		getFilterConfigView().setVisibility(View.GONE);
 		mScenceEffectLayout.setVisibility(View.GONE);
+		mTextEffectsLayout.setVisibility(View.GONE);
 
 	}
 
@@ -1102,7 +1307,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		mScenceEffectLayout.setVisibility(View.GONE);
 		getMVLayout().setVisibility(View.GONE);
 		getFilterConfigView().setVisibility(View.GONE);
-
+		mTextEffectsLayout.setVisibility(View.GONE);
 	}
 
 	/**
@@ -1118,9 +1323,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		getVoiceVolumeConfigView().setVisibility(View.GONE);
 		getMVLayout().setVisibility(View.GONE);
 		getFilterConfigView().setVisibility(View.GONE);
-
-        /**  设置场景特效 */
-		MediaEffectsManager.getMediaEffectManager().setSceneEffectDataList(mScenceEffectLayout.getSceneEffectsTimelineView().getAllMediaEffectData());
+		mTextEffectsLayout.setVisibility(View.GONE);
 
 		applyMediaEffects();
 	}
@@ -1207,7 +1410,8 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		public void onUndo()
 		{
             // 移除场景特效
-			mMovieEditor.removeMediaEffect(mScenceEffectLayout.getSceneEffectsTimelineView().lastEffectMode());
+			if(mScenceEffectLayout.getSceneEffectsTimelineView().lastEffectMode() != null)
+				mMovieEditor.removeMediaEffect(mScenceEffectLayout.getSceneEffectsTimelineView().lastEffectMode().getCurrentMediaEffectData());
 
 			mScenceEffectLayout.getSceneEffectsTimelineView().removeLastEffectMode();
 
@@ -1216,19 +1420,28 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		@Override
 		public void onPressSceneEffect(String code)
 		{
-            startPreView();
+			/** 开始播放视频并预览已设置的特效 */
+			startEffectsPreview();
 
-            SceneEffectsTimelineView.SceneEffectModel sceneEffectModel = new SceneEffectsTimelineView.SceneEffectModel(code);
-            sceneEffectModel.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(mMovieEditor.getCurrentSampleTimeUs(),0));
+			TuSDKMediaSceneEffectData mediaSceneEffectData = new TuSDKMediaSceneEffectData(code);
+			mediaSceneEffectData.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(mMovieEditor.getCurrentSampleTimeUs(),Long.MAX_VALUE));
 
-			// 按下时启用场景特效编辑功能
+			//设置ViewModel
+            EffectsTimelineView.EffectsTimelineSegmentViewModel sceneEffectModel = new EffectsTimelineView.EffectsTimelineSegmentViewModel("lsq_scence_effect_color_"+code);
+			float startProgress = (float)mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
+			float endProgress = (float) mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
+			sceneEffectModel.makeProgressRange(startProgress,endProgress);
+			sceneEffectModel.setMediaEffectData(mediaSceneEffectData);
+
+            // 按下时启用场景特效编辑功能
 			mScenceEffectLayout.setEditable(true);
 			mScenceEffectLayout.getSceneEffectsTimelineView().addEffectMode(sceneEffectModel);
 
-            mMovieEditor.setLooping(false);
 
+			/** 编辑时禁用循环播放 */
+			mMovieEditor.setLooping(false);
             // 预览场景特效 (不会将特效添加到 MovieEditor 中)
-            mMovieEditor.applyMediaEffect(sceneEffectModel);
+            mMovieEditor.addMediaEffectData(mediaSceneEffectData);
 
         }
 
@@ -1239,40 +1452,23 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 			mScenceEffectLayout.setEditable(false);
 
 			mMovieEditor.setLooping(true);
-			// 取消预览场景特效
-			mMovieEditor.unApplyMediaEffect(mScenceEffectLayout.getSceneEffectsTimelineView().lastEffectMode());
+//			 取消预览场景特效
+			mMovieEditor.unApplyMediaEffect((TuSDKMediaSceneEffectData) mScenceEffectLayout.getSceneEffectsTimelineView().lastEffectMode().getCurrentMediaEffectData());
+
+			if(mScenceEffectLayout.getSceneEffectsTimelineView().lastEffectMode().getProgressRange() == null)
+			{
+				mScenceEffectLayout.getSceneEffectsTimelineView().removeLastEffectMode();
+			}
 
             pausePreview();
 
         }
 	};
 
-	/** 场景特效时间轴变化 */
-	protected EffectsTimelineViewDelegate mEffectsTimelineViewDelegate = new EffectsTimelineViewDelegate()
-    {
-        @Override
-        public void onProgressCursorWillChaned()
-        {
-            mMovieEditor.stopPreview();
-        }
 
-        @Override
-        public void onProgressChaned(float progress)
-        {
-            if (mMovieEditor.getTimeRange() != null && mMovieEditor.getTimeRange().isValid())
-                mMovieEditor.seekTimeUs((long)(mMovieEditor.getTimeRange().durationTimeUS() * progress));
 
-        }
-
-		@Override
-		public void onEffectNumChanged(int effectNum)
-		{
-			mScenceEffectLayout.getSceneEffectListView().updateUndoButtonState(effectNum == 0 ? false :true);
-		}
-	};
-
-	/** 用于监听裁剪控件  */
-	private OnCursorChangeListener mOnCursorChangeListener = new OnCursorChangeListener()
+	/** 用于监听 MV 裁剪控件  */
+	private OnCursorChangeListener onMVRangeSelectionBarListener = new OnCursorChangeListener()
 	{
 
 		@Override
@@ -1288,12 +1484,13 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		@Override
 		public void onLeftCursorChanged(final int percent)
 		{
-			if (mMovieEditor != null)
+			if (mMovieEditor != null && mVideoInfo != null)
 			{
                 updateMediaEffectsTimeRange();
 
-				mMovieEditor.seekTimeUs((long)(percent * mCutTimeRange.durationTimeUS() / 100));
-                mMovieEditor.stopPreview();
+				mMovieEditor.stopPreview();
+				mMovieEditor.seekTimeUs(percent * mVideoInfo.durationTimeUs);
+
 			}
 
 			hidePlayCursor();
@@ -1323,15 +1520,16 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 	/** 设置裁剪控件开始与结束的最小间隔距离 */
 	public void setBarSpace()
 	{
-		if(mCutTimeRange.duration() == 0 ) return;
+		if (mVideoInfo == null || mVideoInfo.durationTimeUs <= 0) return;
+
 		if(mRangeSelectionBar!=null)
 		{
 			/**
 			 * 需求需要，需设定最小间隔为1秒的
 			 *
 			 */
-			double percent = (1/mCutTimeRange.duration());
-			int space = (int) (percent*mRangeSelectionBar.getWidth());
+			double percent = (1 / (double)mVideoInfo.durationTimeUs / 1000000l);
+			int space = (int) (percent * mRangeSelectionBar.getWidth());
 			mRangeSelectionBar.setCursorSpace(space);
 		}
 	}
@@ -1346,4 +1544,18 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		}
 	}
 
+	/* 获取顶部View */
+	public View getTopBar(){
+		return mTopBar;
+	}
+
+
+	/**
+	 * 返回到文字之前的特效
+	 */
+	public void backToPreviousEffect(){
+		mTabBar.setVisibility(View.VISIBLE);
+//		onSelectedTabType(mCurrentTabType);
+
+	}
 }

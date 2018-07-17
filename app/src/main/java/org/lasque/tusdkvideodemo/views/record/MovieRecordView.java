@@ -34,10 +34,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.secret.StatisticsManger;
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
 import org.lasque.tusdk.core.seles.sources.SelesVideoCameraInterface;
 import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
+import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.ContextUtils;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs.CameraFlash;
@@ -47,11 +49,13 @@ import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera.RecordMode;
 import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera.RecordState;
 import org.lasque.tusdk.core.utils.hardware.TuSDKVideoCamera.TuSDKVideoCameraDelegate;
 import org.lasque.tusdk.core.utils.hardware.TuSdkStillCameraAdapter.CameraState;
+import org.lasque.tusdk.core.utils.image.RatioType;
 import org.lasque.tusdk.core.utils.json.JsonHelper;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView.TuSdkTableViewItemClickDelegate;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
+import org.lasque.tusdk.modules.components.ComponentActType;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerLocalPackage;
 import org.lasque.tusdkvideodemo.R;
@@ -82,6 +86,11 @@ public class MovieRecordView extends RelativeLayout
 	 * 关闭按钮
 	 */
 	protected TuSdkTextButton mCloseView;
+
+	/**
+	 * 比例调节按钮
+	 */
+	protected ImageView mRatioButton;
 
 	/**
 	 * 闪光灯按钮
@@ -214,6 +223,17 @@ public class MovieRecordView extends RelativeLayout
 	
 	// 记录是否使用方形贴纸
 	private boolean isSquareSticker = true;
+
+	/** 当前屏幕比例 */
+	private int mScreenRatioType;
+	/**
+	 * 视频视图显示比例类型 (默认:RatioType.ratio_all, 如果设置CameraViewRatio > 0,
+	 * 将忽略RatioType)
+	 */
+	private int mRatioType = RatioType.ratio_orgin | RatioType.ratio_1_1 | RatioType.ratio_3_4;
+
+	/** 当前比例类型 */
+	private int mCurrentRatioType;
 	
 	/**
 	 * 录制视频动作委托
@@ -295,6 +315,10 @@ public class MovieRecordView extends RelativeLayout
 
 		mFlashButton = (ImageView) findViewById(R.id.lsq_flashButton);
 		mFlashButton.setOnClickListener(mButtonClickListener);
+
+		mRatioButton = (ImageView) findViewById(R.id.lsq_ratioButton);
+		mRatioButton.setOnClickListener(mButtonClickListener);
+		mRatioButton.setVisibility(GONE);
 
 		mToggleButton = (ImageView) findViewById(R.id.lsq_toggleButton);
 		mToggleButton.setOnClickListener(mButtonClickListener);
@@ -389,6 +413,8 @@ public class MovieRecordView extends RelativeLayout
 
 		//为进度添加初始值
 		progressList.add(0);
+
+		initDefaultRatio(mRatioButton);
 	}
 
 	public void setActived(boolean mActived) 
@@ -474,6 +500,9 @@ public class MovieRecordView extends RelativeLayout
 	{
 		if (!getDelegate().isRecording())
 		{
+			// 启动录制隐藏比例调节按钮
+			if(mRatioButton != null)
+				mRatioButton.setVisibility(GONE);
 			getDelegate().startRecording();
 		}
 	}
@@ -615,11 +644,122 @@ public class MovieRecordView extends RelativeLayout
 		}
 	}
 
+	/****************************** CameraRatio ***********************************/
+
+	/** 初始化默认相机显示比例 */
+	private void initDefaultRatio(ImageView btn)
+	{
+		if (btn == null) return;
+
+		// 设置了固定比例，或者仅有一种比例可选时，不显示比例开关
+		if (RatioType.ratioCount(this.getRatioType()) == 1) btn.setVisibility(GONE);
+
+		this.setCurrentRatioType(RatioType.firstRatioType(this.getRatioType()));
+	}
+	public void isShowRatioButton(boolean isShow){
+		mRatioButton.setVisibility(isShow ? VISIBLE : GONE);
+	}
+	/**
+	 * 视频视图显示比例类型 (默认:RatioType.ratio_all, 如果设置CameraViewRatio > 0,
+	 * 将忽略RatioType)
+	 */
+	public final int getRatioType()
+	{
+		return mRatioType;
+	}
+
+	/**
+	 * 视频视图显示比例类型 (默认:RatioType.ratio_all, 如果设置CameraViewRatio > 0,
+	 * 将忽略RatioType)
+	 */
+	public final void setRatioType(int mRatioType)
+	{
+		this.mRatioType = mRatioType;
+
+		if (mScreenRatioType == 0)
+		{
+			mScreenRatioType = RatioType.radioType(TuSdkContext.getScreenSize().minMaxRatio());
+		}
+
+		// 将和屏幕比例相同的比例替换为全屏选项
+		if (mScreenRatioType != 1 && (mScreenRatioType == (mScreenRatioType & mRatioType)))
+		{
+			this.mRatioType = ((mRatioType | RatioType.ratio_orgin) ^ mScreenRatioType);
+		}
+	}
+
+	/** 获取当前显示比例 */
+	public float getCurrentRatio()
+	{
+		// 设置了固定比例
+		if (mCurrentRatioType > 0) return RatioType.ratio(mCurrentRatioType);
+		return 0f;
+	}
+
+	/**
+	 * 获取显示比例类型
+	 *
+	 * @return
+	 */
+	public int getCurrentRatioType()
+	{
+		return mCurrentRatioType;
+	}
+
+	/** 设置当前比例类型 */
+	protected void setCurrentRatioType(int ratioType)
+	{
+		long actType;
+		int ratioIcon;
+		switch (ratioType)
+		{
+			case RatioType.ratio_3_4:
+				ratioIcon = TuSdkContext.getDrawableResId("lsq_style_default_camera_ratio_3_4");
+				actType = ComponentActType.camera_action_ratio_3_4;
+				break;
+			case RatioType.ratio_1_1:
+				ratioIcon = TuSdkContext.getDrawableResId("lsq_style_default_camera_ratio_1_1");
+				actType = ComponentActType.camera_action_ratio_1_1;
+				break;
+			default:
+				ratioIcon = TuSdkContext.getDrawableResId("lsq_style_default_camera_ratio_orgin");
+				actType = ComponentActType.camera_action_ratio_orgin;
+				break;
+
+		}
+		mCurrentRatioType = ratioType;
+
+		if (mRatioButton != null)
+			mRatioButton.setImageResource(ratioIcon);
+
+		// sdk统计
+		StatisticsManger.appendComponent(actType);
+
+	}
+
+	/**
+	 * 获取当前 Ratio 预览画面顶部偏移百分比（默认：-1 居中显示 取值范围：0-1）
+	 *
+	 * @param ratioType
+	 * @return
+	 */
+	protected float getPreviewOffsetTopPercent(int ratioType)
+	{
+		if (ratioType == RatioType.ratio_1_1) return 0.1f;
+
+		// 置顶
+		return 0.f;
+	}
+
 	protected void dispatchClickEvent(View v)
 	{
 		if (v == mCloseView)
 		{
 			if(getDelegate() != null) getDelegate().finishRecordActivity();
+		}
+		else if(v == mRatioButton)
+		{
+			handleCameraRatio();
 		}
 		else if (v == mFlashButton)
 		{
@@ -658,6 +798,9 @@ public class MovieRecordView extends RelativeLayout
 		}
 		else if (v == mConfirmButton)
 		{
+			// 启动录制隐藏比例调节按钮
+			if(mRatioButton != null)
+				mRatioButton.setVisibility(VISIBLE);
 			updateButtonStatus(mConfirmButton, false);
 			updateButtonStatus(mRollBackButton, false);
 			initProgressList();
@@ -744,6 +887,7 @@ public class MovieRecordView extends RelativeLayout
 	{
 		Intent intent = new Intent(mContext, MovieAlbumActivity.class);
 		intent.putExtra("cutClassName", MoviePreviewAndCutActivity.class.getName());
+		intent.putExtra("selectMax", 1);
 		mContext.startActivity(intent);
 		getDelegate().finishRecordActivity();
 	}
@@ -1144,6 +1288,22 @@ public class MovieRecordView extends RelativeLayout
 	protected void handleStickerButton()
 	{
 		showStickerLayout();
+	}
+
+	/** 改变屏幕比例 录制状态不可改变 */
+	private void handleCameraRatio()
+	{
+		if (mCamera == null || !mCamera.canChangeRatio()) return;
+
+		int type = RatioType.nextRatioType(this.getRatioType(), mCurrentRatioType);
+		this.setCurrentRatioType(type);
+
+		// 设置预览区域顶部偏移量 必须在 changeRegionRatio 之前设置
+		mCamera.getRegionHandler().setOffsetTopPercent(getPreviewOffsetTopPercent(type));
+		mCamera.changeRegionRatio(RatioType.ratio(type));
+
+		// 计算保存比例
+		mCamera.getVideoEncoderSetting().videoSize = TuSdkSize.create((int)(mCamera.getCameraPreviewSize().width * RatioType.ratio(type)), mCamera.getCameraPreviewSize().width);
 	}
 	
 	/** 更新底部栏的显示状态 */

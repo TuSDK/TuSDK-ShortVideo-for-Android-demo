@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.AssetsHelper;
 import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
@@ -31,6 +32,7 @@ import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.OnMP4MovieMix
 import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.State;
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.views.CompoundConfigView;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
@@ -57,7 +59,7 @@ import android.widget.TextView;
  */
 public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDelegate
 {
-	private final static int[] AUIDOENTRY_RESIDARRAY = new int[]{R.raw.tusdk_sample_video,R.raw.lsq_audio_oldmovie, R.raw.lsq_audio_relieve};
+	private final static int[] AUIDOENTRY_RESIDARRAY = new int[]{R.raw.lsq_audio_oldmovie, R.raw.lsq_audio_relieve};
 	
 	/** MP4视频格式混合 */
 	private TuSDKMP4MovieMixer mMP4MovieMixer;
@@ -81,6 +83,9 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	
 	/** 视频合成按钮 */
 	private Button mMovieMixerButton;
+
+	/** 输入视频路径 */
+	private String mInputPath = "";
 	
 	/** 混合后的视频地址 */
 	private String mMixedVideoPath;
@@ -90,6 +95,9 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.movie_mixer_activity);
+
+		mInputPath = getIntent().getStringExtra("videoPath");
+
 		initView();
 		getAudioEntryList();
 		initMediaPlayer();
@@ -140,7 +148,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	
 	private Uri getVideoPath()
 	{
-		Uri videoPathUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.tusdk_sample_video);
+		Uri videoPathUri = Uri.parse(mInputPath);
 		return videoPathUri;
 	}
 
@@ -289,15 +297,17 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 		if (mAudioEntryList != null && mAudioEntryList.size() > 0) return mAudioEntryList;
 		
 		mAudioEntryList = new ArrayList<TuSDKAudioEntry>(2);
+
+		TuSDKAudioEntry audioEntry = new TuSDKAudioEntry(mInputPath);
+		audioEntry.setTrunk(true);
+		mAudioEntryList.add(audioEntry);
 		
 		for (int i = 0; i < AUIDOENTRY_RESIDARRAY.length; i++)
 		{
 			Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + AUIDOENTRY_RESIDARRAY[i]);
-			
-			TuSDKAudioEntry audioEntry = new TuSDKAudioEntry(uri);
-			audioEntry.setTrunk( i == 0 );
-			
-			mAudioEntryList.add(audioEntry);
+			TuSDKAudioEntry audio = new TuSDKAudioEntry(uri);
+			audio.setTrunk(false);
+			mAudioEntryList.add(audio);
 		}
 		
 		return mAudioEntryList;
@@ -377,7 +387,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 		  			  .setOutputFilePath(getMixedVideoPath()) // 设置输出路径
 		  			  .setVideoSoundVolume(1.f) // 设置音乐音量
 		  			  .setClearAudioDecodeCacheInfoOnCompleted(true) // 设置音视频混合完成后是否清除缓存信息 默认：true （false:再次混合时可加快混合速度）
-		  			  .mix(TuSDKMediaDataSource.create(getVideoPath()), mAudioEntryList, false); //  mVideoDataSource : 视频路径 mAudioTracks : 待混合的音频数据 true ： 是否混合视频原音
+		  			  .mix(TuSDKMediaDataSource.create(mInputPath), mAudioEntryList, false); //  mVideoDataSource : 视频路径 mAudioTracks : 待混合的音频数据 true ： 是否混合视频原音
 	}
 
 	 public void refreshFile(File file) 

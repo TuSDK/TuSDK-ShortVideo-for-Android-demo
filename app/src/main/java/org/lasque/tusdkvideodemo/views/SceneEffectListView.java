@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdkvideodemo.R;
 
@@ -82,37 +83,35 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
 
         if (position == 0)
         {
+            view.setOnTouchListener(null);
             view.updateUndoButton(mIsEnableUndoClicked);
-            return;
-        }
+        }else {
+            view.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
 
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
 
-        view.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+                            // 处理按下
+                            handlePressEvent(position);
 
-                switch (motionEvent.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN:
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                        case MotionEvent.ACTION_POINTER_UP:
 
-                        // 处理按下
-                        handlePressEvent(position);
+                            // 处理释放
+                            handleReleaseEvent(position);
 
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_POINTER_UP:
+                            break;
 
-                        // 处理释放
-                        handleReleaseEvent(position);
+                    }
 
-                        break;
-
+                    return true;
                 }
-
-                return true;
-            }
-        });
+            });
+        }
     }
 
     /**

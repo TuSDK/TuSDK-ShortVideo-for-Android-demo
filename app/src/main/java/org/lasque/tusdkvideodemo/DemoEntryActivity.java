@@ -132,7 +132,7 @@ public class DemoEntryActivity extends TuFragmentActivity
 	 */
 	private void handleEditorButton()
 	{
-		AlbumUtils.openVideoAlbum(EDITOR_CLASS);
+		AlbumUtils.openVideoAlbum(EDITOR_CLASS,1);
 	}
 
 	/**
