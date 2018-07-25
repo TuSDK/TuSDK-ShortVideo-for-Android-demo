@@ -10,7 +10,6 @@
 package org.lasque.tusdkvideodemo;
 
 import org.lasque.tusdkvideodemo.api.AudioMixerActivity;
-import org.lasque.tusdkvideodemo.api.MediaPlayerActivity;
 import org.lasque.tusdkvideodemo.api.MutiAudioPlayerActivity;
 import org.lasque.tusdkvideodemo.api.AudioRecordActivity;
 import org.lasque.tusdkvideodemo.api.MovieCompressActivity;
@@ -171,7 +170,6 @@ public class ExpandableSamplesListAdapter extends BaseExpandableListAdapter
         AUDIO_FILE_RECORDER(R.string.lsq_audio_file_recorder, AudioRecordActivity.class.getName(), 0, false),
         VIDEO_COMPRESS(R.string.lsq_compresser_compress, MovieCompressActivity.class.getName(), 1, false),
         MUTI_AUDIO_PLAYER(R.string.lsq_muti_audio_player, MutiAudioPlayerActivity.class.getName(), 0, false),
-        AUDIO_PLAYER(R.string.lsq_media_player, MediaPlayerActivity.class.getName(), 1, false),
         ALBUM_VIDEO_TIMECUT_SAVE(R.string.lsq_album_video_timecut_save, MovieCutActivity.class.getName(), 1, false),
         VIDEO_MIXED(R.string.lsq_video_mixed, MovieSplicerActivity.class.getName(), 2, false),
         VIDEO_TRANSCODE(R.string.lsq_transcode_transcode, MovieTranscodeActivity.class.getName(), 1, false);
@@ -218,7 +216,6 @@ public class ExpandableSamplesListAdapter extends BaseExpandableListAdapter
                 SampleItem.AUDIO_FILE_RECORDER,
                 SampleItem.VIDEO_COMPRESS,
                 SampleItem.MUTI_AUDIO_PLAYER,
-                SampleItem.AUDIO_PLAYER,
                 SampleItem.ALBUM_VIDEO_TIMECUT_SAVE,
                 SampleItem.VIDEO_MIXED,
                 SampleItem.VIDEO_TRANSCODE);
