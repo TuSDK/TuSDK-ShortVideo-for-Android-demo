@@ -15,8 +15,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.TLog;
-import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.video.editor.TuSDKMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSDKTimeRange;
@@ -100,10 +98,10 @@ public class EffectsTimelineView extends FrameLayout
 
                 if (segmentModel.getProgressRange() == null) return;
 
-//                float left = ((float) magicModel.getProgressRange().startProgress() / (float) mDurationTimeUs) * getWidth();
-//                float width = ((float) magicModel.getAtTimeRange().getEndTimeUS() / (float) mDurationTimeUs) * getWidth();
-                float left = ( segmentModel.getProgressRange().startProgress * getWidth());
-                float width = ( segmentModel.getProgressRange().endProgress * getWidth());
+                float left = ((float) segmentModel.getCurrentMediaEffectData().getAtTimeRange().getStartTimeUS() / (float) mDurationTimeUs) * getWidth();
+                float width = ((float) segmentModel.getCurrentMediaEffectData().getAtTimeRange().getEndTimeUS() / (float) mDurationTimeUs) * getWidth();
+//                float left = ( segmentModel.getProgressRange().startProgress * getWidth());
+//                float width = ( segmentModel.getProgressRange().endProgress * getWidth());
 
                 mPaint.setColor(segmentModel.getLabelColor());
 
@@ -459,6 +457,10 @@ public class EffectsTimelineView extends FrameLayout
             progressRange.startProgress = ((float)startTimeUs/(float)mDurationTimeUs);
             sceneEffectModel.setProgressRange(progressRange);
         }
+        if (sceneEffectModel.getCurrentMediaEffectData().getAtTimeRange() == null)
+            sceneEffectModel.getCurrentMediaEffectData().setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(startTimeUs,startTimeUs));
+
+        sceneEffectModel.getCurrentMediaEffectData().getAtTimeRange().setStartTimeUs(startTimeUs);
 
         sceneEffectModel.getProgressRange().setStartProgress(((float)startTimeUs/(float)mDurationTimeUs));
 
@@ -483,6 +485,10 @@ public class EffectsTimelineView extends FrameLayout
             sceneEffectModel.setProgressRange(new EffectsTimelineSegmentViewModel.ProgressRange());
             sceneEffectModel.getProgressRange().startProgress = ((float)endTimeUs/(float)mDurationTimeUs);
         }
+        if (sceneEffectModel.getCurrentMediaEffectData().getAtTimeRange() == null)
+            sceneEffectModel.getCurrentMediaEffectData().setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(endTimeUs,endTimeUs));
+
+        sceneEffectModel.getCurrentMediaEffectData().getAtTimeRange().setEndTimeUs(endTimeUs);
 
         sceneEffectModel.getProgressRange().setEndProgress(((float)endTimeUs/(float)mDurationTimeUs));
 

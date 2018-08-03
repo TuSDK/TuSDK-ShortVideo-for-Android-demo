@@ -1424,7 +1424,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 			startEffectsPreview();
 
 			TuSDKMediaSceneEffectData mediaSceneEffectData = new TuSDKMediaSceneEffectData(code);
-			mediaSceneEffectData.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(mMovieEditor.getCurrentSampleTimeUs(),Long.MAX_VALUE));
+			mediaSceneEffectData.setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(mMovieEditor.getCurrentSampleTimeUs(),mMovieEditor.getCurrentSampleTimeUs()));
 
 			//设置ViewModel
             EffectsTimelineView.EffectsTimelineSegmentViewModel sceneEffectModel = new EffectsTimelineView.EffectsTimelineSegmentViewModel("lsq_scence_effect_color_"+code);

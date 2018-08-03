@@ -21,7 +21,7 @@ import org.lasque.tusdkvideodemo.R;
  */
 public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellView> implements TuSdkTableView.TuSdkTableViewItemClickDelegate<String, SceneEffectCellView>
 {
-    private static final int MIN_PRESS_DURATION_MILLIS = 200;
+    private static final int MIN_PRESS_DURATION_MILLIS = 100;
     private Handler mHandler = new Handler();
 
     // 撤销按钮是否可被点击
