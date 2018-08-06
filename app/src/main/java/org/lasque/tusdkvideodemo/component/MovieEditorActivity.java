@@ -28,6 +28,7 @@ import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.decoder.TuSDKMoviePacketReader;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
+import org.lasque.tusdk.core.delegate.TuSDKAudioLoadDelegate;
 import org.lasque.tusdk.core.delegate.TuSDKVideoLoadDelegate;
 import org.lasque.tusdk.core.delegate.TuSDKVideoSaveDelegate;
 import org.lasque.tusdk.core.seles.SelesParameters;
@@ -390,6 +391,7 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		mMovieEditor.setDelegate(this);
 		mMovieEditor.setSaveDelegate(mSaveDelegate);
 		mMovieEditor.setLoadDelegate(mLoadDelegate);
+		mMovieEditor.setAudioLoadDelegate(mAudioLoadDelegate);
 
 		mMovieEditor.loadVideo();
 
@@ -528,6 +530,25 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		}
 	};
 
+	/** 音频加载回调 */
+	private TuSDKAudioLoadDelegate mAudioLoadDelegate = new TuSDKAudioLoadDelegate()
+	{
+		@Override
+		public void onProgressChanged(float percentage)
+		{
+			mCircleView.setText(50 + (percentage * 50)+"%");
+			mCircleView.setValue(0.5f + percentage * 0.5f);
+		}
+
+		@Override
+		public void onLoadComplete()
+		{
+			getTabBar().setEnable(true);
+
+			mCircleView.setVisibility(View.GONE);
+		}
+	};
+
 	/** 视频加载回调 */
 	private TuSDKVideoLoadDelegate mLoadDelegate = new TuSDKVideoLoadDelegate()
 	{
@@ -535,22 +556,18 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 		public void onProgressChaned(float percentage)
 		{
 			mCircleView.setVisibility(View.VISIBLE);
-			mCircleView.setText((percentage * 100)+"%");
-			mCircleView.setValue(percentage);
+			mCircleView.setText((percentage * 50)+"%");
+			mCircleView.setValue(percentage * 0.5f);
 		}
 
 		@Override
 		public void onLoadComplete(TuSDKVideoInfo videoInfo)
 		{
 
-			getTabBar().setEnable(true);
-
-			mCircleView.setVisibility(View.GONE);
-
 			onVideoInfoReady(videoInfo);
 
 			//同步文字的StickerView
-			mStickerView.resizeForVideo(TuSdkSize.create(videoInfo.width,videoInfo.height),isRatioAdaption);
+			mStickerView.resizeForVideo(TuSdkSize.create(mVideoInfo.width,mVideoInfo.height),isRatioAdaption);
 		}
 	};
 
@@ -610,14 +627,12 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 			mActionButton.setVisibility((status == TuSDKMovieEditorStatus.Previewing || status == TuSDKMovieEditorStatus.Recording) ? View.INVISIBLE : View.VISIBLE);
 		}
 
-        switch (status)
+		switch (status)
         {
             case Loaded:
                 // 首次进入时，选中 MV 和滤镜默认效果
                 selectNormalFilterAndNormalMv();
-				mCircleView.setVisibility(View.GONE);
-                mSaveButton.setEnabled(true);
-
+				mMovieEditor.loadAudio();
             break;
             case LoadVideoFailed:
 				mCircleView.setVisibility(View.GONE);
@@ -640,11 +655,12 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
     {
         TuSdk.messageHub().dismissRightNow();
 
-        if(status == TuSDKMovieEditorSoundStatus.Loading)
-        {
-            String msg = getStringFromResource("new_movie_audio_effect_loading");
-            TuSdk.messageHub().setStatus(MovieEditorActivity.this, msg);
-        }
+		if(status == TuSDKMovieEditorSoundStatus.Loaded)
+		{
+			mCircleView.setVisibility(View.GONE);
+			mSaveButton.setEnabled(true);
+		}
+
     }
 
 	/**
@@ -1428,8 +1444,8 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
 
 			//设置ViewModel
             EffectsTimelineView.EffectsTimelineSegmentViewModel sceneEffectModel = new EffectsTimelineView.EffectsTimelineSegmentViewModel("lsq_scence_effect_color_"+code);
-			float startProgress = (float)mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
-			float endProgress = (float) mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
+			float startProgress = (float)mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoInfo().durationTimeUs;
+			float endProgress = (float) mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoInfo().durationTimeUs;
 			sceneEffectModel.makeProgressRange(startProgress,endProgress);
 			sceneEffectModel.setMediaEffectData(mediaSceneEffectData);
 

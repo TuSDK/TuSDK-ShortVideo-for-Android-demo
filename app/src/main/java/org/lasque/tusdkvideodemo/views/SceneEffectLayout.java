@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.component.MediaEffectsManager;
 import org.lasque.tusdkvideodemo.utils.Constants;
 
 import java.util.Arrays;
@@ -105,7 +104,7 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
         @Override
         public void onProgressChaned(final float progress)
         {
-            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoDurationTimeUs() * progress));
+            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoInfo().durationTimeUs * progress));
         }
 
         @Override

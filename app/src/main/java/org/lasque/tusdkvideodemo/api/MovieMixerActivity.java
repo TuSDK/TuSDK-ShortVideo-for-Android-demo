@@ -9,35 +9,6 @@
  */
 package org.lasque.tusdkvideodemo.api;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lasque.tusdk.core.TuSdk;
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.AssetsHelper;
-import org.lasque.tusdk.core.utils.StringHelper;
-import org.lasque.tusdk.core.utils.TLog;
-import org.lasque.tusdk.core.utils.image.AlbumHelper;
-import org.lasque.tusdk.core.video.TuSDKVideoResult;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
-import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer;
-import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate;
-import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioEntry;
-import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer;
-import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.ErrorCode;
-import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.OnMP4MovieMixerDelegate;
-import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.State;
-import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
-import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.album.MovieInfo;
-import org.lasque.tusdkvideodemo.views.CompoundConfigView;
-import org.lasque.tusdkvideodemo.views.ConfigViewParams;
-import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
-import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -46,9 +17,35 @@ import android.os.Bundle;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+
+import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer;
+import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer.TuSDKMutiAudioPlayerDelegate;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioEntry;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.ErrorCode;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.OnMP4MovieMixerDelegate;
+import org.lasque.tusdk.api.movie.preproc.mixer.TuSDKMP4MovieMixer.State;
+import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
+import org.lasque.tusdk.core.utils.StringHelper;
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.image.AlbumHelper;
+import org.lasque.tusdk.core.video.TuSDKVideoResult;
+import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.views.CompoundConfigView;
+import org.lasque.tusdkvideodemo.views.ConfigViewParams;
+import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
+import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 音视频混合
@@ -115,7 +112,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	private TuSDKMoviePlayerDelegate mMoviePlayerDelegate = new TuSDKMoviePlayerDelegate()
 	{
 		@Override
-		public void onStateChanged(PlayerState state) 
+		public void onStateChanged(PlayerState state)
 		{
 			if (state == PlayerState.INITIALIZED)
 			{
@@ -174,7 +171,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	/**
 	 * 多音轨混合播放器Delegate
 	 */
-	private TuSDKMutiAudioPlayerDelegate mMutiAudioPlayerDelegate = new TuSDKMutiAudioPlayerDelegate() 
+	private TuSDKMutiAudioPlayerDelegate mMutiAudioPlayerDelegate = new TuSDKMutiAudioPlayerDelegate()
 	{
 		/**
 		 * 播放器状态改变事件
@@ -187,7 +184,11 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 				startMutiAudioPlayer();
 				startMoviePlayer();
 			}
-				
+
+		}
+		@Override
+		public void onProgressChanged(float percentage) {
+
 		}
 	};
 	
@@ -348,11 +349,11 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	/**
 	 * 原音配音调节栏委托事件
 	 */
-	private ConfigViewSeekBar.ConfigSeekbarDelegate mVoiceConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate() 
+	private ConfigViewSeekBar.ConfigSeekbarDelegate mVoiceConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate()
 	{
 		
 		@Override
-		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg) 
+		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg)
 		{
 			if (arg.getKey().equals("origin"))
 				setSeekBarProgress(0,arg.getPercentValue());
@@ -431,7 +432,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	 * 混合结果回调
 	 */
 	@Override
-	public void onMixerComplete(TuSDKVideoResult result) 
+	public void onMixerComplete(TuSDKVideoResult result)
 	{
 		if(result != null)
 		{
@@ -442,7 +443,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	}
 
 	@Override
-	public void onErrrCode(ErrorCode code) 
+	public void onErrrCode(ErrorCode code)
 	{
 		if(code == ErrorCode.UnsupportedVideoFormat)
 		{

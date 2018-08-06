@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
@@ -146,7 +145,7 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
         @Override
         public void onProgressChaned(final float progress)
         {
-            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoDurationTimeUs() * progress));
+            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoInfo().durationTimeUs * progress));
         }
 
         @Override

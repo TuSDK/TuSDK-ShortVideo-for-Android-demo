@@ -10,11 +10,18 @@
 
 package org.lasque.tusdkvideodemo.api;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.app.Activity;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-
+import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioEntry;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioMixer;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioMixer.OnAudioMixerDelegate;
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAverageAudioMixer;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.decoder.TuSDKAudioInfo;
@@ -22,23 +29,15 @@ import org.lasque.tusdk.core.encoder.audio.TuSDKAACAudioFileEncoder;
 import org.lasque.tusdk.core.encoder.audio.TuSDKAudioEncoderSetting;
 import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
-import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioEntry;
-import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioMixer;
-import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioMixer.OnAudioMixerDelegate;
-import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAverageAudioMixer;
-import org.lasque.tusdk.api.audio.player.TuSDKMutiAudioPlayer;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.CompoundConfigView;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
 import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
 
-import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 多音轨混合
@@ -168,7 +167,7 @@ public class AudioMixerActivity extends Activity
 	 */
 	private String getMixedAudioPath()
 	{
-		mMixedAudioPath = new File(AlbumHelper.getAblumPath(),String.format("lsq_%s.aac", StringHelper.timeStampString())).getPath();		
+		mMixedAudioPath = new File(AlbumHelper.getAblumPath(),String.format("lsq_%s.aac", StringHelper.timeStampString())).getPath();
 		return mMixedAudioPath;
 	}
 	
@@ -233,13 +232,13 @@ public class AudioMixerActivity extends Activity
 	/**
 	 * 音频混合Delegate
 	 */
-	private OnAudioMixerDelegate mAudioMixerDelegate = new OnAudioMixerDelegate() 
+	private OnAudioMixerDelegate mAudioMixerDelegate = new OnAudioMixerDelegate()
 	{
 		/**
 		 * 混合状态改变事件
 		 */
 		@Override
-		public void onStateChanged(TuSDKAudioMixer.State state) 
+		public void onStateChanged(TuSDKAudioMixer.State state)
 		{
 			if (state == TuSDKAudioMixer.State.Complete)
 			{
@@ -250,7 +249,7 @@ public class AudioMixerActivity extends Activity
 				
 			}else if(state == TuSDKAudioMixer.State.Decoding || state == TuSDKAudioMixer.State.Mixing)
 			{
-				TuSdk.messageHub().setStatus(AudioMixerActivity.this, "混合中");		
+				TuSdk.messageHub().setStatus(AudioMixerActivity.this, "混合中");
 				
 			}else if(state == TuSDKAudioMixer.State.Cancelled)
 			{
@@ -324,6 +323,11 @@ public class AudioMixerActivity extends Activity
 			if (state == TuSDKMutiAudioPlayer.State.PrePared)
 				startMutiAudioPlayer();
 		}
+
+		@Override
+		public void onProgressChanged(float percentage) {
+
+		}
 	};
 	
 	private View.OnClickListener mOnClickListener = new View.OnClickListener()
@@ -381,11 +385,11 @@ public class AudioMixerActivity extends Activity
 	/**
 	 * 原音配音调节栏委托事件
 	 */
-	private ConfigViewSeekBar.ConfigSeekbarDelegate mFilterConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate() 
+	private ConfigViewSeekBar.ConfigSeekbarDelegate mFilterConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate()
 	{
 		
 		@Override
-		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg) 
+		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg)
 		{
 			if (arg.getKey().equals("origin"))
 					setSeekBarProgress(0,arg.getPercentValue());

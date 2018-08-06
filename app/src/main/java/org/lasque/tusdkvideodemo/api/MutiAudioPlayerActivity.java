@@ -16,6 +16,7 @@ import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * 多音轨播放器
  *
@@ -169,6 +170,11 @@ public class MutiAudioPlayerActivity extends Activity {
             {
                 startMutiAudioPlayer();
             }
+
+        }
+
+        @Override
+        public void onProgressChanged(float percentage) {
 
         }
     };

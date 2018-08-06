@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
@@ -58,7 +57,7 @@ public class MagicEffectLayout extends TuSdkRelativeLayout
         @Override
         public void onProgressChaned(final float progress)
         {
-            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoDurationTimeUs() * progress));
+            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoInfo().durationTimeUs * progress));
         }
 
         @Override

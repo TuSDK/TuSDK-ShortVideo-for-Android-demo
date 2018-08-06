@@ -50,7 +50,7 @@ import static org.lasque.tusdkvideodemo.views.MovieEditorTabBar.TabType.Particle
  *
  * @author LiuHang
  */
-public class MovieEditorFullScreenActivity extends MovieEditorActivity 
+public class MovieEditorFullScreenActivity extends MovieEditorActivity
 {
 	private static final int MIN_PRESS_DURATION_MILLIS = 200;
 
@@ -157,8 +157,8 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 							//构建TimeLineViewModel
 							EffectsTimelineView.EffectsTimelineSegmentViewModel magicEffectSegment = new EffectsTimelineView.EffectsTimelineSegmentViewModel("lsq_margic_effect_color_"+mCurrentMagicCode);
 							magicEffectSegment.setMediaEffectData(mCurrentMagicEffectModel);
-							float startProgress = (float)mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
-							float endProgress = (float) mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoDurationTimeUs();
+							float startProgress = (float)mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoInfo().durationTimeUs;
+							float endProgress = (float) mMovieEditor.getCurrentSampleTimeUs()/(float)mMovieEditor.getVideoInfo().durationTimeUs;
 							magicEffectSegment.makeProgressRange(startProgress,endProgress);
 
 
@@ -423,7 +423,7 @@ public class MovieEditorFullScreenActivity extends MovieEditorActivity
 	private TuSdkTableView.TuSdkTableViewItemClickDelegate<String, MagicEffectCellView> mMagicTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<String, MagicEffectCellView>()
 	{
 		@Override
-		public void onTableViewItemClick(String code,MagicEffectCellView itemView, int position)
+		public void onTableViewItemClick(String code, MagicEffectCellView itemView, int position)
 		{
 			// 撤销
 			if (position == 0)
