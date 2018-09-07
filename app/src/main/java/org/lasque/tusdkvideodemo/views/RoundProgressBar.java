@@ -9,9 +9,6 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import org.lasque.tusdk.core.utils.TLog;
-import org.lasque.tusdkvideodemo.R;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -21,6 +18,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdkvideodemo.R;
 
 /**
  * 圆形进度条

@@ -3,8 +3,8 @@ package org.lasque.tusdkvideodemo.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
-import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.utils.Constants;
 
@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public class SceneEffectLayout extends TuSdkRelativeLayout
 {
-    private TuSDKMovieEditor mMovieEditor;
+    private TuSdkMovieEditorImpl mMovieEditor;
 
     /** 场景特效时间轴视图 */
     private EffectsTimelineView mSceneEffectsTimelineView;
@@ -30,9 +30,7 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
 
     }
 
-    /**
-     * 加载视图
-     */
+    /** 加载视图 */
     @Override
     public void loadView()
     {
@@ -87,7 +85,7 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
      * 设置MovieEditor
      * @param movieEditor
      */
-    public void setMovieEditor(TuSDKMovieEditor movieEditor)
+    public void setMovieEditor(TuSdkMovieEditorImpl movieEditor)
     {
         this.mMovieEditor = movieEditor;
     }
@@ -98,13 +96,14 @@ public class SceneEffectLayout extends TuSdkRelativeLayout
         @Override
         public void onProgressCursorWillChaned()
         {
-            mMovieEditor.pausePreview();
+            mMovieEditor.getEditorPlayer().pausePreview();
         }
 
         @Override
         public void onProgressChaned(final float progress)
         {
-            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoInfo().durationTimeUs * progress));
+            mMovieEditor.getEditorPlayer().pausePreview();
+            mMovieEditor.getEditorPlayer().seekTimeUs((long)(mMovieEditor.getEditorPlayer().getTotalTimeUS() * progress));
         }
 
         @Override

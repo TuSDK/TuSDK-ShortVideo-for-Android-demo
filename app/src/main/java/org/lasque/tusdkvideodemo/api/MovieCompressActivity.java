@@ -17,22 +17,17 @@ import android.widget.Toast;
 
 import org.lasque.tusdk.api.movie.compresser.TuSDKMovieCompresser;
 import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.delegate.TuSDKVideoSaveDelegate;
-import org.lasque.tusdk.core.encoder.video.TuSDKVideoEncoderSetting;
 import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoResult;
 import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.album.MovieInfo;
-import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.List;
 
 import at.grabner.circleprogress.CircleProgressView;
 

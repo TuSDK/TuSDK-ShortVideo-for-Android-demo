@@ -25,7 +25,7 @@ import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
  * @author LiuHang
  *
  */
-public class ConfigViewSeekBar extends 	TuSdkRelativeLayout
+public class ConfigViewSeekBar extends TuSdkRelativeLayout
 {
 	// SeekBar默认布局
 	private static String mResID = "tusdk_config_seekbar_one";

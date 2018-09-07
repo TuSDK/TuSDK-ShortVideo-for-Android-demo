@@ -184,11 +184,7 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 				startMutiAudioPlayer();
 				startMoviePlayer();
 			}
-
-		}
-		@Override
-		public void onProgressChanged(float percentage) {
-
+				
 		}
 	};
 	

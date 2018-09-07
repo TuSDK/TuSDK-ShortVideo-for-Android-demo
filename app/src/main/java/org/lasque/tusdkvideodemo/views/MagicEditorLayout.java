@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
-import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
 
 /**
@@ -23,7 +23,7 @@ import org.lasque.tusdkvideodemo.R;
 public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnClickListener
 {
 
-    private TuSDKMovieEditor mMovieEditor;
+    private TuSdkMovieEditorImpl mMovieEditor;
 
 
     // 魔法预览界面
@@ -87,7 +87,7 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
      * 设置MovieEditor
      * @param movieEditor
      */
-    public void setMovieEditor(TuSDKMovieEditor movieEditor) {
+    public void setMovieEditor(TuSdkMovieEditorImpl movieEditor) {
         this.mMovieEditor = movieEditor;
     }
 
@@ -131,21 +131,20 @@ public class MagicEditorLayout extends TuSdkRelativeLayout implements View.OnCli
         this.mDelegate = delegate;
     }
 
-
-
     /** 魔法特效时间轴变化 */
     protected EffectsTimelineView.EffectsTimelineViewDelegate mMagicEffectsTimelineViewDelegate = new EffectsTimelineView.EffectsTimelineViewDelegate()
     {
         @Override
         public void onProgressCursorWillChaned()
         {
-            mMovieEditor.pausePreview();
+            mMovieEditor.getEditorPlayer().pausePreview();
         }
 
         @Override
         public void onProgressChaned(final float progress)
         {
-            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoInfo().durationTimeUs * progress));
+            mMovieEditor.getEditorPlayer().seekTimeUs((long)(mMovieEditor.getEditorPlayer().getTotalTimeUS() * progress));
+            mMovieEditor.getEditorPlayer().pausePreview();
         }
 
         @Override

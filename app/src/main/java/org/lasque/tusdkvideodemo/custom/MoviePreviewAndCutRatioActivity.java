@@ -8,9 +8,6 @@
  *
  */
 package org.lasque.tusdkvideodemo.custom;
-import org.lasque.tusdk.core.struct.TuSdkSize;
-import org.lasque.tusdk.core.utils.RectHelper;
-import org.lasque.tusdkvideodemo.suite.MoviePreviewAndCutActivity;
 
 import android.graphics.Rect;
 import android.media.MediaPlayer;
@@ -18,6 +15,10 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 import android.widget.RelativeLayout;
+
+import org.lasque.tusdk.core.struct.TuSdkSize;
+import org.lasque.tusdk.core.utils.RectHelper;
+import org.lasque.tusdkvideodemo.suite.MoviePreviewAndCutActivity;
 
 /**
  * 视频预览 + 获取视频裁剪范围

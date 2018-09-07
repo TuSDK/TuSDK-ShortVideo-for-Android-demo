@@ -39,6 +39,7 @@ import java.io.File;
 import at.grabner.circleprogress.CircleProgressView;
 
 import static android.widget.Toast.LENGTH_SHORT;
+
 /**
  * 视频转码
  *

@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/lsq_cameraView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/lsq_topBar"
         >
         <Button
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/lsq_style_default_crop_btn_record"
-            android:clickable="false" />
+            />
 
 
         <org.lasque.tusdk.impl.components.widget.sticker.StickerView
@@ -100,6 +100,14 @@
         android:layout_centerVertical="true"
         android:layout_above="@+id/lsq_bottom_navigator"
         layout="@layout/movie_editor_dubbing_view"/>
+
+        <!-- 时间特效视图 -->
+        <include
+            android:id="@+id/lsq_time_effects_layout"
+            layout="@layout/movie_editor_time_effects_layout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_above="@+id/lsq_bottom_navigator"/>
 
         <!-- 文字贴纸视图 -->
         <include

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
-import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.utils.Constants;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 public class MagicEffectLayout extends TuSdkRelativeLayout
 {
-    private TuSDKMovieEditor mMovieEditor;
+    private TuSdkMovieEditorImpl mMovieEditor;
 
     private EffectsTimelineView mTimelineView;
 
@@ -51,13 +51,14 @@ public class MagicEffectLayout extends TuSdkRelativeLayout
         @Override
         public void onProgressCursorWillChaned()
         {
-            mMovieEditor.pausePreview();
+            mMovieEditor.getEditorPlayer().pausePreview();
         }
 
         @Override
         public void onProgressChaned(final float progress)
         {
-            mMovieEditor.seekTimeUs((long)(mMovieEditor.getVideoInfo().durationTimeUs * progress));
+            mMovieEditor.getEditorPlayer().pausePreview();
+            mMovieEditor.getEditorPlayer().seekTimeUs((long)(mMovieEditor.getEditorPlayer().getTotalTimeUS() * progress));
         }
 
         @Override
@@ -103,7 +104,7 @@ public class MagicEffectLayout extends TuSdkRelativeLayout
      *
      * @param movieEditor
      */
-    public void setMovieEditor(TuSDKMovieEditor movieEditor)
+    public void setMovieEditor(TuSdkMovieEditorImpl movieEditor)
     {
         this.mMovieEditor = movieEditor;
     }

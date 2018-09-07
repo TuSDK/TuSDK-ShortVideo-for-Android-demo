@@ -9,14 +9,14 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import org.lasque.tusdkvideodemo.R;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import org.lasque.tusdkvideodemo.R;
 
 /**
  * 自定义TextView，可以设置CompoundDrawable大小

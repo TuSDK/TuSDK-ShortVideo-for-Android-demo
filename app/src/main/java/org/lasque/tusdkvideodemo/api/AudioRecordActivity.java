@@ -10,7 +10,12 @@
 
 package org.lasque.tusdkvideodemo.api;
 
-import java.io.File;
+import android.app.Activity;
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
@@ -21,12 +26,7 @@ import org.lasque.tusdk.core.audio.TuSDKAudioFileRecorder.RecordState;
 import org.lasque.tusdk.core.audio.TuSDKAudioFileRecorder.TuSDKRecordAudioDelegate;
 import org.lasque.tusdkvideodemo.R;
 
-import android.app.Activity;
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import java.io.File;
 
 /**
  * 录制音频
@@ -106,12 +106,12 @@ public class AudioRecordActivity extends Activity
 		{
 			if (state == RecordState.Recording)
 			{
-	            String hintMsg = getResources().getString(R.string.lsq_audio_record_recording);    
+	            String hintMsg = getResources().getString(R.string.lsq_audio_record_recording);
 	            TuSdk.messageHub().showToast(AudioRecordActivity.this, hintMsg);
 			}
 			else if (state == RecordState.Stoped)
 			{
-				String hintMsg = getResources().getString(R.string.lsq_audio_record_stopped);    
+				String hintMsg = getResources().getString(R.string.lsq_audio_record_stopped);
 	            TuSdk.messageHub().showToast(AudioRecordActivity.this, hintMsg);
 			}
 		}

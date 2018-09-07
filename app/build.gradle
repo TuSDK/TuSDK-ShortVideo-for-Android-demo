@@ -38,8 +38,8 @@ dependencies {
     compile('com.github.jakob-grabner:Circle-Progress-View:v1.3', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile files('libs/TuSDKFace-2.2.0.jar')
-    compile files('libs/TuSDKVideo-2.2.0.jar')
-    compile files('libs/TuSDKCore-2.9.2.jar')
+    compile files('libs/TuSDKFace-3.0.0.jar')
+    compile files('libs/TuSDKVideo-3.0.0.jar')
+    compile files('libs/TuSDKCore-3.0.0.jar')
 
 }

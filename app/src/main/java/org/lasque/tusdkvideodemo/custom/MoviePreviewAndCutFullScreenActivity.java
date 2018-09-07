@@ -8,10 +8,6 @@
  *
  */
 package org.lasque.tusdkvideodemo.custom;
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.struct.TuSdkSize;
-import org.lasque.tusdk.core.utils.RectHelper;
-import org.lasque.tusdkvideodemo.R;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -22,12 +18,17 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.struct.TuSdkSize;
+import org.lasque.tusdk.core.utils.RectHelper;
+import org.lasque.tusdkvideodemo.R;
+
 /**
  * 视频预览 + 获取视频裁剪范围
  * 
  * @author leone.xia
  */
-public class MoviePreviewAndCutFullScreenActivity extends MoviePreviewAndCutRatioActivity  
+public class MoviePreviewAndCutFullScreenActivity extends MoviePreviewAndCutRatioActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

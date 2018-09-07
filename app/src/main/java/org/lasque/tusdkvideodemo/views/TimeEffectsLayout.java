@@ -1,16 +1,23 @@
 package org.lasque.tusdkvideodemo.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.EditText;
 
-import org.lasque.tusdk.core.decoder.TuSDKMoviePacketReader;
-import org.lasque.tusdk.core.decoder.TuSDKVideoTimeEffectController;
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
-import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
+import org.lasque.tusdk.core.view.TuSdkViewHelper;
+import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
+import org.lasque.tusdk.video.editor.TuSDKMediaRepeatTimeEffect;
+import org.lasque.tusdk.video.editor.TuSDKMediaReversalTimeEffect;
+import org.lasque.tusdk.video.editor.TuSDKMediaSlowTimeEffect;
 import org.lasque.tusdk.video.editor.TuSDKTimeRange;
 import org.lasque.tusdkvideodemo.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ligh
@@ -18,17 +25,18 @@ import org.lasque.tusdkvideodemo.R;
  * @Copyright: (c) 2018 tusdk.com. All rights reserved.
  * @Description
  */
-public class TimeEffectsLayout extends TuSdkRelativeLayout implements View.OnClickListener
-{
-    private TuSDKMovieEditor mMovieEditor;
+public class TimeEffectsLayout extends TuSdkRelativeLayout {
 
-    public TimeEffectsLayout(Context context, AttributeSet attrs)
-    {
+    private TuSdkMovieEditorImpl mMovieEditor;
+    private TimeEffectListView mTimeEffectListView;
+    private MovieRangScrollerBar mScrollerBar;
+    private int mCurrentPosition = 0;
+
+    public TimeEffectsLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void setMovieEditor(TuSDKMovieEditor movieEditor)
-    {
+    public void setMovieEditor(TuSdkMovieEditorImpl movieEditor) {
         this.mMovieEditor = movieEditor;
     }
 
@@ -36,39 +44,157 @@ public class TimeEffectsLayout extends TuSdkRelativeLayout implements View.OnCli
      * 加载视图
      */
     @Override
-    public void loadView()
-    {
+    public void loadView() {
         super.loadView();
 
-        findViewById(R.id.lsq_time_effects_reverse_btn).setOnClickListener(this);
-        findViewById(R.id.lsq_time_effects_sequence_btn).setOnClickListener(this);
-        findViewById(R.id.lsq_time_effects_repeat_btn).setOnClickListener(this);
-        findViewById(R.id.lsq_time_effects_slow_btn).setOnClickListener(this);
+        getTimeEffectListView();
+
+        if (mTimeEffectListView == null) return;
+
+        List<String> timeModels = new ArrayList<>();
+        timeModels.add("no");
+        timeModels.add("reverse");
+        timeModels.add("repeat");
+        timeModels.add("slow");
+
+        mTimeEffectListView.setModeList(timeModels);
+
     }
 
-    @Override
-    public void onClick(View view) {
+    /**
+     * 滤镜栏视图
+     *
+     * @return
+     */
+    private TimeEffectListView getTimeEffectListView() {
+        if (mTimeEffectListView == null) {
+            mTimeEffectListView = (TimeEffectListView) findViewById(R.id.lsq_time_effect_list_view);
+            mScrollerBar = findViewById(R.id.lsq_time_scroller_bar);
 
-        switch (view.getId())
-        {
-            case R.id.lsq_time_effects_reverse_btn:
-                mMovieEditor.setPlayMode(TuSDKMoviePacketReader.ReadMode.ReverseMode);
+            if (mTimeEffectListView == null) return null;
+
+            mTimeEffectListView.loadView();
+            mTimeEffectListView.setCellLayoutId(R.layout.time_effect_list_cell_view);
+            mTimeEffectListView.setCellWidth(TuSdkContext.dip2px(62));
+            mTimeEffectListView.setItemClickDelegate(mTimeEffectTableItemClickDelegate);
+            mTimeEffectListView.reloadData();
+            mTimeEffectListView.selectPosition(0);
+        }
+        return mTimeEffectListView;
+    }
+
+    public void setVideoDuration() {
+        mScrollerBar.setTimeRangChangedListener(mTimeRangChangedListener);
+        mScrollerBar.setBlockRang((float) (0.5 / mMovieEditor.getEditorTransCoder().getVideoActualDuration()));
+    }
+
+    public void seek(float percent) {
+        mScrollerBar.seek(percent);
+    }
+
+    public void setCoverImageList(List<Bitmap> bitmapList) {
+        mScrollerBar.drawVideoThumbList(bitmapList);
+    }
+
+    private TuSDKTimeRange mTimeRange = TuSDKTimeRange.makeTimeUsRange(0l, 500000);
+    private MovieRangScrollerBar.OnTimeRangChangedListener mTimeRangChangedListener = new MovieRangScrollerBar.OnTimeRangChangedListener() {
+        @Override
+        public void onTimeRangChanged(float leftPercent, float rightPercent) {
+            mTimeRange.setStartTimeUs((long) (mMovieEditor.getEditorPlayer().getTotalTimeUS() * leftPercent));
+            mTimeRange.setEndTimeUs((long) (mMovieEditor.getEditorPlayer().getTotalTimeUS() * rightPercent));
+            TLog.e("StartTimeUs : %s EndTimeUs : %s", mTimeRange.getStartTimeUS(), mTimeRange.getEndTimeUS());
+            handleTimeEffect(mCurrentPosition);
+        }
+    };
+
+    /**
+     * MV 列表点击事件
+     */
+    private TuSdkTableView.TuSdkTableViewItemClickDelegate<String, TimeEffectCellView> mTimeEffectTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<String, TimeEffectCellView>() {
+        @Override
+        public void onTableViewItemClick(final String itemData, TimeEffectCellView itemView, final int position) {
+            if (TuSdkViewHelper.isFastDoubleClick()) return;
+
+            getTimeEffectListView().selectPosition(position);
+            mCurrentPosition = position;
+            handleTimeEffect(position);
+
+        }
+    };
+
+    private void handleTimeEffect(int position) {
+        // TODO 处理时间特效
+        switch (position) {
+            case 0:
+                mMovieEditor.getEditorPlayer().clearTimeEffect();
                 break;
-            case R.id.lsq_time_effects_sequence_btn:
-                mMovieEditor.setPlayMode(TuSDKMoviePacketReader.ReadMode.SequenceMode);
+            case 1:
+                //时光倒流
+                TuSDKMediaReversalTimeEffect reversalTimeEffect = new TuSDKMediaReversalTimeEffect();
+                reversalTimeEffect.setTimeRange(0,mMovieEditor.getEditorPlayer().getTotalTimeUS());
+                mMovieEditor.getEditorPlayer().setTimeEffect(reversalTimeEffect);
                 break;
-            case R.id.lsq_time_effects_repeat_btn:
-                long mStartActionTime = Long.valueOf(((EditText)findViewById(R.id.lsq_time_effects_start_time)).getText().toString());
-                long mTimeDuration = Long.valueOf(((EditText)findViewById(R.id.lsq_time_effects_duration)).getText().toString());
-                int mTimes = Integer.valueOf(((EditText)findViewById(R.id.lsq_time_effects_times)).getText().toString());
-                mMovieEditor.setTimeEffectMode(TuSDKVideoTimeEffectController.TimeEffectMode.RepeatMode, TuSDKTimeRange.makeTimeUsRange(mStartActionTime * 1000,(mStartActionTime + mTimeDuration) * 1000),mTimes);
+            case 2:
+                //反复
+                TuSDKMediaRepeatTimeEffect repeatTimeEffect = new TuSDKMediaRepeatTimeEffect();
+                repeatTimeEffect.setTimeRange(mTimeRange.getStartTimeUS(), mTimeRange.getEndTimeUS());
+                repeatTimeEffect.setRepeatCount(2);
+                repeatTimeEffect.setDropOverTime(true);
+                mMovieEditor.getEditorPlayer().setTimeEffect(repeatTimeEffect);
                 break;
-            case R.id.lsq_time_effects_slow_btn:
-                long mStartActionTime_ = Long.valueOf(((EditText)findViewById(R.id.lsq_time_effects_start_time)).getText().toString());
-                long mTimeDuration_ = Long.valueOf(((EditText)findViewById(R.id.lsq_time_effects_duration)).getText().toString());
-                int mTimes_ = Integer.valueOf(((EditText)findViewById(R.id.lsq_time_effects_times)).getText().toString());
-                mMovieEditor.setTimeEffectMode(TuSDKVideoTimeEffectController.TimeEffectMode.SlowMode,TuSDKTimeRange.makeTimeUsRange(mStartActionTime_ * 1000,(mStartActionTime_ + mTimeDuration_) * 1000),mTimes_);
+            case 3:
+                //慢动作
+                TuSDKMediaSlowTimeEffect slowTimeEffect = new TuSDKMediaSlowTimeEffect();
+                slowTimeEffect.setTimeRange(mTimeRange.getStartTimeUS(), mTimeRange.getEndTimeUS());
+                slowTimeEffect.setSpeed(0.6f);
+                mMovieEditor.getEditorPlayer().setTimeEffect(slowTimeEffect);
                 break;
         }
     }
+
+//    @Override
+//    public void onClick(View view) {
+//
+//        switch (view.getId()) {
+//            case R.id.lsq_time_effects_reverse_btn:
+//                // TODO 倒序
+//                TuSdkMediaTimeline reverseTimeline = new TuSdkMediaTimeline();
+//                reverseTimeline.append(mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs, 0);
+//                mMovieEditor.getEditorPlayer().setTimeLine(reverseTimeline);
+//                break;
+//            case R.id.lsq_time_effects_sequence_btn:
+//                // TODO 正序
+//                TuSdkMediaTimeline timeline = new TuSdkMediaTimeline();
+//                mMovieEditor.getEditorPlayer().setTimeLine(timeline);
+//                break;
+//            case R.id.lsq_time_effects_repeat_btn:
+//                // TODO 反复
+//                long mRepeatStartActionTime = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_start_time)).getText().toString());
+//                long mRepeatTimeDuration = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_duration)).getText().toString());
+//                int mRepeatTimes = Integer.valueOf(((EditText) findViewById(R.id.lsq_time_effects_times)).getText().toString());
+//
+//                TuSdkMediaTimeline repeatTimeline = new TuSdkMediaTimeline();
+//                repeatTimeline.append(0, mRepeatStartActionTime);
+//                for (int i = 0; i < mRepeatTimes; i++) {
+//                    repeatTimeline.append(mRepeatStartActionTime, mRepeatStartActionTime + mRepeatTimeDuration);
+//                }
+//                if ((mRepeatStartActionTime + mRepeatTimeDuration) < mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs)
+//                    repeatTimeline.append(mRepeatStartActionTime + mRepeatTimeDuration, mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs);
+//                mMovieEditor.getEditorPlayer().setTimeLine(repeatTimeline);
+//                break;
+//            case R.id.lsq_time_effects_slow_btn:
+//                // TODO 慢动作
+//                long mSlowStartActionTime = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_start_time)).getText().toString());
+//                long mSlowTimeDuration = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_duration)).getText().toString());
+//                int mSlowTimes = Integer.valueOf(((EditText) findViewById(R.id.lsq_time_effects_times)).getText().toString());
+//
+//                TuSdkMediaTimeline slowTimeline = new TuSdkMediaTimeline();
+//                slowTimeline.append(0, mSlowStartActionTime);
+//                slowTimeline.append(mSlowStartActionTime, mSlowStartActionTime+mSlowTimeDuration,mSlowTimes);
+//                if ((mSlowStartActionTime + mSlowTimeDuration) < mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs)
+//                    slowTimeline.append(mSlowStartActionTime + mSlowTimeDuration, mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs);
+//                mMovieEditor.getEditorPlayer().setTimeLine(slowTimeline);
+//
+//        }
+//    }
 }

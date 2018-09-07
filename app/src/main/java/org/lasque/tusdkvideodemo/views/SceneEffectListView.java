@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdkvideodemo.R;
 
@@ -19,8 +18,7 @@ import org.lasque.tusdkvideodemo.R;
 /**
  * 场景特效列表
  */
-public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellView> implements TuSdkTableView.TuSdkTableViewItemClickDelegate<String, SceneEffectCellView>
-{
+public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellView> implements TuSdkTableView.TuSdkTableViewItemClickDelegate<String, SceneEffectCellView> {
     private static final int MIN_PRESS_DURATION_MILLIS = 100;
     private Handler mHandler = new Handler();
 
@@ -30,20 +28,20 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
     /** 委托对象 */
     private SceneEffectListViewDelegate mDelegate;
 
+    /** 当前播放的进度 **/
+    private float mPercent;
 
-    public SceneEffectListView(Context context, AttributeSet attrs)
-    {
+
+    public SceneEffectListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void setDelegate(SceneEffectListViewDelegate delegate)
-    {
+    public void setDelegate(SceneEffectListViewDelegate delegate) {
         this.mDelegate = delegate;
     }
 
     @Override
-    public void loadView()
-    {
+    public void loadView() {
         super.loadView();
 
         this.setCellLayoutId(R.layout.movie_editor_scence_effect_cell_view);
@@ -55,37 +53,38 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
     /**
      * 视图创建
      *
-     * @param view
-     *            创建的视图
-     * @param parent
-     *            父对象
-     * @param viewType
-     *            视图类型
+     * @param view     创建的视图
+     * @param parent   父对象
+     * @param viewType 视图类型
      */
     @Override
-    protected void onViewCreated(SceneEffectCellView view, ViewGroup parent, int viewType)
-    {
+    protected void onViewCreated(SceneEffectCellView view, ViewGroup parent, int viewType) {
 
+    }
+
+    /**
+     * 同步播放器播放进度
+     *
+     * @param percent
+     */
+    public void setPlayerPercent(float percent) {
+        this.mPercent = percent;
     }
 
     /**
      * 绑定视图数据
      *
-     * @param view
-     *            创建的视图
-     * @param position
-     *            索引位置
+     * @param view     创建的视图
+     * @param position 索引位置
      */
     @Override
-    protected void onViewBinded(SceneEffectCellView view, final int position)
-    {
+    protected void onViewBinded(SceneEffectCellView view, final int position) {
         view.setTag(position);
 
-        if (position == 0)
-        {
+        if (position == 0) {
             view.setOnTouchListener(null);
             view.updateUndoButton(mIsEnableUndoClicked);
-        }else {
+        } else {
             view.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -105,6 +104,12 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
                             handleReleaseEvent(position);
 
                             break;
+                        default:
+                            if (mPercent == 1) {
+                                mPercent = 0;
+                                handleReleaseEvent(position);
+                            }
+                            break;
 
                     }
 
@@ -119,8 +124,7 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
      *
      * @param isEnableClicked
      */
-    public void updateUndoButtonState(boolean isEnableClicked)
-    {
+    public void updateUndoButtonState(boolean isEnableClicked) {
         getSdkAdapter().notifyItemChanged(0);
 
         this.mIsEnableUndoClicked = isEnableClicked;
@@ -132,20 +136,19 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
      * @param position
      */
     long mDuration = 0;
-    private void handlePressEvent(final  int position)
-    {
+
+    private void handlePressEvent(final int position) {
         mHandler.removeCallbacksAndMessages(null);
 
-        mDuration =  System.currentTimeMillis();
+        mDuration = System.currentTimeMillis();
 
         mHandler.postDelayed(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 if (mDelegate != null)
                     mDelegate.onPressSceneEffect(getModeList().get(position));
             }
-        },MIN_PRESS_DURATION_MILLIS);
+        }, MIN_PRESS_DURATION_MILLIS);
     }
 
     /**
@@ -153,10 +156,8 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
      *
      * @param position
      */
-    private void handleReleaseEvent(int position)
-    {
-        if (System.currentTimeMillis() - mDuration  < MIN_PRESS_DURATION_MILLIS)
-        {
+    private void handleReleaseEvent(int position) {
+        if (System.currentTimeMillis() - mDuration < MIN_PRESS_DURATION_MILLIS) {
             mHandler.removeCallbacksAndMessages(null);
             return;
         }
@@ -166,17 +167,14 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
     }
 
     @Override
-    public void onTableViewItemClick(String effectCode, SceneEffectCellView itemView, int position)
-    {
+    public void onTableViewItemClick(String effectCode, SceneEffectCellView itemView, int position) {
         if (position == 0 && mDelegate != null)
-                mDelegate.onUndo();
+            mDelegate.onUndo();
     }
 
 
-
-    /**  SceneEffectListViewDelegate 委托 */
-    public static interface SceneEffectListViewDelegate
-    {
+    /** SceneEffectListViewDelegate 委托 */
+    public static interface SceneEffectListViewDelegate {
         /**
          * 撤销事件
          */
@@ -185,16 +183,14 @@ public class SceneEffectListView extends TuSdkTableView<String, SceneEffectCellV
         /**
          * 按下特效
          *
-         * @param code
-         *          特效code
+         * @param code 特效code
          */
         void onPressSceneEffect(String code);
 
         /**
          * 释放特效
          *
-         * @param code
-         *          特效code
+         * @param code 特效code
          */
         void onReleaseSceneEffect(String code);
 

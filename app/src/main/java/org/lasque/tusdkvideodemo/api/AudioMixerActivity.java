@@ -323,11 +323,6 @@ public class AudioMixerActivity extends Activity
 			if (state == TuSDKMutiAudioPlayer.State.PrePared)
 				startMutiAudioPlayer();
 		}
-
-		@Override
-		public void onProgressChanged(float percentage) {
-
-		}
 	};
 	
 	private View.OnClickListener mOnClickListener = new View.OnClickListener()
@@ -385,11 +380,11 @@ public class AudioMixerActivity extends Activity
 	/**
 	 * 原音配音调节栏委托事件
 	 */
-	private ConfigViewSeekBar.ConfigSeekbarDelegate mFilterConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate()
+	private ConfigViewSeekBar.ConfigSeekbarDelegate mFilterConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate() 
 	{
 		
 		@Override
-		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg)
+		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg) 
 		{
 			if (arg.getKey().equals("origin"))
 					setSeekBarProgress(0,arg.getPercentValue());

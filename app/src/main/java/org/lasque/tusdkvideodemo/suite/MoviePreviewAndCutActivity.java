@@ -8,29 +8,6 @@
  *
  */
 package org.lasque.tusdkvideodemo.suite;
-import java.io.File;
-import java.util.List;
-
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.struct.TuSdkSize;
-import org.lasque.tusdk.core.utils.RectHelper;
-import org.lasque.tusdk.core.view.TuSdkViewHelper;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.OnSeekToPreviewListener;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
-import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
-import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.SimpleCameraActivity;
-import org.lasque.tusdkvideodemo.album.MovieInfo;
-import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
-import org.lasque.tusdkvideodemo.views.HVScrollView;
-import org.lasque.tusdkvideodemo.views.HVScrollView.OnScrollChangeListener;
-import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar;
-import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.OnCursorChangeListener;
-import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.Type;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -49,6 +26,29 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.OnSeekToPreviewListener;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
+import org.lasque.tusdk.core.struct.TuSdkSize;
+import org.lasque.tusdk.core.utils.RectHelper;
+import org.lasque.tusdk.core.view.TuSdkViewHelper;
+import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.SimpleCameraActivity;
+import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
+import org.lasque.tusdkvideodemo.views.HVScrollView;
+import org.lasque.tusdkvideodemo.views.HVScrollView.OnScrollChangeListener;
+import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar;
+import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.OnCursorChangeListener;
+import org.lasque.tusdkvideodemo.views.MovieRangeSelectionBar.Type;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * 视频预览 + 获取视频裁剪范围
@@ -209,7 +209,7 @@ public class MoviePreviewAndCutActivity extends SimpleCameraActivity implements 
 	{
 		if (mRangeSelectionBar == null || mRangeSelectionBar.getVideoThumbList().size() > 0) return;
 
-		TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56),TuSdkContext.dip2px(56));
+		TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56), TuSdkContext.dip2px(56));
 			
 			TuSDKVideoImageExtractor extractor = TuSDKVideoImageExtractor.createExtractor();
 			
@@ -534,7 +534,7 @@ public class MoviePreviewAndCutActivity extends SimpleCameraActivity implements 
 			
 			@Override
 			public void onScrollChange(HVScrollView v, int scrollX, int scrollY,
-					int oldScrollX, int oldScrollY)
+                                       int oldScrollX, int oldScrollY)
 			{
 				mScrollViewContentOffseX = (scrollX > w-mScreenWidth) ? (w-mScreenWidth) : scrollX;
 				mScrollViewContentOffseY = (scrollY > h-mScreenWidth) ? (h-mScreenWidth) : scrollY;

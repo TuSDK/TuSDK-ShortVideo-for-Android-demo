@@ -9,10 +9,6 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import java.util.List;
-
-import org.lasque.tusdkvideodemo.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -50,6 +46,11 @@ import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ScrollView;
+
+import org.lasque.tusdkvideodemo.R;
+
+import java.util.List;
+
 /**
  * TuSDKMovieMuxerFragment.java
  * HVScrollView can scroll horizontal and vertical

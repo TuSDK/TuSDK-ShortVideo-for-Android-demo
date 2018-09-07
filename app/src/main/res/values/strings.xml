@@ -31,6 +31,12 @@
     <string name="lsq_dermabrasion">磨皮</string>
     <string name="lsq_big_eyes">大眼</string>
     <string name="lsq_thin_face">瘦脸</string>
+    <string name="lsq_nose">瘦鼻</string>
+    <string name="lsq_mouth_width">嘴宽</string>
+    <string name="lsq_thin_eyebrows">细眉</string>
+    <string name="lsq_eye_dis">眼距</string>
+    <string name="lsq_eye_angle">眼角</string>
+    <string name="lsq_jaw_size">下巴</string>
 
     <!-- 滤镜 -->
     <string name="lsq_filter_None">无效果</string>
@@ -146,7 +152,7 @@
     <string name="lsq_button_done">我知道了</string>
     <string name="lsq_carema_alert_title">无法开启相机</string>
 
-    <string name="lsq_time_effect_text">时间特效</string>
+    <string name="lsq_time_effect_text">时光</string>
     <string name="lsq_beauty_text">美颜</string>
     <string name="lsq_text_beauty">美颜</string>
     <string name="lsq_filter_text">滤镜</string>
@@ -351,5 +357,8 @@
     <string name="lsq_text_style_alignright">右对齐</string>
     <string name="lsq_text_style_aligncenter">居中</string>
 
+    <string name="lsq_time_effect_repeat">反复</string>
+    <string name="lsq_time_effect_reverse">时间倒流</string>
+    <string name="lsq_time_effect_slow">慢动作</string>
 
 </resources>

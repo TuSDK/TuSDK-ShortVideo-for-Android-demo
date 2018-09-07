@@ -9,18 +9,17 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.TextView;
+
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterParameterInterface;
 import org.lasque.tusdk.core.seles.sources.SelesOutInput;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar.TuSeekBarDelegate;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * 滤镜配置拖动栏

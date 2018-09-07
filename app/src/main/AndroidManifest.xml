@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.lasque.tusdkvideodemo"
-    android:versionCode="20180717"
-    android:versionName="2.2.0">
+    android:versionCode="20180907"
+    android:versionName="3.0.0">
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -190,6 +190,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/lsq_sdkTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".api.MediaPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/lsq_sdkTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".api.AudioPitchActivity" />
+        <activity android:name=".api.TestMovieEditorActivity"></activity>
     </application>
 
 </manifest>

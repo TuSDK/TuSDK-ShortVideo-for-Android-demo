@@ -9,13 +9,11 @@
  */
 package org.lasque.tusdkvideodemo;
 
-import org.lasque.tusdk.core.*;
-import org.lasque.tusdk.core.utils.TLog;
-import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.tencent.bugly.crashreport.CrashReport;
+
+import org.lasque.tusdk.core.TuSdkApplication;
 
 /**
  * TuApplication.java
@@ -56,7 +54,7 @@ public class TuApplication extends TuSdkApplication
 		ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
 
 		// 初始化 Bugly SDK
-		CrashReport.initCrashReport(getApplicationContext(), "4ec0dd4b40", true); 
+		CrashReport.initCrashReport(getApplicationContext(), "4ec0dd4b40", true);
 
 		// 设置资源类，当 Application id 与 Package Name 不相同时，必须手动调用该方法, 且在 init 之前执行。
 		// TuSdk.setResourcePackageClazz(org.lasque.tusdkdemo.R.class);

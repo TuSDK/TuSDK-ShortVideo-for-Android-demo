@@ -9,16 +9,16 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
-import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.views.AudioEffectCellView.MixingCellViewDelegate;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
+import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.views.AudioEffectCellView.MixingCellViewDelegate;
 
 /**
  * 自定义的混音列表

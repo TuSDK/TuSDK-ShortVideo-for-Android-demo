@@ -9,12 +9,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.lasque.tusdk.api.audio.preproc.processor.TuSDKAudioProcessor;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.audio.TuSDKAudioFileRecorder;
+import org.lasque.tusdk.core.media.codec.audio.TuSdkAudioInfo;
 import org.lasque.tusdk.core.utils.FileHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
@@ -152,7 +153,7 @@ public class DubbingRecodLayout extends TuSdkRelativeLayout
         Button minTimeButton = (Button) findViewById(R.id.lsq_minTimeBtn);
         LayoutParams minTimeLayoutParams = (LayoutParams) minTimeButton.getLayoutParams();
         minTimeLayoutParams.leftMargin =(int)(((float) MIN_AUDIO_RECORD_TIME * TuSdkContext.getScreenSize().width) / mMaxRecordTime)
-                -TuSdkContext.dip2px(minTimeButton.getWidth());
+                - TuSdkContext.dip2px(minTimeButton.getWidth());
 
         mAudioTimeRemainingText = (TextView) findViewById(R.id.lsq_voiceRrecord_timeRemaining_text);
         updateAudioTimeRemaining(0.0f);
@@ -198,6 +199,35 @@ public class DubbingRecodLayout extends TuSdkRelativeLayout
         mAudioRecorder = new TuSDKAudioFileRecorder();
         mAudioRecorder.setOutputFormat(TuSDKAudioFileRecorder.OutputFormat.AAC);
         mAudioRecorder.setAudioRecordDelegate(mRecordAudioDelegate);
+    }
+
+    /**
+     * 设置输入音频信息
+     * @param audioInfo
+     */
+    public void setInputAudioInfo(TuSdkAudioInfo audioInfo)
+    {
+        if(mAudioRecorder == null || audioInfo == null) return;
+        mAudioRecorder.setInputAudioInfo(audioInfo);
+    }
+
+    /**
+     * 设置要处理的音效类型
+     * @param soundType
+     */
+    public void setSoundType(TuSDKAudioProcessor.TuSDKSoundType soundType)
+    {
+        if(mAudioRecorder == null || soundType == null) return;
+        mAudioRecorder.setSoundType(soundType);
+    }
+
+    /**
+     * 设置音效类型改变回调
+     * @param soundTypeChangeListener 音效类型改变回调
+     */
+    public void setSoundTypeChangeListener(TuSDKAudioProcessor.TuSDKSoundTypeChangeListener soundTypeChangeListener) {
+        if(mAudioRecorder == null || soundTypeChangeListener == null) return;
+        this.mAudioRecorder.setSoundTypeChangeListener(soundTypeChangeListener);
     }
 
     /** 停止录音 */

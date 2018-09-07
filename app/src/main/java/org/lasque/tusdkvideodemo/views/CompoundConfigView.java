@@ -9,7 +9,9 @@
  */
 package org.lasque.tusdkvideodemo.views;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.util.AttributeSet;
+import android.widget.LinearLayout;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
@@ -17,9 +19,7 @@ import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams.ConfigViewArg;
 import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar.ConfigSeekbarDelegate;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import java.util.ArrayList;
 
 /**
  * 可以生成多个调节栏

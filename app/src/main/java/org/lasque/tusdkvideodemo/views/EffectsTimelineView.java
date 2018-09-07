@@ -98,10 +98,10 @@ public class EffectsTimelineView extends FrameLayout
 
                 if (segmentModel.getProgressRange() == null) return;
 
-                float left = ((float) segmentModel.getCurrentMediaEffectData().getAtTimeRange().getStartTimeUS() / (float) mDurationTimeUs) * getWidth();
-                float width = ((float) segmentModel.getCurrentMediaEffectData().getAtTimeRange().getEndTimeUS() / (float) mDurationTimeUs) * getWidth();
-//                float left = ( segmentModel.getProgressRange().startProgress * getWidth());
-//                float width = ( segmentModel.getProgressRange().endProgress * getWidth());
+//                float left = ((float) segmentModel.getCurrentMediaEffectData().getAtTimeRange().getStartTimeUS() / (float) mDurationTimeUs) * getWidth();
+//                float width = ((float) segmentModel.getCurrentMediaEffectData().getAtTimeRange().getEndTimeUS() / (float) mDurationTimeUs) * getWidth();
+                float left = ( segmentModel.getProgressRange().startProgress * getWidth());
+                float width = ( segmentModel.getProgressRange().endProgress * getWidth());
 
                 mPaint.setColor(segmentModel.getLabelColor());
 
@@ -253,6 +253,8 @@ public class EffectsTimelineView extends FrameLayout
                 {
                     float progerss = event.getX() / getWidth();
                     this.setProgress(progerss);
+                    if (mDelegate != null)
+                        mDelegate.onProgressChaned(this.mProgress);
 
                 }
                     break;
@@ -470,9 +472,9 @@ public class EffectsTimelineView extends FrameLayout
     /**
      * 更新最后一个场景特效结束时间
      *
-     * @param endTimeUs
+     * @param endTimePercent 结束的百分比
      */
-    public void updateLastEffectModelEndTime(final long endTimeUs)
+    public void updateLastEffectModelEndTime(final float endTimePercent)
     {
         if (!mEditable) return;
 
@@ -483,18 +485,13 @@ public class EffectsTimelineView extends FrameLayout
         if (sceneEffectModel.getProgressRange() == null)
         {
             sceneEffectModel.setProgressRange(new EffectsTimelineSegmentViewModel.ProgressRange());
-            sceneEffectModel.getProgressRange().startProgress = ((float)endTimeUs/(float)mDurationTimeUs);
+            sceneEffectModel.getProgressRange().startProgress = endTimePercent;
         }
-        if (sceneEffectModel.getCurrentMediaEffectData().getAtTimeRange() == null)
-            sceneEffectModel.getCurrentMediaEffectData().setAtTimeRange(TuSDKTimeRange.makeTimeUsRange(endTimeUs,endTimeUs));
 
-        sceneEffectModel.getCurrentMediaEffectData().getAtTimeRange().setEndTimeUs(endTimeUs);
-
-        sceneEffectModel.getProgressRange().setEndProgress(((float)endTimeUs/(float)mDurationTimeUs));
+        sceneEffectModel.getProgressRange().setEndProgress(endTimePercent);
 
         postColorBarInvalidate();
     }
-
     /**
      * 设置持续时间
      *
@@ -564,11 +561,20 @@ public class EffectsTimelineView extends FrameLayout
             private float endProgress;
 
             public void setEndProgress(float endProgress) {
+                if(endProgress > startProgress)
                 this.endProgress = endProgress;
             }
 
             public void setStartProgress(float startProgress) {
                 this.startProgress = startProgress;
+            }
+
+            public float getStartProgress() {
+                return startProgress;
+            }
+
+            public float getEndProgress() {
+                return endProgress;
             }
         }
     }

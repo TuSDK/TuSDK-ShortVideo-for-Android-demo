@@ -1,8 +1,5 @@
 package org.lasque.tusdkvideodemo.component;
 
-import android.widget.ImageView;
-
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.video.editor.TuSDKMediaAudioEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMediaStickerAudioEffectData;

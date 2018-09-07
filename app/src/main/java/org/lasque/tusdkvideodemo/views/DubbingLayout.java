@@ -2,9 +2,7 @@ package org.lasque.tusdkvideodemo.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 
-import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.TuSdkLinearLayout;
 import org.lasque.tusdkvideodemo.R;
 

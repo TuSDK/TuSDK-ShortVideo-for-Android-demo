@@ -19,29 +19,30 @@ import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
 import org.lasque.tusdkvideodemo.R;
 
 /**
- * @author Yanlin
+ * 时间特效
+ * @author xujie
  *
  */
-public class FilterListView extends TuSdkTableView<String, FilterCellView>
+public class TimeEffectListView extends TuSdkTableView<String, TimeEffectCellView>
 {
 	/** 行视图宽度 */
 	private int mCellWidth;
-	
+
 	/** 默认选择第几项 */
 	private int mSelectedPosition = 0;
 
 
-	public FilterListView(Context context, AttributeSet attrs, int defStyle)
+	public TimeEffectListView(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);
 	}
 
-	public FilterListView(Context context, AttributeSet attrs)
+	public TimeEffectListView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 	}
 
-	public FilterListView(Context context)
+	public TimeEffectListView(Context context)
 	{
 		super(context);
 	}
@@ -81,7 +82,7 @@ public class FilterListView extends TuSdkTableView<String, FilterCellView>
 	 *            视图类型
 	 */
 	@Override
-	protected void onViewCreated(FilterCellView view, ViewGroup parent, int viewType) 
+	protected void onViewCreated(TimeEffectCellView view, ViewGroup parent, int viewType)
 	{
 		if (this.getCellWidth() > 0)
 		{
@@ -98,30 +99,30 @@ public class FilterListView extends TuSdkTableView<String, FilterCellView>
 	 *            索引位置
 	 */
 	@Override
-	protected void onViewBinded(FilterCellView view, int position)
+	protected void onViewBinded(TimeEffectCellView view, int position)
 	{
 		view.setTag(position);
 		
 		if(mSelectedPosition != position)
 		{
-			// 取消当前滤镜选中状态
+			// 取消当前特效选中状态
 			updateFilterCellViewStatus(view, false);
 		}
 		else
 		{
-			// 选中当前滤镜
+			// 选中当前特效
 			updateFilterCellViewStatus(view, true);
 		}
 	}
 	
 	/**
-	 * 更新滤镜选中状态
+	 * 更新特效选中状态
 	 * 
 	 * @param view
 	 * @param isSelected
 	 */
 	
-	private void updateFilterCellViewStatus(FilterCellView view, Boolean isSelected)
+	private void updateFilterCellViewStatus(TimeEffectCellView view, Boolean isSelected)
 	{
 		if(isSelected)
 		{

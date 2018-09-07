@@ -9,11 +9,11 @@
  */
 package org.lasque.tusdkvideodemo;
 
-import org.lasque.tusdk.core.video.TuSDKVideoResult;
-import org.lasque.tusdkvideodemo.component.MovieRecordKeepModeActivity;
-
 import android.os.Bundle;
 import android.view.View;
+
+import org.lasque.tusdk.core.video.TuSDKVideoResult;
+import org.lasque.tusdkvideodemo.component.MovieRecordKeepModeActivity;
 
 /**
  * 断点续拍录制相机 + 视频编辑
@@ -39,7 +39,7 @@ public class MovieRecordAndImportEditorActivity extends MovieRecordKeepModeActiv
 	}
 	
 	@Override
-	public void onMovieRecordComplete(TuSDKVideoResult result) 
+	public void onMovieRecordComplete(TuSDKVideoResult result)
 	{
 		super.onMovieRecordComplete(result);
 	}

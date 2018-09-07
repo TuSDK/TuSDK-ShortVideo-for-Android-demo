@@ -172,11 +172,6 @@ public class MutiAudioPlayerActivity extends Activity {
             }
 
         }
-
-        @Override
-        public void onProgressChanged(float percentage) {
-
-        }
     };
 
     /**

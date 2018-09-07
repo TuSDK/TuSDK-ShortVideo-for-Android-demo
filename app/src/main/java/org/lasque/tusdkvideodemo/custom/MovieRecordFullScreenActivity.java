@@ -11,7 +11,6 @@
 package org.lasque.tusdkvideodemo.custom;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ProgressBar;
 
 import org.lasque.tusdk.core.TuSdk;

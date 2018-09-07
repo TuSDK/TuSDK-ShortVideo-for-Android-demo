@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.seles.tusdk.textSticker.TextStickerData;
 import org.lasque.tusdk.core.seles.tusdk.textSticker.TuSDKTextStickerImage;
 import org.lasque.tusdk.core.struct.TuSdkSize;
@@ -49,9 +50,7 @@ import org.lasque.tusdk.modules.view.widget.sticker.StickerFactory;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerItemViewInterface;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerText;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerTextData;
-import org.lasque.tusdk.video.editor.TuSDKMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSDKMediaTextEffectData;
-import org.lasque.tusdk.video.editor.TuSDKMovieEditor;
 import org.lasque.tusdk.video.editor.TuSDKTimeRange;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.component.MovieEditorActivity;
@@ -62,10 +61,10 @@ import java.util.ArrayList;
 /**
  * 文字特效自定义View
  */
-public class TextEffectLayout extends TuSdkRelativeLayout implements StickerViewDelegate{
+public class TextEffectLayout extends TuSdkRelativeLayout implements StickerViewDelegate {
 
     //视频编辑器
-    private TuSDKMovieEditor mMovieEditor;
+    private TuSdkMovieEditorImpl mMovieEditor;
 
     /************************* view ******************************/
     //贴图视图
@@ -153,7 +152,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
      * 设置编辑器
      * @param movieEditor
      */
-    public void setMovieEditor(TuSDKMovieEditor movieEditor)
+    public void setMovieEditor(TuSdkMovieEditorImpl movieEditor)
     {
         this.mMovieEditor = movieEditor;
     }
@@ -614,7 +613,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
      * @return
      */
     private float getTimeForDuration(@IntRange(from = 0, to = 100) int percent){
-        return percent*mMovieEditor.getVideoInfo().durationTimeUs/(100*1000);
+        return percent*mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs/(100*1000);
     }
 
     /**
@@ -623,7 +622,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
      * @return
      */
     private float getPercentForTime(float time){
-        return time*(100*1000*1000)/mMovieEditor.getVideoInfo().durationTimeUs;
+        return time*(100*1000*1000)/mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs;
     }
 
     /**同步视图**/
@@ -634,14 +633,14 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
     /** 设置裁剪控件开始与结束的最小间隔距离 */
     private void setBarSpace()
     {
-        if(mMovieEditor.getVideoInfo() ==null || mMovieEditor.getVideoInfo().durationTimeUs == 0 ) return;
+        if(mMovieEditor.getEditorTransCoder().getVideoInfo() ==null || mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs == 0 ) return;
         if(mRangeSelectionBar!=null)
         {
             /**
              * 需求需要，需设定最小间隔为1秒的
              * 间隔距离，单位秒要转化为毫秒；
              */
-            double percent = (1/mMovieEditor.getVideoInfo().durationTimeUs);
+            double percent = (1/mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs);
             seekBarWidth = seekBarWidth==0?640:seekBarWidth;
             int space = (int) (percent*seekBarWidth);
 
@@ -795,7 +794,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
         getStickerView().getStickerItems().clear();
         mRangeSelectionBar.setLeftSelection(0);
         mRangeSelectionBar.setRightSelection(100);
-        mMovieEditor.startPreview();
+        mMovieEditor.getEditorPlayer().startPreview();
 
     }
 
@@ -825,7 +824,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
             stickerItemView.setStroke(getResColor(R.color.lsq_color_transparent),0);
 
             //生成相应的图片
-            Bitmap textBitmap =StickerFactory.getBitmapForText(stickerItemView.getTextView());
+            Bitmap textBitmap = StickerFactory.getBitmapForText(stickerItemView.getTextView());
 
             //获取计算相应的位置
             int[] locaiont = new int[2];
@@ -852,7 +851,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
         getStickerView().getStickerItems().clear();
         mRangeSelectionBar.setLeftSelection(0);
         mRangeSelectionBar.setRightSelection(100);
-        mMovieEditor.startPreview();
+        mMovieEditor.getEditorPlayer().startPreview();
         setVisibility(GONE);
 
     }
@@ -1253,7 +1252,7 @@ public class TextEffectLayout extends TuSdkRelativeLayout implements StickerView
 
         mStickerData.texts = mStickerTexts;
 
-        mMovieEditor.pausePreview();
+        mMovieEditor.getEditorPlayer().pausePreview();
         this.appendStickerItem(mStickerData);
     }
 

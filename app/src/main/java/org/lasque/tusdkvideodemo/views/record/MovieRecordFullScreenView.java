@@ -67,7 +67,7 @@ public class MovieRecordFullScreenView extends MovieRecordView
 
 		for (int i = 0;i<childCount;i++)
 		{
-			mSpeedModeBar.getChildAt(i).setOnClickListener(new OnClickListener()
+			mSpeedModeBar.getChildAt(i).setOnClickListener(new View.OnClickListener()
 			{
 				@Override
 				public void onClick(View view)

@@ -214,7 +214,7 @@ public class MovieSplicerActivity extends Activity
 	{
 		@Override
 		public void onProgress(float progress, TuSdkMediaDataSource mediaDataSource, int index,
-							   int total)
+                               int total)
 		{
 			TLog.i("onProgressChanged: " + progress);
 			mCircleView.setText((progress * 100)+"%");

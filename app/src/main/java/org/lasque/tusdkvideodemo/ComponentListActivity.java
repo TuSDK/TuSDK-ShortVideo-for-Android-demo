@@ -33,20 +33,15 @@ import org.lasque.tusdk.core.view.widget.TuSdkNavigatorBar.NavigatorBarButtonTyp
 import org.lasque.tusdk.core.view.widget.TuSdkNavigatorBar.TuSdkNavigatorBarDelegate;
 import org.lasque.tusdk.impl.view.widget.TuNavigatorBar;
 import org.lasque.tusdk.video.TuSDKVideo;
-import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.utils.AlbumUtils;
 import org.lasque.tusdkvideodemo.utils.PermissionUtils;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 功能列表界面
  * 
  * @author Bonan
  */
-public class ComponentListActivity extends ExpandableListActivity implements TuSdkNavigatorBarDelegate 
+public class ComponentListActivity extends ExpandableListActivity implements TuSdkNavigatorBarDelegate
 {
 	/** 最大滑动速度 */
 	public static final int MAX_SLIDE_SPEED = 1000;

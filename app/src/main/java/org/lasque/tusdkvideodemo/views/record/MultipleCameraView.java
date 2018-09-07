@@ -36,6 +36,9 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.SelesParameters;
@@ -62,9 +65,6 @@ import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerLocalPackage;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.utils.ClickAndLongPressedInterface;
 import org.lasque.tusdkvideodemo.utils.ClickAndLongPressedListener;
@@ -329,7 +329,7 @@ public class MultipleCameraView extends FrameLayout
 	 * 
 	 * @return
 	 */
-	private FilterListView getFilterListView() 
+	private FilterListView getFilterListView()
 	{
 		if (mFilterListView == null) {
 			mFilterListView = (FilterListView) findViewById(R.id.lsq_filter_list_view);
@@ -348,7 +348,7 @@ public class MultipleCameraView extends FrameLayout
 	private TuSdkTableViewItemClickDelegate<String, FilterCellView> mFilterTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<String, FilterCellView>() {
 		@Override
 		public void onTableViewItemClick(String itemData,
-				FilterCellView itemView, int position) {
+                                         FilterCellView itemView, int position) {
 			onFilterGroupSelected(itemData, itemView, position);
 		}
 	};
@@ -361,7 +361,7 @@ public class MultipleCameraView extends FrameLayout
 	 * @param position
 	 */
 	protected void onFilterGroupSelected(String itemData,
-			FilterCellView itemView, int position) 
+                                         FilterCellView itemView, int position)
 	{
 		FilterCellView prevCellView = (FilterCellView) mFilterListView.findViewWithTag(mFocusPostion);
 		mFocusPostion = position;
@@ -491,7 +491,7 @@ public class MultipleCameraView extends FrameLayout
 	{
 		List<StickerGroup> list = new ArrayList<StickerGroup>();
 	    try {  
-	        InputStream stream = getResources().openRawResource(R.raw.full_screen_sticker); 
+	        InputStream stream = getResources().openRawResource(R.raw.full_screen_sticker);
 
 	        if (stream == null) return null;
 	        
@@ -521,24 +521,24 @@ public class MultipleCameraView extends FrameLayout
 	/**
 	 * 贴纸组列表点击事件
 	 */
-	private TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>
-	             mStickerTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>() {
+	private TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>
+	             mStickerTableItemClickDelegate = new TuSdkTableView.TuSdkTableViewItemClickDelegate<StickerGroup, StickerCellView>() {
 		@Override
 		public void onTableViewItemClick(StickerGroup itemData,
 				StickerCellView itemView, int position) {
 			onStickerGroupSelected(itemData, itemView, position);
 		}
 	};
-	
+
 	/**
 	 * 贴纸组选择事件
-	 * 
+	 *
 	 * @param itemData
 	 * @param itemView
 	 * @param position
 	 */
 	protected void onStickerGroupSelected(StickerGroup itemData,
-			StickerCellView itemView, int position) 
+			StickerCellView itemView, int position)
 	{
 		// 设置点击贴纸时呈现或是隐藏贴纸
 		if (position == 0)
@@ -562,13 +562,13 @@ public class MultipleCameraView extends FrameLayout
 
 	/**
 	 * 传递录制相机对象
-	 * 
+	 *
 	 */
 	public void setUpCamera(Activity activity,TuSDKRecordVideoCamera tuSDKRecordVideoCamera)
 	{
 		this.mActivity = activity;
 		this.mTuSDKVideoCamera = tuSDKRecordVideoCamera;
-	    
+
 	    ThreadHelper.postDelayed(new Runnable(){
 
 			@Override
@@ -579,10 +579,10 @@ public class MultipleCameraView extends FrameLayout
 				mIsFirstEntry = false;
 				changeVideoFilterCode(Arrays.asList(Constants.VIDEOFILTERS).get(mFocusPostion));
 			}
-			
+
 	    }, 1000);
 	}
-	
+
 	private OnClickListener mButtonListener=new OnClickListener()
 	{
 		@Override
@@ -595,10 +595,10 @@ public class MultipleCameraView extends FrameLayout
 			else if (v == mFlashButton)
 			{
 				mFlashEnabled = !mFlashEnabled;
-	
+
 				mTuSDKVideoCamera.setFlashMode(mFlashEnabled ? CameraFlash.Torch
 						: CameraFlash.Off);
-	
+
 				// 闪光灯
 				updateButtonStatus(mFlashButton, mFlashEnabled);
 			}
@@ -622,10 +622,10 @@ public class MultipleCameraView extends FrameLayout
 			}
 		  }
 	 };
-		
+
 	/**
 	 * 更新按钮显示状态
-	 * 
+	 *
 	 * @param button
 	 * @param clickable
 	 */
@@ -645,11 +645,11 @@ public class MultipleCameraView extends FrameLayout
 		}
 		button.setImageResource(imgId);
 	}
-	
+
 	/**
 	 * 点击贴纸栏上方的空白区域隐藏贴纸栏
 	 */
-	public void hideStickerStaff() 
+	public void hideStickerStaff()
 	{
 		if (mStickerBottomView.getVisibility() == View.INVISIBLE)
 			return;
@@ -660,11 +660,11 @@ public class MultipleCameraView extends FrameLayout
 		ViewCompat.animate(mStickerBottomView)
 				.translationY(mStickerBottomView.getHeight()).setDuration(200);
 	}
-	
+
 	/**
 	 * 点击滤镜栏上方的空白区域隐藏滤镜栏
 	 */
-	public void hideFilterStaff() 
+	public void hideFilterStaff()
 	{
 		if (mFilterBottomView.getVisibility() == View.INVISIBLE) return;
 
@@ -674,30 +674,30 @@ public class MultipleCameraView extends FrameLayout
 		ViewCompat.animate(mFilterBottomView)
 				.translationY(mFilterBottomView.getHeight()).setDuration(200);
 	}
-	
+
 	/**
 	 * 处理底部按钮的显示状态
-	 * 
+	 *
 	 * @param isHidden
 	 */
-	private void handleBottomBtnLayout(boolean isHidden) 
+	private void handleBottomBtnLayout(boolean isHidden)
 	{
 		mBottomBtnLayout.setVisibility(isHidden ? View.INVISIBLE : View.VISIBLE);
 	}
-	
+
 	private ClickAndLongPressedInterface mClickAndLongPressedInterface = new ClickAndLongPressedInterface()
 	{
 		@Override
-		public void onLongPressedDown() 
+		public void onLongPressedDown()
 		{
 			if (mTuSDKVideoCamera == null) return;
-			
+
 			mTuSDKVideoCamera.startRecording();
 			setBackButtonHided(true);
 		}
 
 		@Override
-		public void onLongPressedUp() 
+		public void onLongPressedUp()
 		{
 			mResType = RES_TYPE_VIDEO;
 			if (mTuSDKVideoCamera != null)
@@ -706,9 +706,9 @@ public class MultipleCameraView extends FrameLayout
 				setBackButtonHided(false);
 			}
 		}
-		
+
 		@Override
-		public void onClick() 
+		public void onClick()
 		{
 			updateCaptureState();
 			hideFilterStickerBtn(true);
@@ -718,13 +718,13 @@ public class MultipleCameraView extends FrameLayout
 			}
 		}
 	};
-	
-	@SuppressLint("ClickableViewAccessibility") 
+
+	@SuppressLint("ClickableViewAccessibility")
 	private OnTouchListener mOnTouchListener = new OnTouchListener()
 	{
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
-		
+
 			// 只响应ACTION_DOWN事件
 			if (event.getAction() != MotionEvent.ACTION_DOWN) return false;
 
@@ -736,7 +736,7 @@ public class MultipleCameraView extends FrameLayout
 			{
 				handleFilterButton();
 			}
-			else if (v == mDeltButton) 
+			else if (v == mDeltButton)
 			{
 				deleteResource();
 			}
@@ -803,10 +803,10 @@ public class MultipleCameraView extends FrameLayout
 		params.setFilterArg(key, progress);
 		mSelesOutInput.submitFilterParameter();
 	}
-    
+
 	/**
 	 * 更新贴纸栏相关视图的显示状态
-	 * 
+	 *
 	 * @param isShow
 	 */
 	private void updateStickerViewStaff(boolean isShow)
@@ -814,34 +814,34 @@ public class MultipleCameraView extends FrameLayout
 		mRoundProgressBar.setVisibility(isShow? View.INVISIBLE: View.VISIBLE);
 		mSmartBeautyButton.setVisibility(isShow? View.INVISIBLE: View.VISIBLE);
 		mStickerButton.setVisibility(isShow? View.INVISIBLE: View.VISIBLE);
-		
+
 		mStickerBottomView
 				.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 		mTouchView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
-	
+
 	/**
 	 * 更新滤镜栏相关视图的显示状态
-	 * 
+	 *
 	 * @param isShow
 	 */
 	private void updateFilterViewStaff(boolean isShow)
 	{
-		
+
 		mRoundProgressBar.setVisibility(isShow? View.INVISIBLE: View.VISIBLE);
 		mSmartBeautyButton.setVisibility(isShow? View.INVISIBLE: View.VISIBLE);
 		mStickerButton.setVisibility(isShow? View.INVISIBLE: View.VISIBLE);
-		
+
 		mFilterBottomView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 		mTouchView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
 	}
-	
+
 	/**
 	 * 滤镜配置视图
-	 * 
+	 *
 	 * @return
 	 */
-	private FilterConfigView getFilterConfigView() 
+	private FilterConfigView getFilterConfigView()
 	{
 	    if (mConfigView == null)
         {
@@ -849,8 +849,8 @@ public class MultipleCameraView extends FrameLayout
         }
 
         return mConfigView;
-	} 
-	
+	}
+
 	/**
 	 * 设置返回按钮是否隐藏
 	 * @param isHidden
@@ -863,7 +863,7 @@ public class MultipleCameraView extends FrameLayout
 		}
     	mBackButton.setVisibility(isHidden?View.INVISIBLE:View.VISIBLE);
     }
-    
+
 	/**
 	 * 更新拍照进度条状态
 	 */
@@ -873,65 +873,65 @@ public class MultipleCameraView extends FrameLayout
 	    mRoundProgressBar.setInnerRoundColor(innerRoundColor);
 	    mRoundProgressBar.invalidate();
 	}
-	
+
 	/** 显示贴纸视图 */
-	protected void handleStickerButton() 
+	protected void handleStickerButton()
 	{
 		showStickerLayout();
 		handleBottomBtnLayout(true);
 	}
-	 
+
 	private void hideFilterStickerBtn(boolean isHidden)
 	{
 		mStickerButton.setVisibility(isHidden ? View.INVISIBLE : View.VISIBLE);
 		mSmartBeautyButton.setVisibility(isHidden ? View.INVISIBLE : View.VISIBLE);
 	}
-	
+
 	/** 显示滤镜视图 */
 	protected void handleFilterButton()
 	{
 		showSmartBeautyLayout();
 		handleBottomBtnLayout(true);
 	}
-	
+
     /**
      * 销毁图片
      */
     private void destroyBitmap()
     {
     	if (mCaptureBitmap == null) return;
-    	
+
     	if (!mCaptureBitmap.isRecycled())
     		mCaptureBitmap.recycle();
-    	
+
     	mCaptureBitmap = null;
     }
-    
+
     /**
      * 删除资源
      */
     public void deleteResource()
     {
-    	
+
 		if (mPreviewLayout == null|| mPreviewVideoLayout == null)
 		{
 			TLog.e("mPreviewLayout == null || mPreviewVideoLayout == null");
 			return;
-		}		 
-		
+		}
+
 		if(mResType == RES_TYPE_IMAGE)
 		{
 			updateImagePreviewStatus(false);
 			destroyBitmap();
             TuSdk.messageHub().showToast(mActivity, R.string.lsq_image_del_ok);
 		}
-		
+
 		if(mResType == RES_TYPE_VIDEO && mMoviePlayer != null && mSurfaceView != null)
 		{
 			// 返回录制界面需先调用removeAllViews清除预览画面
 			// 不然无法显示相机预览界面
 			mPreviewVideoLayout.removeAllViews();
-			
+
 			updateVideoPreviewStatus(false);
 			mMoviePlayer.stop();
 			File file = new File(mVideoPath);
@@ -951,13 +951,13 @@ public class MultipleCameraView extends FrameLayout
      * 隐藏虚拟按键，并且全屏
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-	protected void hideNavigationBar() 
+	protected void hideNavigationBar()
     {
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) 
-        { 
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19)
+        {
             View decorview = mActivity.getWindow().getDecorView();
             decorview.setSystemUiVisibility(View.GONE);
-        } 
+        }
         else if (Build.VERSION.SDK_INT >= 19)
         {
             View decorView = mActivity.getWindow().getDecorView();
@@ -966,7 +966,7 @@ public class MultipleCameraView extends FrameLayout
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
-    
+
     /**
      * 保存资源
      */
@@ -987,13 +987,13 @@ public class MultipleCameraView extends FrameLayout
             destroyBitmap();
             TuSdk.messageHub().showToast(mActivity, R.string.lsq_image_save_ok);
 		}
-	
+
 		if(mResType == RES_TYPE_VIDEO && mMoviePlayer != null && mSurfaceView != null)
 		{
 			// 返回录制界面需先调用removeAllViews清除预览画面
 			// 不然无法显示相机预览界面
 			mPreviewVideoLayout.removeAllViews();
-			
+
 			updateVideoPreviewStatus(false);
 			mMoviePlayer.stop();
 			ImageSqlHelper.saveMp4ToAlbum(mActivity,new File(mVideoPath));
@@ -1007,41 +1007,41 @@ public class MultipleCameraView extends FrameLayout
 		getDelegate().resumeCameraCapture();
 		updateProgressBarState(false);
 	 }
-	
+
 	private void updateSmartBeautyTab(TuSdkTextButton button, boolean clickable)
 	{
 		int imgId = 0, colorId = 0;
-		
+
 		switch (button.getId())
 		{
 		case R.id.lsq_filter_btn:
-			imgId = clickable? R.drawable.lsq_style_default_btn_filter_selected 
+			imgId = clickable? R.drawable.lsq_style_default_btn_filter_selected
 					: R.drawable.lsq_style_default_btn_filter_unselected;
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
 			break;
 		case R.id.lsq_beauty_btn:
-			imgId = clickable? R.drawable.lsq_style_default_btn_beauty_selected 
+			imgId = clickable? R.drawable.lsq_style_default_btn_beauty_selected
 					: R.drawable.lsq_style_default_btn_beauty_unselected;
 			colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
 			break;
 		}
-		
+
 		button.setCompoundDrawables(null, TuSdkContext.getDrawable(imgId), null, null);
 		button.setTextColor(TuSdkContext.getColor(colorId));
 	}
-	
+
 	private void setEnableAllSeekBar(boolean enable)
 	{
-		setEnableSeekBar(mSmoothingBarLayout,enable,0,R.drawable.tusdk_view_widget_seekbar_none_drag);
-		setEnableSeekBar(mEyeSizeBarLayout,enable,0,R.drawable.tusdk_view_widget_seekbar_none_drag);
-		setEnableSeekBar(mChinSizeBarLayout,enable,0,R.drawable.tusdk_view_widget_seekbar_none_drag);
+		setEnableSeekBar(mSmoothingBarLayout,enable,0, R.drawable.tusdk_view_widget_seekbar_none_drag);
+		setEnableSeekBar(mEyeSizeBarLayout,enable,0, R.drawable.tusdk_view_widget_seekbar_none_drag);
+		setEnableSeekBar(mChinSizeBarLayout,enable,0, R.drawable.tusdk_view_widget_seekbar_none_drag);
 	}
 
 	/** 设置调节栏是否有效 */
 	private void setEnableSeekBar(ConfigViewSeekBar viewSeekBar,boolean enable,float progress,int id)
 	{
-		if (viewSeekBar == null) return; 
-		
+		if (viewSeekBar == null) return;
+
 		viewSeekBar.setProgress(progress);
 		viewSeekBar.getSeekbar().setEnabled(enable);
 		viewSeekBar.getSeekbar().getDragView().setBackgroundResource(id);
@@ -1054,35 +1054,35 @@ public class MultipleCameraView extends FrameLayout
 		{
 		    changeVideoFilterCode(Arrays.asList(Constants.VIDEOFILTERS).get(mFocusPostion));
 		}
-	    
+
 		if (mBeautyLayout == null || mFilterLayout == null)
 			return;
-		
+
 		mBeautyLayout.setVisibility(View.VISIBLE);
 		mFilterLayout.setVisibility(View.GONE);
 		updateSmartBeautyTab(mBeautyTab,true);
 		updateSmartBeautyTab(mFilterTab,false);
-		
+
 		if (mSelesOutInput == null)
 		{
 			setEnableAllSeekBar(false);
 			return;
 		}
-		
+
 		SelesParameters params = mSelesOutInput.getFilterParameter();
 		if (params == null)
 		{
 			setEnableAllSeekBar(false);
 			return;
 		}
-		
+
 		List<FilterArg> list = params.getArgs();
 		if (list == null || list.size() == 0)
 		{
 			setEnableAllSeekBar(false);
 			return;
 		}
-		
+
 		for(FilterArg arg : list)
 		{
 			if (arg.equalsKey("smoothing"))
@@ -1108,12 +1108,12 @@ public class MultipleCameraView extends FrameLayout
 	{
 		if (mBeautyLayout == null || mFilterLayout == null)
 			return;
-		
+
 		mFilterLayout.setVisibility(View.VISIBLE);
 		mBeautyLayout.setVisibility(View.GONE);
 		updateSmartBeautyTab(mBeautyTab,false);
 		updateSmartBeautyTab(mFilterTab,true);
-		
+
 		if (mFocusPostion>0 && getFilterConfigView() != null && mSelesOutInput != null)
 		{
 			getFilterConfigView().post(new Runnable()
@@ -1124,41 +1124,41 @@ public class MultipleCameraView extends FrameLayout
 					getFilterConfigView().setSelesFilter(mSelesOutInput.getFilter());
 					getFilterConfigView().setVisibility(View.VISIBLE);
 				}});
-			
+
 			getFilterConfigView().setSeekBarDelegate(mConfigSeekBarDelegate);
 			getFilterConfigView().invalidate();
 		}
 	}
-	 
+
 		/**
 		 * 显示贴纸底部栏
 		 */
-		public void showStickerLayout() 
+		public void showStickerLayout()
 		{
 			updateStickerViewStaff(true);
-	
+
 			// 滤镜栏向上动画并显示
 			ViewCompat.setTranslationY(mStickerBottomView,
 					mStickerBottomView.getHeight());
 			ViewCompat.animate(mStickerBottomView).translationY(0).setDuration(200);
 		}
-		
+
 		/**
 		 * 显示智能美颜底部栏
 		 */
 		public void showSmartBeautyLayout()
 		{
 			updateFilterViewStaff(true);
-			
+
 			// 滤镜栏向上动画并显示
 			ViewCompat.setTranslationY(mFilterBottomView,
 					mFilterBottomView.getHeight());
             ViewCompat.animate(mFilterBottomView).translationY(0).setDuration(200);
 
 			showBeautySeekBar();
-			
+
 		}
-		
+
 		/**
 		 * 更新图片预览界面的状态
 		 * @param isShowed
@@ -1179,20 +1179,20 @@ public class MultipleCameraView extends FrameLayout
 			mSurfaceView.setZOrderMediaOverlay(isShowed ? true :false);
 			mPreviewImg.setVisibility(View.GONE);
 		}
-		
-		 public void refreshFile(File file) 
+
+		 public void refreshFile(File file)
 		 {
 			if (file == null) {
 				TLog.e("refreshFile file == null");
 				return;
 			}
-			
+
 			Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 			Uri uri = Uri.fromFile(file);
 			intent.setData(uri);
 			mActivity.sendBroadcast(intent);
 		 }
-		 
+
 	/**
 	 * 录制结束重置进度条状态
 	 */
@@ -1203,7 +1203,7 @@ public class MultipleCameraView extends FrameLayout
 			TLog.e("mRoundProgressBar == null");
 			return;
 		}
-		
+
 	    int innerRoundColor= TuSdkContext.getColor("lsq_innerRound_unselected_color");
         mRoundProgressBar.setInnerRoundColor(innerRoundColor);
         mRoundProgressBar.setRingWidth(TuSdkContext.dip2px(6));
@@ -1212,11 +1212,11 @@ public class MultipleCameraView extends FrameLayout
         mRoundProgressBar.setProgress(0);
         mRoundProgressBar.invalidate();
 	}
-	
+
 	/**
 	 * 显示贴纸和滤镜
 	 */
-	private void showStickerAndFilter() 
+	private void showStickerAndFilter()
 	{
 		if (mStickerButton == null || mSmartBeautyButton == null)
 		{
@@ -1226,14 +1226,14 @@ public class MultipleCameraView extends FrameLayout
 		mStickerButton.setVisibility(View.VISIBLE);
 		mSmartBeautyButton.setVisibility(View.VISIBLE);
 	}
-	
+
 	/**
 	 * 滤镜选中状态
-	 * 
+	 *
 	 * @param itemView
 	 * @param position
 	 */
-	private void selectFilter(FilterCellView itemView, int position) 
+	private void selectFilter(FilterCellView itemView, int position)
 	{
 		updateFilterBorderView(itemView,false);
 		itemView.setFlag(position);
@@ -1241,21 +1241,21 @@ public class MultipleCameraView extends FrameLayout
 		TextView titleView = itemView.getTitleView();
 		titleView.setBackground(TuSdkContext.getDrawable("tusdk_view_filter_selected_text_roundcorner"));
 	}
-	
+
 	/**
 	 * 设置滤镜单元边框是否可见
 	 * @param lastFilter
 	 * @param isHidden
 	 */
-	private void updateFilterBorderView(FilterCellView lastFilter,boolean isHidden)
+	private void updateFilterBorderView(FilterCellView lastFilter, boolean isHidden)
 	{
 		View filterBorderView = lastFilter.getBorderView();
 		filterBorderView.setVisibility(isHidden ? View.GONE : View.VISIBLE);
 	}
-	
+
 	/**
 	 * 录制错误时更新视图显示
-	 * 
+	 *
 	 * @param error
 	 */
 	public void updateViewOnMovieRecordFailed(RecordError error)
@@ -1265,15 +1265,15 @@ public class MultipleCameraView extends FrameLayout
             TuSdk.messageHub().showToast(mActivity, R.string.lsq_record_time_invalid);
         else
             TuSdk.messageHub().showToast(mActivity, R.string.lsq_record_movie_error);
-        
+
 		resetProgess();
 		showStickerAndFilter();
 		getDelegate().resumeCameraCapture();
 	}
-	
+
 	/**
 	 * 录制状态发生改变时更新视图显示
-	 * 
+	 *
 	 * @param state
  	 */
 	public void updateViewOnMovieRecordStateChanged(RecordState state)
@@ -1283,21 +1283,21 @@ public class MultipleCameraView extends FrameLayout
             hideFilterStickerBtn(true);
         }
 	}
-	
+
 	/**
 	 * 录制进度改变时更新视图显示
-	 * 
+	 *
 	 * @param progress
 	 * @param durationTime
 	 */
-	public void updateViewOnMovieRecordProgressChanged(float progress, float durationTime) 
+	public void updateViewOnMovieRecordProgressChanged(float progress, float durationTime)
 	{
 		updateProgressBar((int)(progress*100));
 	}
-	
+
 	/**
 	 * 录制完成时更新视图显示
-	 * 
+	 *
 	 */
 	public void updateViewOnMovieRecordComplete(TuSDKVideoResult result)
 	{
@@ -1305,7 +1305,7 @@ public class MultipleCameraView extends FrameLayout
 		// 暂停相机
 		getDelegate().pauseCameraCapture();
 	}
-	
+
 	/**
 	 * 滤镜变化时改变滤镜调节栏
 	 * @param selesOutInput
@@ -1337,9 +1337,9 @@ public class MultipleCameraView extends FrameLayout
 				mChinSizeProgress = arg.getPrecentValue();
     	}
     	selesOutInput.setFilterParameter(params);
-    	
+
         mSelesOutInput = selesOutInput;
-        
+
         if (getFilterConfigView() != null)
             getFilterConfigView().setSelesFilter(mSelesOutInput.getFilter());
 
@@ -1349,35 +1349,35 @@ public class MultipleCameraView extends FrameLayout
         	showBeautySeekBar();
         }
 	}
-	
+
 	/**
 	 * 拍照
 	 * @param camera
 	 * @param bitmap
 	 */
-	public void updateViewOnVideoCameraScreenShot(SelesVideoCameraInterface camera, Bitmap bitmap) 
+	public void updateViewOnVideoCameraScreenShot(SelesVideoCameraInterface camera, Bitmap bitmap)
 	{
-		if(bitmap != null) 
+		if(bitmap != null)
 		{
 			displayCapturedImage(bitmap);
 			// 暂停相机
 			camera.pauseCameraCapture();
-			
+
 			updateProgressBarState(true);
 		}
 	}
-	
+
 	public void displayCapturedImage(final Bitmap bitmap)
 	{
 		mResType = RES_TYPE_IMAGE;
 		mCaptureBitmap = bitmap;
-		
+
 		if (mPreviewLayout == null || mPreviewImg == null) return;
-		
+
 		updateImagePreviewStatus(true);
-		mPreviewImg.setImageBitmap(bitmap)	;			
+		mPreviewImg.setImageBitmap(bitmap)	;
 	}
-	
+
 	/**
 	 * 更新进度条进度
 	 * @param progress
@@ -1392,7 +1392,7 @@ public class MultipleCameraView extends FrameLayout
         mRoundProgressBar.setProgress(progress);
         mRoundProgressBar.invalidate();
 	}
-	
+
 	/**
 	 * 创建SurfaceView播放视频
 	 */

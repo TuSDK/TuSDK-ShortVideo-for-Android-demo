@@ -18,6 +18,8 @@ import org.lasque.tusdkvideodemo.R;
  */
 public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnClickListener
 {
+    /** 时间特效Tab */
+    protected TuSdkTextButton mTimeEffectTabBtn;
     /** 滤镜Tab */
     protected TuSdkTextButton mFilterTabBtn;
     /** MV Tab */
@@ -38,6 +40,7 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
     public enum TabType
     {
+        TimeEffectTabType,
         FilterTabType,
         MVTabType,
         DubbingTabType,
@@ -76,6 +79,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     public void loadView()
     {
         super.loadView();
+
+        mTimeEffectTabBtn = findViewById(R.id.lsq_tab_time_effects_btn);
+        mTimeEffectTabBtn.setOnClickListener(this);
 
         mFilterTabBtn = findViewById(R.id.lsq_tab_filter_btn);
         mFilterTabBtn.setOnClickListener(this);
@@ -118,6 +124,12 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
         switch (button.getId())
         {
+
+            case R.id.lsq_tab_time_effects_btn:
+                imgId = clickable ? R.drawable.lsq_tab_ic_time_y
+                        : R.drawable.lsq_tab_ic_time_g;
+                colorId = clickable ? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
+                break;
             case R.id.lsq_tab_filter_btn:
                 imgId = clickable? R.drawable.lsq_style_default_btn_filter_selected
                         : R.drawable.lsq_style_default_btn_filter_unselected;
@@ -145,8 +157,8 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
                 colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
                 break;
             case R.id.lsq_tab_text_effect_btn:
-                imgId = clickable?R.drawable.lsq_editor_bottom_tab_text_selected
-                        :R.drawable.lsq_editor_bottom_tab_text;
+                imgId = clickable? R.drawable.lsq_editor_bottom_tab_text_selected
+                        : R.drawable.lsq_editor_bottom_tab_text;
                 colorId = clickable? R.color.lsq_filter_title_color : R.color.lsq_filter_title_default_color;
                 break;
         }
@@ -160,6 +172,7 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     {
         if(!getEnable()) return;
 
+        updateButtonStatus(mTimeEffectTabBtn, mTimeEffectTabBtn == view);
         updateButtonStatus(mFilterTabBtn, mFilterTabBtn == view);
         updateButtonStatus(mMvTabBtn, mMvTabBtn == view);
         updateButtonStatus(mDubbingTabBtn, mDubbingTabBtn == view);
@@ -171,6 +184,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
         switch (view.getId())
         {
+            case R.id.lsq_tab_time_effects_btn:
+                mSelectedTabType = TabType.TimeEffectTabType;
+                break;
             case R.id.lsq_tab_filter_btn:
                 mSelectedTabType = TabType.FilterTabType;
                 break;

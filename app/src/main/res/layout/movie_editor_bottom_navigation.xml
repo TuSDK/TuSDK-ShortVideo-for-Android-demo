@@ -18,6 +18,19 @@
             android:layout_below="@id/lsq_spilt_line"
             android:gravity="center"
             android:orientation="horizontal">
+
+            <org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
+                android:id="@+id/lsq_tab_time_effects_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:drawableTop="@drawable/lsq_tab_ic_time_g"
+                android:gravity="center"
+                android:text="@string/lsq_time_effect_text"
+                android:textColor="@color/lsq_filter_title_default_color"
+                android:textSize="14sp" />
+
             <org.lasque.tusdk.core.view.widget.button.TuSdkTextButton
                 android:id="@+id/lsq_tab_magic_btn"
                 android:layout_width="match_parent"

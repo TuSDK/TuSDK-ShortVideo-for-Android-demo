@@ -14,10 +14,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import org.lasque.tusdk.core.encoder.video.TuSDKVideoEncoderSetting;
-import org.lasque.tusdk.core.seles.sources.SelesOutInput;
 import org.lasque.tusdk.core.seles.sources.SelesVideoCameraInterface;
 import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
-import org.lasque.tusdk.core.seles.tusdk.combo.Face2DComboFilterWrap;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera.RecordError;
 import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera.RecordMode;
@@ -30,13 +28,14 @@ import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
 import org.lasque.tusdkvideodemo.views.record.MultipleCameraView;
 import org.lasque.tusdkvideodemo.views.record.MultipleCameraView.TuSDKMultipleCameraDelegate;
+
 /**
  * 多功能相机示例，点击拍照，长按录像
  * 
  * @author LiuHang
  */
 @SuppressLint("ClickableViewAccessibility") 
-public class MultipleCameraActivity extends SimpleCameraActivity implements TuSDKMultipleCameraDelegate 
+public class MultipleCameraActivity extends SimpleCameraActivity implements TuSDKMultipleCameraDelegate
 {
 	/** 最大录制时间 */
 	private final int MAX_RECORDING_TIME = 8;
@@ -136,7 +135,7 @@ public class MultipleCameraActivity extends SimpleCameraActivity implements TuSD
 	/**
 	 * 滤镜效果改变监听事件
 	 */
-	protected TuSDKVideoCameraDelegate mVideoCameraDelegate = new TuSDKVideoCameraDelegate() 
+	protected TuSDKVideoCameraDelegate mVideoCameraDelegate = new TuSDKVideoCameraDelegate()
     {
         @Override
         public void onFilterChanged(FilterWrap selesOutInput)
@@ -150,7 +149,7 @@ public class MultipleCameraActivity extends SimpleCameraActivity implements TuSD
 		}
 
 		@Override
-		public void onVideoCameraScreenShot(SelesVideoCameraInterface camera, Bitmap bitmap) 
+		public void onVideoCameraScreenShot(SelesVideoCameraInterface camera, Bitmap bitmap)
 		{
 			mMultipleCameraView.updateViewOnVideoCameraScreenShot(camera, bitmap);
 		}
@@ -161,7 +160,7 @@ public class MultipleCameraActivity extends SimpleCameraActivity implements TuSD
 	 */
     private TuSDKRecordVideoCameraDelegate mRecordResultDelegate = new TuSDKRecordVideoCameraDelegate()
 	{
-		public void onMovieRecordComplete(TuSDKVideoResult result) 
+		public void onMovieRecordComplete(TuSDKVideoResult result)
 		{
 			mMultipleCameraView.updateViewOnMovieRecordComplete(result);
 		}

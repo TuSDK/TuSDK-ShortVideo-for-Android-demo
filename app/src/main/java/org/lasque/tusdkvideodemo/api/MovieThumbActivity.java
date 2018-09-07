@@ -10,19 +10,6 @@
 
 package org.lasque.tusdkvideodemo.api;
 
-import java.util.List;
-
-import org.lasque.tusdk.core.TuSdk;
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.struct.TuSdkSize;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
-import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
-import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
-import org.lasque.tusdkvideodemo.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -37,6 +24,19 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.PlayerState;
+import org.lasque.tusdk.api.movie.player.TuSDKMoviePlayer.TuSDKMoviePlayerDelegate;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate;
+import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
+import org.lasque.tusdk.core.struct.TuSdkSize;
+import org.lasque.tusdkvideodemo.R;
+
+import java.util.List;
 
 /**
  * 获取视频缩略图
@@ -90,7 +90,7 @@ public class MovieThumbActivity extends Activity
 	private TuSDKMoviePlayerDelegate mMoviePlayerDelegate = new TuSDKMoviePlayerDelegate()
 	{
 		@Override
-		public void onStateChanged(PlayerState state) 
+		public void onStateChanged(PlayerState state)
 		{
 			if (state == PlayerState.INITIALIZED)
 			{
@@ -131,7 +131,7 @@ public class MovieThumbActivity extends Activity
 	/** 加载视频缩略图 */
 	public void loadVideoThumbList(String videoPath)
 	{
-		TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56),TuSdkContext.dip2px(30));
+		TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56), TuSdkContext.dip2px(30));
 		
 		TuSDKVideoImageExtractor extractor = TuSDKVideoImageExtractor.createExtractor();
 		
@@ -139,7 +139,7 @@ public class MovieThumbActivity extends Activity
 				.setVideoDataSource(TuSDKMediaDataSource.create(getVideoPath()))
 				.setExtractFrameCount(6);
 		
-		extractor.asyncExtractImageList(new TuSDKVideoImageExtractorDelegate() 
+		extractor.asyncExtractImageList(new TuSDKVideoImageExtractorDelegate()
 		{
 			@Override   
 			public void onVideoImageListDidLoaded(List<Bitmap> images) 

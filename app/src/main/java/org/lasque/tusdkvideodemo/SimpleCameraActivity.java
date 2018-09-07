@@ -28,11 +28,6 @@ import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting;
 import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting.AVCodecType;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
-import org.lasque.tusdkvideodemo.album.MovieInfo;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 相机界面父类
