@@ -534,7 +534,7 @@ public class MoviePreviewAndCutActivity extends SimpleCameraActivity implements 
 			
 			@Override
 			public void onScrollChange(HVScrollView v, int scrollX, int scrollY,
-                                       int oldScrollX, int oldScrollY)
+					int oldScrollX, int oldScrollY)
 			{
 				mScrollViewContentOffseX = (scrollX > w-mScreenWidth) ? (w-mScreenWidth) : scrollX;
 				mScrollViewContentOffseY = (scrollY > h-mScreenWidth) ? (h-mScreenWidth) : scrollY;

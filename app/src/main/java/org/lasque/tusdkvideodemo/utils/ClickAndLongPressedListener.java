@@ -128,7 +128,7 @@ public class ClickAndLongPressedListener implements OnTouchListener {
 		return mLongPressedAndClickInterface;
 	}
 
-	public void setLongPressedAndClickInterface(ClickAndLongPressedInterface callBack) 
+	public void setLongPressedAndClickInterface(ClickAndLongPressedInterface callBack)
 	{
 		this.mLongPressedAndClickInterface = callBack;
 	}

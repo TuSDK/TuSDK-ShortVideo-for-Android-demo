@@ -191,18 +191,6 @@ public class MovieRecordView extends RelativeLayout {
     private ConfigViewSeekBar mEyeSizeBarLayout;
     // 瘦脸调节栏
     private ConfigViewSeekBar mChinSizeBarLayout;
-    // 瘦鼻调节栏
-    private ConfigViewSeekBar mNoseBarLayout;
-    // 嘴宽调节栏
-    private ConfigViewSeekBar mMouthWidthBarLayout;
-    // 细眉调节栏
-    private ConfigViewSeekBar mThinEyebrowsBarLayout;
-    // 眼距调节栏
-    private ConfigViewSeekBar mEyeDisBarLayout;
-    // 眼角调节栏
-    private ConfigViewSeekBar mEyeAngleBarLayout;
-    // 眼角调节栏
-    private ConfigViewSeekBar mJawSizeBarLayout;
     // 用于记录当前调节栏效果系数
     private float mMixiedProgress = -1.0f;
     // 用于记录当前调节栏磨皮系数
@@ -211,18 +199,9 @@ public class MovieRecordView extends RelativeLayout {
     private float mEyeSizeProgress = -1.0f;
     // 用于记录当前调节栏瘦脸系数
     private float mChinSizeProgress = -1.0f;
-    // 用于记录当前调节栏瘦鼻系数
-    private float mNoseSizeProgress = -1.0f;
-    // 用于记录当前调节栏嘴宽系数
-    private float mMouthWidthProgress = -1.0f;
-    // 用于记录当前调节栏细眉系数
-    private float mThinEyebrowsProgress = -1.0f;
-    // 用于记录当前调节栏眼距系数
-    private float mEyeDisProgress = -1.0f;
-    // 用于记录当前调节栏眼距系数
-    private float mEyeAngleProgress = -1.0f;
-    // 用于记录当前调节栏眼距系数
-    private float mJawSizeProgress = -1.0f;
+    // 用于记录当前白皙的系数
+    private float mWhiteningProgress = -1.0f;
+
     private Context mContext;
 
     protected TuSDKRecordVideoCamera mCamera;
@@ -406,30 +385,6 @@ public class MovieRecordView extends RelativeLayout {
         mChinSizeBarLayout.getTitleView().setText(R.string.lsq_thin_face);
         mChinSizeBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
 
-        mNoseBarLayout = (ConfigViewSeekBar) mBeautyLayout.findViewById(R.id.lsq_nose_bar);
-        mNoseBarLayout.getTitleView().setText(R.string.lsq_nose);
-        mNoseBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        mMouthWidthBarLayout = (ConfigViewSeekBar) mBeautyLayout.findViewById(R.id.lsq_mouth_width_bar);
-        mMouthWidthBarLayout.getTitleView().setText(R.string.lsq_mouth_width);
-        mMouthWidthBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        mEyeDisBarLayout = (ConfigViewSeekBar) mBeautyLayout.findViewById(R.id.lsq_eye_dis_bar);
-        mEyeDisBarLayout.getTitleView().setText(R.string.lsq_eye_dis);
-        mEyeDisBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        mEyeAngleBarLayout = (ConfigViewSeekBar) mBeautyLayout.findViewById(R.id.lsq_eye_angle_bar);
-        mEyeAngleBarLayout.getTitleView().setText(R.string.lsq_eye_angle);
-        mEyeAngleBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        mJawSizeBarLayout = (ConfigViewSeekBar) mBeautyLayout.findViewById(R.id.lsq_jaw_size_bar);
-        mJawSizeBarLayout.getTitleView().setText(R.string.lsq_jaw_size);
-        mJawSizeBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        mThinEyebrowsBarLayout = (ConfigViewSeekBar) mBeautyLayout.findViewById(R.id.lsq_thin_eyebrows_bar);
-        mThinEyebrowsBarLayout.getTitleView().setText(R.string.lsq_thin_eyebrows);
-        mThinEyebrowsBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
         mFilterBottomView = (RelativeLayout) findViewById(R.id.lsq_filter_group_bottom_view);
         mFilterBottomView.setVisibility(View.INVISIBLE);
 
@@ -575,12 +530,6 @@ public class MovieRecordView extends RelativeLayout {
         setEnableSeekBar(mSmoothingBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
         setEnableSeekBar(mEyeSizeBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
         setEnableSeekBar(mChinSizeBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
-        setEnableSeekBar(mNoseBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
-        setEnableSeekBar(mMouthWidthBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
-        setEnableSeekBar(mEyeDisBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
-        setEnableSeekBar(mEyeAngleBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
-        setEnableSeekBar(mThinEyebrowsBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
-        setEnableSeekBar(mJawSizeBarLayout, enable, 0, R.drawable.tusdk_view_widget_seekbar_none_drag);
     }
 
     /**
@@ -637,24 +586,6 @@ public class MovieRecordView extends RelativeLayout {
                         R.drawable.tusdk_view_widget_seekbar_drag);
             } else if (arg.equalsKey("chinSize")) {
                 setEnableSeekBar(mChinSizeBarLayout, true, arg.getPrecentValue(),
-                        R.drawable.tusdk_view_widget_seekbar_drag);
-            } else if (arg.equalsKey("noseSize")) {
-                setEnableSeekBar(mNoseBarLayout, true, arg.getPrecentValue(),
-                        R.drawable.tusdk_view_widget_seekbar_drag);
-            } else if (arg.equalsKey("mouthWidth")) {
-                setEnableSeekBar(mMouthWidthBarLayout, true, arg.getPrecentValue(),
-                        R.drawable.tusdk_view_widget_seekbar_drag);
-            } else if (arg.equalsKey("eyeDis")) {
-                setEnableSeekBar(mEyeDisBarLayout, true, arg.getPrecentValue(),
-                        R.drawable.tusdk_view_widget_seekbar_drag);
-            } else if (arg.equalsKey("eyeAngle")) {
-                setEnableSeekBar(mEyeAngleBarLayout, true, arg.getPrecentValue(),
-                        R.drawable.tusdk_view_widget_seekbar_drag);
-            } else if (arg.equalsKey("archEyebrow")) {
-                setEnableSeekBar(mThinEyebrowsBarLayout, true, arg.getPrecentValue(),
-                        R.drawable.tusdk_view_widget_seekbar_drag);
-            } else if (arg.equalsKey("jawSize")) {
-                setEnableSeekBar(mJawSizeBarLayout, true, arg.getPrecentValue(),
                         R.drawable.tusdk_view_widget_seekbar_drag);
             }
         }
@@ -1711,45 +1642,23 @@ public class MovieRecordView extends RelativeLayout {
             List<FilterArg> list = params.getArgs();
             for (FilterArg arg : list) {
                 if (arg.equalsKey("smoothing") && mSmoothingProgress != -1.0f)
-                    arg.setPrecentValue(mSmoothingProgress);
+                    arg.setPrecentValue(mSmoothingProgress * 0.7f);
                 else if (arg.equalsKey("smoothing") && mSmoothingProgress == -1.0f)
                     mSmoothingProgress = arg.getPrecentValue();
                 else if (arg.equalsKey("mixied") && mMixiedProgress != -1.0f)
-                    arg.setPrecentValue(mMixiedProgress);
+                    arg.setPrecentValue(mMixiedProgress * 0.7f);
                 else if (arg.equalsKey("mixied") && mMixiedProgress == -1.0f)
                     mMixiedProgress = arg.getPrecentValue();
                 else if (arg.equalsKey("eyeSize") && mEyeSizeProgress != -1.0f)
-                    arg.setPrecentValue(mEyeSizeProgress);
+                    arg.setPrecentValue(mEyeSizeProgress * 0.7f);
                 else if (arg.equalsKey("chinSize") && mChinSizeProgress != -1.0f)
-                    arg.setPrecentValue(mChinSizeProgress);
-                else if (arg.equalsKey("noseSize") && mNoseSizeProgress != -1.0f)
-                    arg.setPrecentValue(mNoseSizeProgress);
-                else if (arg.equalsKey("mouthWidth") && mMouthWidthProgress != -1.0f)
-                    arg.setPrecentValue(mMouthWidthProgress);
-                else if (arg.equalsKey("eyeDis") && mEyeDisProgress != -1.0f)
-                    arg.setPrecentValue(mEyeDisProgress);
-                else if (arg.equalsKey("eyeAngle") && mEyeAngleProgress != -1.0f)
-                    arg.setPrecentValue(mEyeAngleProgress);
-                else if (arg.equalsKey("archEyebrow") && mThinEyebrowsProgress != -1.0f)
-                    arg.setPrecentValue(mThinEyebrowsProgress);
-                else if (arg.equalsKey("jawSize") && mJawSizeProgress != -1.0f)
-                    arg.setPrecentValue(mJawSizeProgress);
+                    arg.setPrecentValue(mChinSizeProgress*0.4f);
                 else if (arg.equalsKey("eyeSize") && mEyeSizeProgress == -1.0f)
                     mEyeSizeProgress = arg.getPrecentValue();
                 else if (arg.equalsKey("chinSize") && mChinSizeProgress == -1.0f)
                     mChinSizeProgress = arg.getPrecentValue();
-                else if (arg.equalsKey("noseSize") && mNoseSizeProgress == -1.0f)
-                    mNoseSizeProgress = arg.getPrecentValue();
-                else if (arg.equalsKey("mouthWidth") && mMouthWidthProgress == -1.0f)
-                    mMouthWidthProgress = arg.getPrecentValue();
-                else if (arg.equalsKey("eyeDis") && mEyeDisProgress == -1.0f)
-                    mEyeDisProgress = arg.getPrecentValue();
-                else if (arg.equalsKey("eyeAngle") && mEyeAngleProgress == -1.0f)
-                    mEyeAngleProgress = arg.getPrecentValue();
-                else if (arg.equalsKey("archEyebrow") && mThinEyebrowsProgress == -1.0f)
-                    mThinEyebrowsProgress = arg.getPrecentValue();
-                else if (arg.equalsKey("jawSize") && mJawSizeProgress == -1.0f)
-                    mJawSizeProgress = arg.getPrecentValue();
+                else if (arg.equalsKey("whitening") && mWhiteningProgress != -1.0f)
+                    arg.setPrecentValue(mWhiteningProgress*0.6f);
             }
             selesOutInput.setFilterParameter(params);
 
@@ -1789,20 +1698,10 @@ public class MovieRecordView extends RelativeLayout {
                 mEyeSizeProgress = arg.getPrecentValue();
             else if (arg.equalsKey("chinSize"))
                 mChinSizeProgress = arg.getPrecentValue();
-            else if (arg.equalsKey("noseSize"))
-                mNoseSizeProgress = arg.getPrecentValue();
-            else if (arg.equalsKey("mouthWidth"))
-                mMouthWidthProgress = arg.getPrecentValue();
-            else if (arg.equalsKey("eyeDis"))
-                mEyeDisProgress = arg.getPrecentValue();
-            else if (arg.equalsKey("eyeAngle"))
-                mEyeAngleProgress = arg.getPrecentValue();
-            else if (arg.equalsKey("archEyebrow"))
-                mThinEyebrowsProgress = arg.getPrecentValue();
-            else if (arg.equalsKey("jawSize"))
-                mJawSizeProgress = arg.getPrecentValue();
             else if (arg.equalsKey("mixied"))
                 mMixiedProgress = arg.getPrecentValue();
+            else if(arg.equalsKey("whitening"))
+                mWhiteningProgress = arg.getPrecentValue();
         }
 
     };
@@ -1822,24 +1721,6 @@ public class MovieRecordView extends RelativeLayout {
             } else if (seekBar == mChinSizeBarLayout.getSeekbar()) {
                 mChinSizeProgress = progress;
                 applyFilter(mChinSizeBarLayout, "chinSize", progress);
-            } else if (seekBar == mNoseBarLayout.getSeekbar()) {
-                mNoseSizeProgress = progress;
-                applyFilter(mNoseBarLayout, "noseSize", progress);
-            } else if (seekBar == mMouthWidthBarLayout.getSeekbar()) {
-                mMouthWidthProgress = progress;
-                applyFilter(mMouthWidthBarLayout, "mouthWidth", progress);
-            } else if (seekBar == mEyeDisBarLayout.getSeekbar()) {
-                mEyeDisProgress = progress;
-                applyFilter(mEyeDisBarLayout, "eyeDis", progress);
-            } else if (seekBar == mEyeAngleBarLayout.getSeekbar()) {
-                mEyeAngleProgress = progress;
-                applyFilter(mEyeAngleBarLayout, "eyeAngle", progress);
-            } else if (seekBar == mThinEyebrowsBarLayout.getSeekbar()) {
-                mThinEyebrowsProgress = progress;
-                applyFilter(mThinEyebrowsBarLayout, "archEyebrow", progress);
-            } else if (seekBar == mJawSizeBarLayout.getSeekbar()) {
-                mJawSizeProgress = progress;
-                applyFilter(mJawSizeBarLayout, "jawSize", progress);
             }
         }
     };

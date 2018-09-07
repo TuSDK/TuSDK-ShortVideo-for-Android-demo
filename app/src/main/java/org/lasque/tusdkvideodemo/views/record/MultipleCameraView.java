@@ -329,7 +329,7 @@ public class MultipleCameraView extends FrameLayout
 	 * 
 	 * @return
 	 */
-	private FilterListView getFilterListView()
+	private FilterListView getFilterListView() 
 	{
 		if (mFilterListView == null) {
 			mFilterListView = (FilterListView) findViewById(R.id.lsq_filter_list_view);
@@ -348,7 +348,7 @@ public class MultipleCameraView extends FrameLayout
 	private TuSdkTableViewItemClickDelegate<String, FilterCellView> mFilterTableItemClickDelegate = new TuSdkTableViewItemClickDelegate<String, FilterCellView>() {
 		@Override
 		public void onTableViewItemClick(String itemData,
-                                         FilterCellView itemView, int position) {
+				FilterCellView itemView, int position) {
 			onFilterGroupSelected(itemData, itemView, position);
 		}
 	};
@@ -361,7 +361,7 @@ public class MultipleCameraView extends FrameLayout
 	 * @param position
 	 */
 	protected void onFilterGroupSelected(String itemData,
-                                         FilterCellView itemView, int position)
+			FilterCellView itemView, int position) 
 	{
 		FilterCellView prevCellView = (FilterCellView) mFilterListView.findViewWithTag(mFocusPostion);
 		mFocusPostion = position;
@@ -1247,7 +1247,7 @@ public class MultipleCameraView extends FrameLayout
 	 * @param lastFilter
 	 * @param isHidden
 	 */
-	private void updateFilterBorderView(FilterCellView lastFilter, boolean isHidden)
+	private void updateFilterBorderView(FilterCellView lastFilter,boolean isHidden)
 	{
 		View filterBorderView = lastFilter.getBorderView();
 		filterBorderView.setVisibility(isHidden ? View.GONE : View.VISIBLE);

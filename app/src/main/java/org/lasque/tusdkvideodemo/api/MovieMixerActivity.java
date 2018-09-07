@@ -345,11 +345,11 @@ public class MovieMixerActivity extends Activity implements OnMP4MovieMixerDeleg
 	/**
 	 * 原音配音调节栏委托事件
 	 */
-	private ConfigViewSeekBar.ConfigSeekbarDelegate mVoiceConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate()
+	private ConfigViewSeekBar.ConfigSeekbarDelegate mVoiceConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate() 
 	{
 		
 		@Override
-		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg)
+		public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewArg arg) 
 		{
 			if (arg.getKey().equals("origin"))
 				setSeekBarProgress(0,arg.getPercentValue());

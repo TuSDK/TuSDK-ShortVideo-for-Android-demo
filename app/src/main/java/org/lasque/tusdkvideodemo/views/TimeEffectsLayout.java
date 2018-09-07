@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.recyclerview.TuSdkTableView;
@@ -58,7 +57,6 @@ public class TimeEffectsLayout extends TuSdkRelativeLayout {
         timeModels.add("slow");
 
         mTimeEffectListView.setModeList(timeModels);
-
     }
 
     /**
@@ -102,7 +100,6 @@ public class TimeEffectsLayout extends TuSdkRelativeLayout {
         public void onTimeRangChanged(float leftPercent, float rightPercent) {
             mTimeRange.setStartTimeUs((long) (mMovieEditor.getEditorPlayer().getTotalTimeUS() * leftPercent));
             mTimeRange.setEndTimeUs((long) (mMovieEditor.getEditorPlayer().getTotalTimeUS() * rightPercent));
-            TLog.e("StartTimeUs : %s EndTimeUs : %s", mTimeRange.getStartTimeUS(), mTimeRange.getEndTimeUS());
             handleTimeEffect(mCurrentPosition);
         }
     };
@@ -152,49 +149,4 @@ public class TimeEffectsLayout extends TuSdkRelativeLayout {
         }
     }
 
-//    @Override
-//    public void onClick(View view) {
-//
-//        switch (view.getId()) {
-//            case R.id.lsq_time_effects_reverse_btn:
-//                // TODO 倒序
-//                TuSdkMediaTimeline reverseTimeline = new TuSdkMediaTimeline();
-//                reverseTimeline.append(mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs, 0);
-//                mMovieEditor.getEditorPlayer().setTimeLine(reverseTimeline);
-//                break;
-//            case R.id.lsq_time_effects_sequence_btn:
-//                // TODO 正序
-//                TuSdkMediaTimeline timeline = new TuSdkMediaTimeline();
-//                mMovieEditor.getEditorPlayer().setTimeLine(timeline);
-//                break;
-//            case R.id.lsq_time_effects_repeat_btn:
-//                // TODO 反复
-//                long mRepeatStartActionTime = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_start_time)).getText().toString());
-//                long mRepeatTimeDuration = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_duration)).getText().toString());
-//                int mRepeatTimes = Integer.valueOf(((EditText) findViewById(R.id.lsq_time_effects_times)).getText().toString());
-//
-//                TuSdkMediaTimeline repeatTimeline = new TuSdkMediaTimeline();
-//                repeatTimeline.append(0, mRepeatStartActionTime);
-//                for (int i = 0; i < mRepeatTimes; i++) {
-//                    repeatTimeline.append(mRepeatStartActionTime, mRepeatStartActionTime + mRepeatTimeDuration);
-//                }
-//                if ((mRepeatStartActionTime + mRepeatTimeDuration) < mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs)
-//                    repeatTimeline.append(mRepeatStartActionTime + mRepeatTimeDuration, mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs);
-//                mMovieEditor.getEditorPlayer().setTimeLine(repeatTimeline);
-//                break;
-//            case R.id.lsq_time_effects_slow_btn:
-//                // TODO 慢动作
-//                long mSlowStartActionTime = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_start_time)).getText().toString());
-//                long mSlowTimeDuration = Long.valueOf(((EditText) findViewById(R.id.lsq_time_effects_duration)).getText().toString());
-//                int mSlowTimes = Integer.valueOf(((EditText) findViewById(R.id.lsq_time_effects_times)).getText().toString());
-//
-//                TuSdkMediaTimeline slowTimeline = new TuSdkMediaTimeline();
-//                slowTimeline.append(0, mSlowStartActionTime);
-//                slowTimeline.append(mSlowStartActionTime, mSlowStartActionTime+mSlowTimeDuration,mSlowTimes);
-//                if ((mSlowStartActionTime + mSlowTimeDuration) < mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs)
-//                    slowTimeline.append(mSlowStartActionTime + mSlowTimeDuration, mMovieEditor.getEditorTransCoder().getVideoInfo().durationTimeUs);
-//                mMovieEditor.getEditorPlayer().setTimeLine(slowTimeline);
-//
-//        }
-//    }
 }

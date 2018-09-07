@@ -12,7 +12,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.RectF;
-import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -22,15 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
-import org.lasque.tusdk.api.audio.preproc.processor.TuSDKAudioProcessor;
 import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
-import org.lasque.tusdk.core.common.TuSDKMediaUtils;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
-import org.lasque.tusdk.core.media.codec.audio.TuSdkAudioInfo;
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.SelesParameters.FilterArg;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorEffector;
@@ -693,15 +689,10 @@ public class MovieEditorActivity extends SimpleCameraActivity implements View.On
         mDubbingLayout.getDubbingListView().setBackgroundColor(TuSdkContext.getColor("lsq_color_white"));
         mDubbingLayout.getDubbingListView().setItemClickDelegate(mMixingTableItemClickDelegate);
 
-        MediaFormat audioFormat = TuSDKMediaUtils.getAudioFormat(mVideoPath);
 
         mDubbingRecodLayout = findViewById(R.id.lsq_editor_dubbing_record_layout);
         mDubbingRecodLayout.loadView();
         mDubbingRecodLayout.setVisibility(View.GONE);
-
-        mDubbingRecodLayout.setInputAudioInfo(new TuSdkAudioInfo(audioFormat));
-        //设置录制的音效
-        mDubbingRecodLayout.setSoundType(TuSDKAudioProcessor.TuSDKSoundType.Lolita);
 
         /** 设置录制委托 */
         mDubbingRecodLayout.setDelegate(new DubbingRecodLayout.DubbingRecodLayoutDelegate() {
