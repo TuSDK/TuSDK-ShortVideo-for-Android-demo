@@ -481,18 +481,23 @@ public class RecordView extends RelativeLayout
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId){
                 case R.id.lsq_audio_normal:
+                    // 正常
                     mCamera.setSoundPitchType(TuSdkAudioPitchEngine.TuSdkSoundPitchType.Normal);
                     break;
                 case R.id.lsq_audio_monster:
+                    // 怪兽
                     mCamera.setSoundPitchType(TuSdkAudioPitchEngine.TuSdkSoundPitchType.Monster);
                     break;
                 case R.id.lsq_audio_uncle:
+                    // 大叔
                     mCamera.setSoundPitchType(TuSdkAudioPitchEngine.TuSdkSoundPitchType.Uncle);
                     break;
                 case R.id.lsq_audio_girl:
+                    // 女生
                     mCamera.setSoundPitchType(TuSdkAudioPitchEngine.TuSdkSoundPitchType.Girl);
                     break;
                 case R.id.lsq_audio_lolita:
+                    // 萝莉
                     mCamera.setSoundPitchType(TuSdkAudioPitchEngine.TuSdkSoundPitchType.Lolita);
                     break;
             }
@@ -704,14 +709,19 @@ public class RecordView extends RelativeLayout
         viewSeekBar.getConfigValueView().setText((int)(progress*100) + "%");
         SelesParameters params = mSelesOutInput.getFilterParameter();
         if(key.equals("eyeSize")){
-            progress = progress * 0.65f;
+            // 大眼
+            progress = progress * 0.85f;
         }else if(key.equals("chinSize")){
-            progress = progress * 0.5f;
+            // 瘦脸
+            progress = progress * 0.8f;
         }else if(key.equals("noseSize")){
-            progress = progress * 0.3f;
+            // 瘦鼻
+            progress = progress * 0.6f;
         }else if(key.equals("smoothing") || key.equals("mixied")){
+            // 磨皮、效果
             progress = progress * 0.7f;
         }else if(key.equals("whitening")){
+            // 白皙
             progress = progress * 0.6f;
         }
         params.setFilterArg(key, progress);

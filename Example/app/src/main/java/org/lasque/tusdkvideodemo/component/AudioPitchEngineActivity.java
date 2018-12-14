@@ -115,10 +115,9 @@ public class AudioPitchEngineActivity extends ScreenAdapterActivity {
         mAudioPitchEngine = new TuSdkAudioPitchEngine(mInputAudioInfo);
         mAudioPitchEngine.setOutputBufferDelegate(mAudioPitchEngineOutputBufferDelegate);
         mAudioPitchEngine.setSoundPitchType(TuSdkAudioPitchEngine.TuSdkSoundPitchType.Normal);
-
         /**  step3: 初始化 AudioTrack 用以播放处理后的音频数据 */
         mAudioTrack = new TuSdkAudioTrackImpl(mInputAudioInfo);
-
+        mAudioTrack.play();
     }
 
     /**
@@ -134,14 +133,7 @@ public class AudioPitchEngineActivity extends ScreenAdapterActivity {
        @Override
        public void onAudioRecordOutputBuffer(ByteBuffer outputByteBuffer, MediaCodec.BufferInfo bufferInfo) {
 
-            /**
-             * TuSdkAudioRecord 内部使用了 ByteBuffer 缓冲区，而 TuSdkAudioPitchEngine.processInputBuffer 是异步处理，
-             * 为了防止数据被篡改，需要对 ByteBuffer 数据进行 copy 。
-             */
-            byte[] copyData = new byte[bufferInfo.size];
-            System.arraycopy(outputByteBuffer.array(), 0, copyData, 0, bufferInfo.size);
-
-            mAudioPitchEngine.processInputBuffer(ByteBuffer.wrap(copyData),bufferInfo);
+            mAudioPitchEngine.processInputBuffer(outputByteBuffer,bufferInfo);
        }
 
        @Override
@@ -162,9 +154,15 @@ public class AudioPitchEngineActivity extends ScreenAdapterActivity {
        public void onProcess(ByteBuffer outputByteBuffer, MediaCodec.BufferInfo bufferInfo) {
            try {
 
+
+               /** outputByteBuffer 为 JNI 层抛出，在这里必须使用 get 方式获取数据。不能直接使用 outputByteBuffer.array() */
+               byte[] data = new byte[bufferInfo.size];
+               outputByteBuffer.get(data);
+
                // 将处理后的音频数据写入文件
                // Demo 为了演示主要功能，未对 PCM 数据进行编码.
-               mFileOutputStream.write(outputByteBuffer.array());
+               mFileOutputStream.write(data);
+
 
            } catch (Exception e) {
                e.printStackTrace();

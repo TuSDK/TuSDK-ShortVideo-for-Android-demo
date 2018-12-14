@@ -85,7 +85,7 @@ public class EditorCutView extends FrameLayout {
      * @param times
      */
     public void setRangTime(float times){
-        String rangeTime = String.format("%s %.1f %s","已选择",times,"秒");
+        String rangeTime = String.format("%s %.1f %s",getResources().getString(R.id.lsq_movie_cut_selecttime),times,"s");
         mTimeRangView.setText(rangeTime);
     }
 

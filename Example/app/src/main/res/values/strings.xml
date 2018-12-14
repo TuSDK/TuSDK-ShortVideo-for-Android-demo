@@ -418,6 +418,10 @@
     <item name="lsq_movie_cut_time" type="id">秒</item>
     <string name="lsq_congfigview_set_size">大小</string>
 
+    <string name="lsq_capture">拍照</string>
+    <string name="lsq_click_shoot">点击拍摄</string>
+    <string name="lsq_long_click_shoot">长按拍摄</string>
+
     <string name="lsq_max_audio_record_time">已达到最大录制时长</string>
     <string name="lsq_album_select_min_time">视频时长不得小于3秒，请重新选择。</string>
 

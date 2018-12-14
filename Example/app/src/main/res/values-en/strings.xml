@@ -221,7 +221,9 @@
     <string name="lsq_mixing_nosound">No BGM</string>
     <string name="lsq_mixing_soundrecording">Record</string>
     <string name="lsq_audio_record_complete">Record Finish</string>
+    <string name="lsq_start_audiotrecord_hint">Long press the tape</string>
     <string name="lsq_audio_record_mintime">Min Time: 1s</string>
+
     <string name="lsq_text_dubbing">Dubbing</string>
     <string name="lsq_none_dubbing">No BGM</string>
     <string name="lsq_mixing_record">Record</string>
@@ -229,9 +231,9 @@
     <string name="lsq_congfigview_set_originIntensity">Audio</string>
     <string name="lsq_congfigview_set_dubbingIntensity">Dub</string>
     <string name="lsq_voiceRcording_timeRemaining">7 seconds remained</string>
-    <string name="lsq_audioRecording_cancelrecording">取消录制?</string>
-    <string name="lsq_audioRecording_next">确定</string>
-    <string name="lsq_audioRecording_cancel">取消</string>
+    <string name="lsq_audioRecording_cancelrecording">Cancel the recording?</string>
+    <string name="lsq_audioRecording_next">confirm</string>
+    <string name="lsq_audioRecording_cancel">cancel</string>
     
     <!-- API Example -->
     <string name="lsq_cut">Cut</string>
@@ -245,12 +247,13 @@
     <string name="lsq_audio_mixer_pause">Pause</string>
     <string name="lsq_movie_thumb_loading">Loading Thumb</string>
     <string name="lsq_audio_mixer_text">Audio Mixture</string>
+    <string name="lsq_congfigview_set_dubbing">Dub Audio</string>
     <string name="lsq_congfigview_set_origin">Origin Audio</string>
     <string name="lsq_congfigview_set_dubbingone">Audio One</string>
     <string name="lsq_congfigview_set_dubbingtwo">Audio Two</string>
     <string name="lsq_congfigview_set_dubbingthree">Audio Three</string>
     <string name="lsq_audio_record_hint">Click 「Start Recording」 button to start recording audio, click 「Finish Recording」 to generate a new audio ，then click 「Play Audio」 to play the audio</string>
-    <string name="lsq_movie_pitch_hint">\u3000\u3000 please click the [start recording] button to start recording audio. After recording, click [end and play recording] to generate and play audio files.</string>
+    <string name="lsq_audio_pitch_hint">\u3000\u3000 please click the [start recording] button to start recording audio. After recording, click [end and play recording] to generate and play audio files.</string>
     <string name="lsq_audio_record_start">StartRecord</string>
     <string name="lsq_audio_record_stop">FinishRecord</string>
     <string name="lsq_audio_record_stop_and_play">Stop And Play</string>
@@ -385,9 +388,9 @@
 
     <string name="lsq_ic_eyesize">Eye</string>
     <string name="lsq_ic_jawsize">Jaw</string>
-    <string name="lsq_ic_eyedis">EyeDistance</string>
-    <string name="lsq_ic_archeyebrow">Brow</string>
-    <string name="lsq_ic_eyeangle">EyeAngle</string>
+    <string name="lsq_ic_eyedis">Eye Distance</string>
+    <string name="lsq_ic_archeyebrow">Eyebrow</string>
+    <string name="lsq_ic_eyeangle">Eye Angle</string>
     <string name="lsq_ic_chinsize">Chin</string>
     <string name="lsq_ic_mouthwidth">Mouth</string>
     <string name="lsq_ic_nosesize">Nose</string>
@@ -414,6 +417,10 @@
     <item name="lsq_movie_cut_selecttime" type="id">select time</item>
     <item name="lsq_movie_cut_time" type="id">s</item>
     <string name="lsq_congfigview_set_size">size</string>
+
+    <string name="lsq_capture">Capture</string>
+    <string name="lsq_click_shoot">Click shoot</string>
+    <string name="lsq_long_click_shoot">Long click shoot</string>
 
     <string name="lsq_filter_chcomics_video">CHComics_video</string>
     <string name="lsq_filter_lightcolor_video">Lightcolor_Video</string>

@@ -92,8 +92,8 @@ public class EditorMusicComponent extends EditorComponent {
                 @Override
                 public void run() {
                     getEditorPlayer().setVideoSoundVolume(1);
-                    getAudioRecordView().gone();
                     getVolumeConfigView().showView(true);
+                    getAudioRecordView().gone();
                     applyAudioEffect(Uri.fromFile(outputFile));
                 }
             });

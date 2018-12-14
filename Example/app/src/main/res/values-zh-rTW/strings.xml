@@ -219,7 +219,7 @@
     <!-- 录音 -->
     <string name="lsq_mixing_nosound">無配音</string>
     <string name="lsq_mixing_soundrecording">自己錄音</string>
-    <string name="lsq_start_audiotrecord_hint">請先長按錄音</string>
+    <string name="lsq_start_audiotrecord_hint">長按錄音</string>
     <string name="lsq_audio_record_complete">錄音完成</string>
     <string name="lsq_audio_record_mintime">錄製最短時間 1s</string>
     <string name="lsq_text_dubbing">配音</string>
@@ -409,6 +409,10 @@
     <item name="lsq_movie_cut_selecttime" type="id">已選擇</item>
     <item name="lsq_movie_cut_time" type="id">秒</item>
     <string name="lsq_congfigview_set_size">大小</string>
+
+    <string name="lsq_capture">拍照</string>
+    <string name="lsq_click_shoot">點擊拍攝</string>
+    <string name="lsq_long_click_shoot">長按拍攝</string>
 
     <string name="lsq_max_audio_record_time">已達到最大錄製時长</string>
     <string name="lsq_album_select_min_time">視頻時長不得小於3秒，請重新選擇。</string>

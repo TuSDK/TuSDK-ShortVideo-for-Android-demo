@@ -222,7 +222,7 @@
             android:layout_toLeftOf="@+id/lsq_longButton"
             android:gravity="center"
             android:padding="@dimen/lsq_font_space_8"
-            android:text="拍照"
+            android:text="@string/lsq_capture"
             android:textColor="@color/lsq_alpha_white_66"
             android:textSize="@dimen/lsq_font_size_28" />
 
@@ -233,7 +233,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:padding="@dimen/lsq_font_space_8"
-            android:text="长按拍摄"
+            android:text="@string/lsq_long_click_shoot"
             android:textColor="@color/lsq_color_white"
             android:textSize="@dimen/lsq_font_size_28" />
 
@@ -244,7 +244,7 @@
             android:layout_toRightOf="@+id/lsq_longButton"
             android:gravity="center"
             android:padding="@dimen/lsq_font_space_8"
-            android:text="单击拍摄"
+            android:text="@string/lsq_click_shoot"
             android:textColor="@color/lsq_alpha_white_66"
             android:textSize="@dimen/lsq_font_size_28" />
 

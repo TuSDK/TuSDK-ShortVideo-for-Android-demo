@@ -220,8 +220,6 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
     /** 隐藏当期那视图  把录音器和裁剪器销毁  进度条归0 **/
     public void gone() {
         mCurrentPos = 2;
-        mRecordBottomView.selectSoundType(mCurrentPos);
-
         if (mAudioRecorder != null) mAudioRecorder.releas();
         if (mMovieCuter != null) mMovieCuter.releas();
         mAudioRecorder = null;

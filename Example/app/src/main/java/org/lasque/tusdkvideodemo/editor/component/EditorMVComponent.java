@@ -491,6 +491,8 @@ public class EditorMVComponent extends EditorComponent {
         long startTimeUs = (long) (mTimeLineView.getLeftStartTimePercent() * videoInfo.durationTimeUs);
         long endTimeUs = (long) (mTimeLineView.getRightEndTimePercent() * videoInfo.durationTimeUs);
 
+        if(endTimeUs <= startTimeUs)return;
+
         TuSdkTimeRange timeRange = TuSdkTimeRange.makeTimeUsRange(startTimeUs, endTimeUs);
 
         // 设置音频特效播放区间
