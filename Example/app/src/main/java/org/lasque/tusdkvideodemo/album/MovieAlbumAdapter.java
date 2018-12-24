@@ -77,7 +77,7 @@ public class MovieAlbumAdapter extends RecyclerView.Adapter<MovieAlbumAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        return new ViewHolder(mInflater.inflate(R.layout.album_select_video_item,parent,false));
+        return new ViewHolder(mInflater.inflate(R.layout.lsq_album_select_video_item,parent,false));
     }
 
     @Override

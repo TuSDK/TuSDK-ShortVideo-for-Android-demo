@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,31 +32,33 @@ import android.widget.TextView;
 import org.lasque.tusdk.api.audio.preproc.processor.TuSdkAudioPitchEngine;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.components.camera.TuVideoFocusTouchViewBase;
-import org.lasque.tusdk.core.secret.FilterAdapter;
+import org.lasque.tusdk.core.components.camera.TuSdkVideoFocusTouchViewBase;
 import org.lasque.tusdk.core.seles.SelesParameters;
-import org.lasque.tusdk.core.seles.sources.SelesVideoCameraInterface;
 import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs;
-import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera;
-import org.lasque.tusdk.core.utils.hardware.TuSDKVideoCamera;
+import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCamera;
+import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCameraImpl;
 import org.lasque.tusdk.core.utils.hardware.TuSdkStillCameraAdapter;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
 import org.lasque.tusdk.core.utils.image.RatioType;
 import org.lasque.tusdk.core.utils.sqllite.ImageSqlHelper;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
-import org.lasque.tusdk.impl.view.widget.TuSeekBar;
+import org.lasque.tusdk.video.editor.TuSdkMediaComicEffectData;
+import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
+import org.lasque.tusdk.video.editor.TuSdkMediaFilterEffectData;
+import org.lasque.tusdk.video.editor.TuSdkMediaPlasticFaceEffect;
+import org.lasque.tusdk.video.editor.TuSdkMediaSkinFaceEffect;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.BeautyPlasticRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.BeautyRecyclerAdapter;
-import org.lasque.tusdkvideodemo.views.ConfigViewParams;
+import org.lasque.tusdkvideodemo.views.FilterConfigSeekbar;
 import org.lasque.tusdkvideodemo.views.HorizontalProgressBar;
+import org.lasque.tusdkvideodemo.views.ParamsConfigView;
 import org.lasque.tusdkvideodemo.views.TabViewPagerAdapter;
 import org.lasque.tusdkvideodemo.utils.Constants;
-import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
 import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.StickerGroupCategories;
 import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
@@ -63,8 +66,12 @@ import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeFilter;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypePlasticFace;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSkinFace;
 
 /**
  * Created by zuojindong on 2018/6/20.
@@ -134,7 +141,7 @@ public class RecordView extends RelativeLayout
 
     private Context mContext;
     /** 录制相机 */
-    protected TuSDKRecordVideoCamera mCamera;
+    protected TuSdkRecorderVideoCameraImpl mCamera;
     /** 录制视频动作委托 */
     private TuSDKMovieRecordDelegate mDelegate;
     /** 拍照获得的Bitmap */
@@ -308,7 +315,7 @@ public class RecordView extends RelativeLayout
         // 录制进度条
         mRecordProgress = findViewById(R.id.lsq_record_progressbar);
         Button minTimeButton = (Button) findViewById(R.id.lsq_minTimeBtn);
-        RelativeLayout.LayoutParams minTimeLayoutParams = (LayoutParams) minTimeButton.getLayoutParams();
+        LayoutParams minTimeLayoutParams = (LayoutParams) minTimeButton.getLayoutParams();
         minTimeLayoutParams.leftMargin = (int) (((float) Constants.MIN_RECORDING_TIME * TuSdkContext.getScreenSize().width) / Constants.MAX_RECORDING_TIME)
                 - TuSdkContext.dip2px(minTimeButton.getWidth());
         // 一进入录制界面就显示最小时长标记
@@ -356,31 +363,22 @@ public class RecordView extends RelativeLayout
 
         // 美颜类型
         mBeautyRecyclerAdapter = new BeautyRecyclerAdapter(getContext());
-        mBeautyRecyclerAdapter.setBeautyParams(Arrays.asList("0","1","2","3","4","5"));
-        mBeautyRecyclerAdapter.setOnBeautyItemClickListener(beautyItemClickListener);
+        mBeautyRecyclerAdapter.setOnSkinItemClickListener(beautyItemClickListener);
         // 微整形
-        mBeautyPlasticRecyclerAdapter = new BeautyPlasticRecyclerAdapter(getContext());
-        mBeautyPlasticRecyclerAdapter.setBeautyParams(Arrays.asList(mBeautyPlastics));
+        mBeautyPlasticRecyclerAdapter = new BeautyPlasticRecyclerAdapter(getContext(),mBeautyPlastics);
         mBeautyPlasticRecyclerAdapter.setOnBeautyPlasticItemClickListener(beautyPlasticItemClickListener);
 
-        mSmoothingBarLayout = (ConfigViewSeekBar) findViewById(R.id.lsq_beauty_smooth_bar);
-        mSmoothingBarLayout.getTitleView().setText(R.string.lsq_filter_set_smoothing);
-        mSmoothingBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        mWhiteningBarLayout = (ConfigViewSeekBar) findViewById(R.id.lsq_beauty_whitening_bar);
-        mWhiteningBarLayout.getTitleView().setText(R.string.lsq_filter_set_whitening);
-        mWhiteningBarLayout.getSeekbar().setDelegate(mTuSeekBarDelegate);
-
-        // 微整形Bar
-        mBeautyTypeBarLayout = (ConfigViewSeekBar) findViewById(R.id.lsq_beauty_type_bar);
-        mBeautyTypeBarLayout.getSeekbar().setDelegate(mBeautyTypeSeekBarDelegate);
-
-        mSmoothingBarLayout.setVisibility(GONE);
-        mWhiteningBarLayout.setVisibility(GONE);
-        mBeautyTypeBarLayout.setVisibility(GONE);
+        // 滤镜调节
+        mFilterConfigView = findViewById(R.id.lsq_filter_config_view);
+        mFilterConfigView.setSeekBarDelegate(mFilterConfigViewSeekBarDelegate);
+        // 微整形调节
+        mBeautyPlasticsConfigView = findViewById(R.id.lsq_beauty_plastics_config_view);
+        mBeautyPlasticsConfigView.setPrefix("lsq_beauty_");
+        mBeautyPlasticsConfigView.setSeekBarDelegate(mBeautyPlasticConfigViewSeekBarDelegate);
 
         initFilterRecyclerView();
         initStickerLayout();
+
     }
 
     /**
@@ -389,7 +387,6 @@ public class RecordView extends RelativeLayout
     public void initRecordProgress(){
         mRecordProgress.clearProgressList();
         interuptLayout.removeAllViews();
-        setViewHideOrVisible(true);
     }
 
     /**
@@ -397,12 +394,13 @@ public class RecordView extends RelativeLayout
      *
      * @param camera
      */
-    public void setUpCamera(Context context, TuSDKRecordVideoCamera camera)
+    public void setUpCamera(Context context, TuSdkRecorderVideoCameraImpl camera)
     {
         this.mContext = context;
         this.mCamera = camera;
 
-        mCamera.setDelegate(mVideoCameraDelegate);
+        mCamera.setCameraListener(mVideoCameraLinstener);
+        mCamera.setMediaEffectChangeListener(mMediaEffectChangeListener);
         mCamera.getFocusTouchView().setGestureListener(gestureListener);
         // 根据录制模式不同，给开始录制按钮加上不同的监听事件 默认Keep
 //        if (mCamera.getRecordMode()== TuSDKRecordVideoCamera.RecordMode.Normal)
@@ -413,7 +411,58 @@ public class RecordView extends RelativeLayout
 //
 //            mRecordButton.setOnTouchListener(onTouchListener);
 //        }
+
+        ThreadHelper.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // 调用精准美颜
+                switchConfigSkin(true);
+            }
+        },500);
+        // 滤镜切换需要做延时
+        ThreadHelper.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                changeVideoFilterCode(Arrays.asList(Constants.VIDEOFILTERS).get(mCurrentPosition));
+            }
+
+        }, 1000);
     }
+
+    /**
+     * 特效数据应用、移除回调
+     */
+    private TuSdkRecorderVideoCamera.TuSdkMediaEffectChangeListener mMediaEffectChangeListener = new TuSdkRecorderVideoCamera.TuSdkMediaEffectChangeListener() {
+        @Override
+        public void didApplyingMediaEffect(final TuSdkMediaEffectData mediaEffectData) {
+            ThreadHelper.post(new Runnable() {
+                @Override
+                public void run() {
+                    switch (mediaEffectData.getMediaEffectType()){
+                        case TuSdkMediaEffectDataTypeFilter: //滤镜效果
+                            SelesParameters.FilterArg filterArg = mediaEffectData.getFilterArg("mixied");// 获取效果参数
+                            if(filterArg != null)
+                                mFilterConfigView.setFilterArgs(mediaEffectData,Arrays.asList(filterArg));
+                            break;
+                        case TuSdkMediaEffectDataTypeSkinFace:
+                            break;
+
+                    }
+                }
+            });
+        }
+
+        /**
+         * 移除特效后回调
+         * @param mediaEffects
+         */
+        @Override
+        public void didRemoveMediaEffect(List<TuSdkMediaEffectData> mediaEffects) {
+
+        }
+    };
 
     /**
      * 录制按键
@@ -450,6 +499,7 @@ public class RecordView extends RelativeLayout
                     // 点击录制
                     else if(mRecordMode == RecordType.SHORT_CLICK_RECORD)
                     {
+                        // 是否录制中
                         if(getDelegate().isRecording())
                         {
                             getDelegate().pauseRecording();
@@ -530,7 +580,7 @@ public class RecordView extends RelativeLayout
     /** 滤镜视图 */
     private RelativeLayout mFilterContent;
     /** 参数调节视图 */
-    protected ConfigViewSeekBar mFilterConfigView;
+    protected ParamsConfigView mFilterConfigView;
     /** 滤镜列表 */
     private RecyclerView mFilterRecyclerView;
     /** 滤镜列表Adapter */
@@ -543,20 +593,6 @@ public class RecordView extends RelativeLayout
     private int mCurrentPosition = DEFAULT_POSITION;
     /** 用于记录上一次位置 */
     private int mComicsCurrentPosition = 0;
-    /** 记录是否是首次进入录制页面 */
-//    private boolean mIsFirstEntry = true;
-    /** 所有Key列表 */
-    private List<String> keyTempList = new ArrayList<>();;
-    /** 滤镜控制类 */
-    private FilterWrap mSelesOutInput;
-    /** 磨皮调节栏 */
-    private ConfigViewSeekBar mSmoothingBarLayout;
-    /** 白皙调节栏 */
-    private ConfigViewSeekBar mWhiteningBarLayout;
-    /** 微整形调节栏 */
-    private ConfigViewSeekBar mBeautyTypeBarLayout;
-    /** 用于记录当前调节栏效果系数 */
-    private float mMixiedProgress = -1.0f;
     /** 滤镜名称 */
     private TextView mFilterNameTextView;
     /** 是否切换漫画滤镜 */
@@ -624,15 +660,6 @@ public class RecordView extends RelativeLayout
         this.mComicsFilterAdapter.setFilterList(Arrays.asList(Constants.COMICSFILTERS));
 
         this.mFilterAdapter.setFilterList(Arrays.asList(Constants.VIDEOFILTERS));
-        // 滤镜切换需要做延时
-        ThreadHelper.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                changeVideoFilterCode(Arrays.asList(Constants.VIDEOFILTERS).get(mCurrentPosition));
-            }
-
-        }, 1000);
     }
 
     /**
@@ -648,10 +675,9 @@ public class RecordView extends RelativeLayout
         setFilterContentVisible(true);
 
         // 设置滤镜参数调节
-        if (mCurrentPosition > 0 && getFilterConfigView() != null && mSelesOutInput != null)
+        if (mCurrentPosition > 0 && mFilterConfigView != null)
         {
-            getFilterConfigView().setDelegate(mConfigSeekBarDelegate);
-            getFilterConfigView().invalidate();
+            mFilterConfigView.invalidate();
         }
 
         TextView lsq_comics_tab = findViewById(R.id.lsq_comics_tab);
@@ -671,126 +697,60 @@ public class RecordView extends RelativeLayout
         switchFilterConfigTab(isComicsFilterChecked ? lsq_comics_tab : lsq_filter_tab);
     }
 
-    /** 滤镜效果拖动条监听事件 */
-    private ConfigViewSeekBar.ConfigSeekbarDelegate mConfigSeekBarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate() {
-        @Override
-        public void onSeekbarDataChanged(ConfigViewSeekBar seekbar, ConfigViewParams.ConfigViewArg arg) {
-            applyFilter(seekbar,"mixied",seekbar.getSeekbar().getProgress());
-        }
-    };
-
-    /** 美颜(磨皮、白皙)拖动条监听事件 */
-    private TuSeekBar.TuSeekBarDelegate mTuSeekBarDelegate = new TuSeekBar.TuSeekBarDelegate()
-    {
-        @Override
-        public void onTuSeekBarChanged(TuSeekBar seekBar, float progress)
-        {
-            if (seekBar == mSmoothingBarLayout.getSeekbar())
-            {
-                applyFilter(mSmoothingBarLayout,"smoothing",progress);
-            }
-            else if (seekBar == mWhiteningBarLayout.getSeekbar())
-            {
-                applyFilter(mWhiteningBarLayout,"whitening",progress);
-            }
-        }
-    };
-
     /**
-     * 应用滤镜值
-     * @param viewSeekBar 调节栏
-     * @param key 滤镜key
-     * @param progress 滤镜百分比
+     * 滤镜调节栏
      */
-    private void applyFilter(ConfigViewSeekBar viewSeekBar, String key, float progress)
-    {
-        if (viewSeekBar == null || mSelesOutInput == null) return;
+    private ParamsConfigView.FilterConfigViewSeekBarDelegate mFilterConfigViewSeekBarDelegate = new ParamsConfigView.FilterConfigViewSeekBarDelegate() {
+        @Override
+        public void onSeekbarDataChanged(FilterConfigSeekbar seekbar, SelesParameters.FilterArg arg) {
 
-        viewSeekBar.getConfigValueView().setText((int)(progress*100) + "%");
-        SelesParameters params = mSelesOutInput.getFilterParameter();
-        if(key.equals("eyeSize")){
-            // 大眼
-            progress = progress * 0.85f;
-        }else if(key.equals("chinSize")){
-            // 瘦脸
-            progress = progress * 0.8f;
-        }else if(key.equals("noseSize")){
-            // 瘦鼻
-            progress = progress * 0.6f;
-        }else if(key.equals("smoothing") || key.equals("mixied")){
-            // 磨皮、效果
-            progress = progress * 0.7f;
-        }else if(key.equals("whitening")){
-            // 白皙
-            progress = progress * 0.6f;
+            List<TuSdkMediaEffectData> filterEffects = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter);
+
+            float progress = seekbar.getSeekbar().getProgress();
+
+            // 只能添加一个滤镜特效
+            TuSdkMediaFilterEffectData filterEffect = (TuSdkMediaFilterEffectData) filterEffects.get(0);
+            filterEffect.submitParameter(arg.getKey(),progress);
+
         }
-        params.setFilterArg(key, progress);
-        mSelesOutInput.submitFilterParameter();
-    }
+    };
 
     /**
      * 滤镜效果改变监听事件
      */
-    protected TuSDKVideoCamera.TuSDKVideoCameraDelegate mVideoCameraDelegate = new TuSDKVideoCamera.TuSDKVideoCameraDelegate()
+    protected TuSdkRecorderVideoCamera.TuSdkCameraListener mVideoCameraLinstener = new TuSdkRecorderVideoCamera.TuSdkCameraListener()
     {
         @Override
         public void onFilterChanged(FilterWrap selesOutInput)
         {
-            if (selesOutInput == null) return;
-
-            // 默认滤镜参数调节
-            SelesParameters params = selesOutInput.getFilterParameter();
-            List<SelesParameters.FilterArg> list = params.getArgs();
-            keyTempList.clear();
-            for (SelesParameters.FilterArg arg : list)
-            {
-                keyTempList.add(arg.getKey());
-
-                if (arg.equalsKey("mixied"))
-                    mMixiedProgress = arg.getPrecentValue();
-            }
-            selesOutInput.setFilterParameter(params);
-            mSelesOutInput = selesOutInput;
-
-            //设置效果值
-            if (getFilterConfigView() != null)
-                getFilterConfigView().setProgress(mMixiedProgress);
-
-            if(keyTempList.contains("smoothing")) {
-                //设置润滑默认值
-                mSmoothingBarLayout.getSeekbar().setProgress(beautyLevel * 20f / 100);
-                applyFilter(mSmoothingBarLayout, "smoothing", beautyLevel * 20f / 100);
-            }else{
-                mSmoothingBarLayout.setVisibility(GONE);
-            }
-
-            //设置白皙默认值
-            if(keyTempList.contains("whitening")) {
-                mWhiteningBarLayout.setVisibility(mSmoothingBarLayout.getVisibility() == VISIBLE ? VISIBLE : GONE);
-                mWhiteningBarLayout.getSeekbar().setProgress(beautyLevel*20f/100);
-                applyFilter(mWhiteningBarLayout, "whitening", beautyLevel * 20f / 100);
-            }else{
-                mWhiteningBarLayout.setVisibility(GONE);
-            }
-
         }
 
         @Override
-        public void onVideoCameraStateChanged(SelesVideoCameraInterface camera, TuSdkStillCameraAdapter.CameraState newState){
-
+        public void onVideoCameraStateChanged(TuSdkStillCameraAdapter.CameraState newState) {
+            TLog.e("CameraState : %s",newState);
         }
 
+        /**
+         * 拍照数据回调
+         * @param bitmap 图片
+         */
         @Override
-        public void onVideoCameraScreenShot(SelesVideoCameraInterface camera, Bitmap bitmap) {
+        public void onVideoCameraScreenShot(Bitmap bitmap) {
             presentPreviewLayout(bitmap);
         }
+
+
     };
 
     /** 滤镜组列表点击事件 */
     private FilterRecyclerAdapter.ItemClickListener mFilterItemClickListener = new FilterRecyclerAdapter.ItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            onFilterGroupSelected(position);
+            mFilterConfigView.setVisibility((position == 0)? INVISIBLE :
+                    ((mCurrentPosition == position) ? (mFilterConfigView.getVisibility() == VISIBLE ? INVISIBLE :VISIBLE)
+                            :INVISIBLE));
+            mCurrentPosition = position;
+            changeVideoFilterCode(mFilterAdapter.getFilterList().get(position));
         }
     };
 
@@ -799,39 +759,9 @@ public class RecordView extends RelativeLayout
         @Override
         public void onItemClick(int position) {
             mComicsCurrentPosition = position;
-            changeVideoFilterCode(mComicsFilterAdapter.getFilterList().get(position));
+            changeVideoComicEffectCode(mComicsFilterAdapter.getFilterList().get(position));
         }
     };
-
-
-    /**
-     * 滤镜组选择事件
-     *
-     * @param position
-     */
-    protected void onFilterGroupSelected(int position)
-    {
-        getFilterConfigView().setVisibility((position == 0)? INVISIBLE :
-                ((mCurrentPosition == position) ? (getFilterConfigView().getVisibility() == VISIBLE ? INVISIBLE :VISIBLE)
-                        :INVISIBLE));
-        mCurrentPosition = position;
-        changeVideoFilterCode(mFilterAdapter.getFilterList().get(position));
-
-    }
-
-    /**
-     * 滤镜效果配置视图
-     *
-     * @return
-     */
-    private ConfigViewSeekBar getFilterConfigView()
-    {
-        if (mFilterConfigView == null)
-        {
-            mFilterConfigView = (ConfigViewSeekBar) findViewById(R.id.lsq_filter_config_view);
-        }
-        return mFilterConfigView;
-    }
 
     /**
      * 切换滤镜
@@ -839,102 +769,75 @@ public class RecordView extends RelativeLayout
      */
     protected void changeVideoFilterCode(final String code)
     {
-        if (mCamera != null && mCamera.getState() != TuSdkStillCameraAdapter.CameraState.StateUnknow
-                && mCamera.getState() != TuSdkStillCameraAdapter.CameraState.StateStarting)
-        {
-            ThreadHelper.runThread(new Runnable() {
+        TuSdkMediaFilterEffectData filterEffectData = new TuSdkMediaFilterEffectData(code);
+        SelesParameters.FilterArg filterArg = filterEffectData.getFilterArg("mixied");// 效果
+        if(filterArg != null) filterArg.setMaxValueFactor(0.7f);// 设置最大值限制
+        mCamera.addMediaEffectData(filterEffectData);
 
-                @Override
-                public void run() {
-                    if (mCamera != null
-                            && mCamera.getState() != TuSdkStillCameraAdapter.CameraState.StateUnknow
-                            && mCamera.getState() != TuSdkStillCameraAdapter.CameraState.StateStarting)
-                        mCamera.switchFilter(code);
-                }
-            });
-        }
-        else {
-            ThreadHelper.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    ThreadHelper.runThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (mCamera != null
-                                    && mCamera.getState() != TuSdkStillCameraAdapter.CameraState.StateUnknow
-                                    && mCamera.getState() != TuSdkStillCameraAdapter.CameraState.StateStarting)
-                                mCamera.switchFilter(code);
-                        }
-                    });
-                }
-            }, 800);
-        }
-
-        // 普通滤镜
-        if(mFilterAdapter.getFilterList().contains(code))
-        {
-                mFilterAdapter.setCurrentPosition(mCurrentPosition);
-                mFilterRecyclerView.scrollToPosition(mCurrentPosition);
-                mComicsFilterAdapter.setCurrentPosition(0);
-                mComicsFilterRecyclerView.scrollToPosition(0);
-                mComicsCurrentPosition = 0;
-        }else
-        {
-            mFilterAdapter.setCurrentPosition(0);
-            mFilterRecyclerView.scrollToPosition(0);
-            mComicsFilterAdapter.setCurrentPosition(mComicsCurrentPosition);
-            mComicsFilterRecyclerView.scrollToPosition(mComicsCurrentPosition);
-            mCurrentPosition = 0;
-        }
+        mFilterAdapter.setCurrentPosition(mCurrentPosition);
+        mFilterRecyclerView.scrollToPosition(mCurrentPosition);
+        mComicsFilterAdapter.setCurrentPosition(0);
+        mComicsFilterRecyclerView.scrollToPosition(0);
+        mComicsCurrentPosition = 0;
 
         // 滤镜名显示
-        if(mSelesOutInput != null && !mSelesOutInput.equalsCode(code)) {
-            AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-            alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    mFilterNameTextView.setVisibility(VISIBLE);
-                }
+        showHitTitle(TuSdkContext.getString("lsq_filter_" + code));
+    }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mFilterNameTextView.setVisibility(GONE);
-                }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
 
-                }
-            });
-            mFilterNameTextView.setText(TuSdkContext.getString("lsq_filter_" + code));
-            mFilterNameTextView.setAnimation(alphaAnimation);
-            alphaAnimation.setDuration(2000);
-            alphaAnimation.start();
-        }
+    /**
+     * 显示提示文字
+     * @param title
+     */
+    private void showHitTitle(String title){
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mFilterNameTextView.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mFilterNameTextView.setVisibility(GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        mFilterNameTextView.setText(title);
+        mFilterNameTextView.setAnimation(alphaAnimation);
+        alphaAnimation.setDuration(2000);
+        alphaAnimation.start();
     }
 
     /** TouchView滑动监听 */
-    private TuVideoFocusTouchViewBase.GestureListener gestureListener = new TuVideoFocusTouchViewBase.GestureListener() {
+    private TuSdkVideoFocusTouchViewBase.GestureListener gestureListener = new TuSdkVideoFocusTouchViewBase.GestureListener() {
         @Override
         public void onLeftGesture() {
+            // 美颜开启禁止滑动切换
+            if(mSmartBeautyTabLayout.getVisibility() == VISIBLE) return;
             if(!isComicsFilterChecked)
                 changeVideoFilterCode(mFilterAdapter.getFilterList().get(mCurrentPosition < (mFilterAdapter.getFilterList().size() - 1) ?
                     (mCurrentPosition = mCurrentPosition + 1) : (mCurrentPosition = 0)));
             else
-                changeVideoFilterCode(mComicsFilterAdapter.getFilterList().get(mComicsCurrentPosition < (mComicsFilterAdapter.getFilterList().size() - 1) ?
+                changeVideoComicEffectCode(mComicsFilterAdapter.getFilterList().get(mComicsCurrentPosition < (mComicsFilterAdapter.getFilterList().size() - 1) ?
                         (mComicsCurrentPosition = mComicsCurrentPosition + 1) : (mComicsCurrentPosition = 0)));
         }
 
         @Override
         public void onRightGesture() {
+            // 美颜开启禁止滑动切换
+            if(mSmartBeautyTabLayout.getVisibility() == VISIBLE) return;
+
             if(!isComicsFilterChecked)
                 changeVideoFilterCode(mFilterAdapter.getFilterList().get(mCurrentPosition > 0 ?
                     (mCurrentPosition = mCurrentPosition - 1) : (mCurrentPosition = mFilterAdapter.getFilterList().size() - 1)));
             else
-                changeVideoFilterCode(mComicsFilterAdapter.getFilterList().get(mComicsCurrentPosition > 0 ?
+                changeVideoComicEffectCode(mComicsFilterAdapter.getFilterList().get(mComicsCurrentPosition > 0 ?
                         (mComicsCurrentPosition = mComicsCurrentPosition - 1) : (mComicsCurrentPosition = mComicsFilterAdapter.getFilterList().size() - 1)));
         }
 
@@ -958,33 +861,37 @@ public class RecordView extends RelativeLayout
      */
     private void switchFilterConfigTab(View view)
     {
-        switch (view.getId())
-        {
-            // 漫画滤镜
-            case R.id.lsq_comics_tab:
-                isComicsFilterChecked = true;
-                ((TextView)findViewById(R.id.lsq_comics_tab)).setTextColor(getResources().getColor(R.color.lsq_color_white));
-                ((TextView)findViewById(R.id.lsq_filter_tab)).setTextColor(getResources().getColor(R.color.lsq_alpha_white_66));
-                findViewById(R.id.lsq_comics_tab_line).setBackgroundResource(R.color.lsq_color_white);
-                findViewById(R.id.lsq_filter_tab_line).setBackgroundResource(R.color.lsq_alpha_white_00);
+        isComicsFilterChecked = view.getId() == R.id.lsq_comics_tab ? true : false;
 
-                getFilterListView().setVisibility(INVISIBLE);
-                getComicsFilterListView().setVisibility(VISIBLE);
-                getFilterConfigView().setVisibility(GONE);
-                break;
-            // 普通滤镜
-            case R.id.lsq_filter_tab:
-                isComicsFilterChecked = false;
-                ((TextView)findViewById(R.id.lsq_comics_tab)).setTextColor(getResources().getColor(R.color.lsq_alpha_white_66));
-                ((TextView)findViewById(R.id.lsq_filter_tab)).setTextColor(getResources().getColor(R.color.lsq_color_white));
-                findViewById(R.id.lsq_comics_tab_line).setBackgroundResource(R.color.lsq_alpha_white_00);
-                findViewById(R.id.lsq_filter_tab_line).setBackgroundResource(R.color.lsq_color_white);
+        ((TextView)findViewById(R.id.lsq_comics_tab)).setTextColor(getResources().getColor(view.getId() == R.id.lsq_comics_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_66));
+        ((TextView)findViewById(R.id.lsq_filter_tab)).setTextColor(getResources().getColor(view.getId() == R.id.lsq_filter_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_66));
+        findViewById(R.id.lsq_comics_tab_line).setBackgroundResource(view.getId() == R.id.lsq_comics_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_00);
+        findViewById(R.id.lsq_filter_tab_line).setBackgroundResource(view.getId() == R.id.lsq_filter_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_00);
 
-                getFilterListView().setVisibility(VISIBLE);
-                getComicsFilterListView().setVisibility(INVISIBLE);
-                getFilterConfigView().setVisibility(GONE);
-                break;
-        }
+        getFilterListView().setVisibility(view.getId() == R.id.lsq_filter_tab ? VISIBLE : INVISIBLE);
+        getComicsFilterListView().setVisibility(view.getId() == R.id.lsq_comics_tab ? VISIBLE : INVISIBLE);
+        mFilterConfigView.setVisibility(GONE);
+
+    }
+
+    /********************** 动漫 ****************************/
+
+    /**
+     * 切换漫画滤镜
+     * @param code
+     */
+    protected void changeVideoComicEffectCode(final String code)
+    {
+        mCamera.addMediaEffectData(new TuSdkMediaComicEffectData(code));
+
+        mFilterAdapter.setCurrentPosition(0);
+        mFilterRecyclerView.scrollToPosition(0);
+        mComicsFilterAdapter.setCurrentPosition(mComicsCurrentPosition);
+        mComicsFilterRecyclerView.scrollToPosition(mComicsCurrentPosition);
+        mCurrentPosition = 0;
+
+        // 滤镜名显示
+        showHitTitle(TuSdkContext.getString("lsq_filter_" + code));
     }
 
     /******************************* 贴纸 **************************/
@@ -1035,6 +942,302 @@ public class RecordView extends RelativeLayout
         mTabPagerIndicator.setDefaultVisibleCounts(stickerGroupCategories.size());
         mTabPagerIndicator.setTabItems(stickerGroupCategories);
     }
+
+    /*********************************** 微整形 ********************/
+    /** 美颜微整形是否选中 */
+    private boolean isBeautyChecked = true;
+    /** 美颜适配器 */
+    private BeautyRecyclerAdapter mBeautyRecyclerAdapter;
+    /** 微整形适配器 */
+    private BeautyPlasticRecyclerAdapter mBeautyPlasticRecyclerAdapter;
+    /** 微整形调节栏 */
+    private ParamsConfigView mBeautyPlasticsConfigView;
+    /** 微整形默认值  Float 为进度值 */
+    private HashMap<String, Float> mDefaultBeautyPercentParams = new HashMap<String, Float>() {
+        {
+            put("eyeSize", 0.3f); // 大眼
+            put("chinSize", 0.2f); // 瘦脸
+            put("noseSize", 0.2f); // 廋鼻
+            put("mouthWidth", 0.5f); // 嘴型
+            put("archEyebrow", 0.5f); // 眉型
+            put("jawSize", 0.5f); // 下巴
+            put("eyeAngle", 0.5f); // 眼角
+            put("eyeDis", 0.5f); // 眼距
+        }
+    };
+
+    /** 微整形参数 */
+    private List<String> mBeautyPlastics = new ArrayList(){
+        {
+            add("reset");
+            add("eyeSize");
+            add("chinSize");
+            add("noseSize");
+            add("mouthWidth");
+            add("archEyebrow");
+            add("jawSize");
+            add("eyeAngle");
+            add("eyeDis");
+        }
+    };
+
+    /**
+     * 美型调节栏
+     */
+    private ParamsConfigView.FilterConfigViewSeekBarDelegate mBeautyPlasticConfigViewSeekBarDelegate =
+            new ParamsConfigView.FilterConfigViewSeekBarDelegate() {
+        @Override
+        public void onSeekbarDataChanged(FilterConfigSeekbar seekbar, SelesParameters.FilterArg arg) {
+            if(isBeautyChecked)
+                submitSkinParamter(arg.getKey(),seekbar.getSeekbar().getProgress());
+            else
+                submitPlasticFaceParamter(arg.getKey(),seekbar.getSeekbar().getProgress());
+        }
+    };
+
+    /** 美颜Item点击事件 */
+    BeautyRecyclerAdapter.OnBeautyItemClickListener beautyItemClickListener =
+            new BeautyRecyclerAdapter.OnBeautyItemClickListener() {
+        @Override
+        public void onChangeSkin(View v, String key,boolean useSkinNatural) {
+            mBeautyPlasticsConfigView.setVisibility(VISIBLE);
+            switchConfigSkin(useSkinNatural);
+
+            // 获取key值并显示到调节栏
+            TuSdkMediaEffectData mediaEffectData = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).get(0);
+            SelesParameters.FilterArg filterArg = mediaEffectData.getFilterArg(key);
+            mBeautyPlasticsConfigView.setFilterArgs(mediaEffectData,Arrays.asList(filterArg));
+        }
+
+        @Override
+        public void onClear() {
+            hideBeautyBarLayout();
+
+            mCamera.removeMediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace);
+        }
+    };
+
+    /** 微整形Item点击事件 */
+    BeautyPlasticRecyclerAdapter.OnBeautyPlasticItemClickListener beautyPlasticItemClickListener = new BeautyPlasticRecyclerAdapter.OnBeautyPlasticItemClickListener() {
+        @Override
+        public void onItemClick(View v, int position) {
+            mBeautyPlasticsConfigView.setVisibility(VISIBLE);
+            switchBeautyPlasticConfig(position);
+        }
+
+        @Override
+        public void onClear() {
+
+            hideBeautyBarLayout();
+
+            AlertDialog.Builder adBuilder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog_Alert);
+            adBuilder.setTitle(R.string.lsq_text_beauty_type);
+            adBuilder.setMessage(R.string.lsq_clear_beauty_plastic_hit);
+            adBuilder.setNegativeButton(R.string.lsq_audioRecording_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            adBuilder.setPositiveButton(R.string.lsq_audioRecording_next, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mCamera.removeMediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace);
+                    dialog.dismiss();
+                }
+            });
+            adBuilder.show();
+        }
+    };
+
+    /**
+     * 隐藏美颜参数调节栏
+     */
+    private void hideBeautyBarLayout(){
+        mBeautyPlasticsConfigView.setVisibility(GONE);
+
+    }
+
+    /**
+     * 切换美颜、微整形Tab
+     * @param view
+     */
+    private void switchBeautyConfigTab(View view)
+    {
+        switch (view.getId())
+        {
+            // 美颜
+            case R.id.lsq_beauty_tab:
+                isBeautyChecked = true;
+                ((TextView)findViewById(R.id.lsq_beauty_tab)).setTextColor(getResources().getColor(R.color.lsq_color_white));
+                ((TextView)findViewById(R.id.lsq_beauty_plastic_tab)).setTextColor(getResources().getColor(R.color.lsq_alpha_white_66));
+                findViewById(R.id.lsq_beauty_tab_line).setBackgroundResource(R.color.lsq_color_white);
+                findViewById(R.id.lsq_beauty_plastic_tab_line).setBackgroundResource(R.color.lsq_alpha_white_00);
+
+                mBeautyRecyclerView.setAdapter(mBeautyRecyclerAdapter);
+                hideBeautyBarLayout();
+                break;
+            // 微整形
+            case R.id.lsq_beauty_plastic_tab:
+                isBeautyChecked = false;
+                ((TextView)findViewById(R.id.lsq_beauty_tab)).setTextColor(getResources().getColor(R.color.lsq_alpha_white_66));
+                ((TextView)findViewById(R.id.lsq_beauty_plastic_tab)).setTextColor(getResources().getColor(R.color.lsq_color_white));
+                findViewById(R.id.lsq_beauty_tab_line).setBackgroundResource(R.color.lsq_alpha_white_00);
+                findViewById(R.id.lsq_beauty_plastic_tab_line).setBackgroundResource(R.color.lsq_color_white);
+
+                mBeautyRecyclerView.setAdapter(mBeautyPlasticRecyclerAdapter);
+                mBeautyRecyclerView.scrollToPosition(mBeautyPlasticRecyclerAdapter.getCurrentPos() - 1);
+                hideBeautyBarLayout();
+                break;
+        }
+    }
+
+    /**
+     * 设置美颜、微整形视图状态
+     * @param isVisible true显示false隐藏
+     */
+    private void setBeautyViewVisible(boolean isVisible)
+    {
+
+        if(isVisible)
+        {
+            setBeautyLayout(true);
+            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty_selected);
+
+            TextView lsq_beauty_tab = findViewById(R.id.lsq_beauty_tab);
+            TextView lsq_beauty_shape_tab = findViewById(R.id.lsq_beauty_plastic_tab);
+
+            lsq_beauty_tab.setTag(0);
+            lsq_beauty_shape_tab.setTag(1);
+
+            lsq_beauty_tab.setOnClickListener(onClickListener);
+            lsq_beauty_shape_tab.setOnClickListener(onClickListener);
+
+            switchBeautyConfigTab(isBeautyChecked ? lsq_beauty_tab : lsq_beauty_shape_tab);
+        }
+        else
+        {
+            setBeautyLayout(false);
+            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty);
+        }
+    }
+
+    /**
+     * 设置美颜视图
+     * @param isVisible 是否可见
+     */
+    private void setBeautyLayout(boolean isVisible){
+        mSmartBeautyTabLayout.setVisibility(isVisible ? VISIBLE : GONE);
+    }
+
+    /**
+     * 切换美颜预设按键
+     * @param useSkinNatural
+     *  true 自然(精准)美颜 false 极致美颜
+     */
+    private void switchConfigSkin(boolean useSkinNatural)
+    {
+        TuSdkMediaSkinFaceEffect skinFaceEffect = new TuSdkMediaSkinFaceEffect(useSkinNatural);
+
+        // 美白
+        SelesParameters.FilterArg whiteningArgs = skinFaceEffect.getFilterArg("whitening");
+        whiteningArgs.setMaxValueFactor(0.6f);//设置最大值限制
+        // 磨皮
+        SelesParameters.FilterArg smoothingArgs = skinFaceEffect.getFilterArg("smoothing");
+        smoothingArgs.setMaxValueFactor(0.7f);//设置最大值限制
+
+        if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace) == null ||
+                mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).size() == 0) {
+
+            whiteningArgs.setPrecentValue(0.3f);//设置默认显示
+
+            smoothingArgs.setPrecentValue(0.6f);//设置默认显示
+            mCamera.addMediaEffectData(skinFaceEffect);
+        }else{
+            TuSdkMediaSkinFaceEffect oldSkinFaceEffect = (TuSdkMediaSkinFaceEffect) mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).get(0);
+            mCamera.addMediaEffectData(skinFaceEffect);
+
+            for (SelesParameters.FilterArg filterArg : oldSkinFaceEffect.getFilterArgs()) {
+                SelesParameters.FilterArg arg = skinFaceEffect.getFilterArg(filterArg.getKey());
+                arg.setPrecentValue(filterArg.getPrecentValue());
+            }
+
+            skinFaceEffect.submitParameters();
+        }
+
+        // 滤镜名显示
+        showHitTitle(TuSdkContext.getString(useSkinNatural ? "lsq_beauty_skin_precision" : "lsq_beauty_skin_extreme"));
+    }
+
+    /**
+     * 应用美肤
+     * @param key
+     * @param progress
+     */
+    private void submitSkinParamter(String key, float progress)
+    {
+        List<TuSdkMediaEffectData> filterEffects = mCamera.mediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSkinFace);
+
+        if (filterEffects.size() == 0) return;
+
+        // 只能添加一个滤镜特效
+        TuSdkMediaSkinFaceEffect filterEffect = (TuSdkMediaSkinFaceEffect) filterEffects.get(0);
+        filterEffect.submitParameter(key, progress);
+    }
+
+    /**
+     * 切换微整形类型
+     * @param position
+     */
+    private void switchBeautyPlasticConfig(int position){
+        if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace).size() == 0)
+        {
+            // 添加一个默认微整形特效
+            TuSdkMediaPlasticFaceEffect plasticFaceEffect = new TuSdkMediaPlasticFaceEffect();
+            mCamera.addMediaEffectData(plasticFaceEffect);
+            for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
+                if (arg.equalsKey("eyeSize")) {// 大眼
+                    arg.setMaxValueFactor(0.85f);// 最大值限制
+                }
+                if (arg.equalsKey("chinSize")) {// 瘦脸
+                    arg.setMaxValueFactor(0.8f);// 最大值限制
+                }
+                if (arg.equalsKey("noseSize")) {// 瘦鼻
+                    arg.setMaxValueFactor(0.6f);// 最大值限制
+                }
+
+            }
+            for (String key : mDefaultBeautyPercentParams.keySet()) {
+                TLog.e("key -- %s",mDefaultBeautyPercentParams.get(key));
+                submitPlasticFaceParamter(key,mDefaultBeautyPercentParams.get(key));
+            }
+
+        }
+
+        TuSdkMediaEffectData effectData = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace).get(0);
+        SelesParameters.FilterArg filterArg = effectData.getFilterArg(mBeautyPlastics.get(position));
+
+//        TLog.e("filterArg -- %s",filterArg.getPrecentValue());
+
+        mBeautyPlasticsConfigView.setFilterArgs(null,Arrays.asList(filterArg));
+    }
+
+    /**
+     * 应用整形值
+     * @param key
+     * @param progress
+     */
+    private void submitPlasticFaceParamter(String key, float progress)
+    {
+        List<TuSdkMediaEffectData> filterEffects = mCamera.mediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypePlasticFace);
+
+        if (filterEffects.size() == 0) return;
+
+        // 只能添加一个滤镜特效
+        TuSdkMediaPlasticFaceEffect filterEffect = (TuSdkMediaPlasticFaceEffect) filterEffects.get(0);
+        filterEffect.submitParameter(key, progress);
+    }
+
 
     /******************************** 拍照 ************************/
     /**
@@ -1133,8 +1336,6 @@ public class RecordView extends RelativeLayout
                     break;
                 // 美颜按钮显示美颜布局
                 case R.id.lsq_beautyButton:
-                    // 显示美颜布局 取消漫画滤镜
-                    changeVideoFilterCode(mFilterAdapter.getFilterList().get(mCurrentPosition = DEFAULT_POSITION));
 
                     setFilterContentVisible(false);
                     setBottomViewVisible(mSmartBeautyTabLayout.getVisibility() == VISIBLE);
@@ -1160,14 +1361,14 @@ public class RecordView extends RelativeLayout
                     mFocusOpen.setTextColor(getResources().getColor(R.color.lsq_widget_speedbar_button_bg));
                     mFocusClose.setTextColor(getResources().getColor(R.color.lsq_color_white));
 
-                    mCamera.setDisableContinueFoucs(false);
+                    mCamera.setDisableContinueFocus(false);
                     break;
                 // 自动对焦关闭
                 case R.id.lsq_focus_close:
                     mFocusOpen.setTextColor(getResources().getColor(R.color.lsq_color_white));
                     mFocusClose.setTextColor(getResources().getColor(R.color.lsq_widget_speedbar_button_bg));
 
-                    mCamera.setDisableContinueFoucs(true);
+                    mCamera.setDisableContinueFocus(true);
                     break;
                 // 闪光灯开启
                 case R.id.lsq_lighting_open:
@@ -1182,7 +1383,7 @@ public class RecordView extends RelativeLayout
                     switchBeautyConfigTab(v);
                     break;
                 // 微整形
-                case R.id.lsq_beauty_shape_tab:
+                case R.id.lsq_beauty_plastic_tab:
                     switchBeautyConfigTab(v);
                     break;
                 // 滤镜
@@ -1241,8 +1442,9 @@ public class RecordView extends RelativeLayout
                         return;
                     }
                     // 启动录制隐藏比例调节按钮
-                    mCamera.finishRecording();
+                    mCamera.stopRecording();
                     initRecordProgress();
+                    setViewHideOrVisible(false);
                     break;
                 // 取消拍摄
                 case R.id.lsq_backButton:
@@ -1254,7 +1456,7 @@ public class RecordView extends RelativeLayout
                     break;
                 // 取消贴纸
                 case R.id.lsq_cancel_button:
-                    mCamera.removeAllLiveSticker();
+                    mCamera.removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker);
                     TabViewPagerAdapter.mStickerGroupId = 0;
                     mViewPager.getAdapter().notifyDataSetChanged();
                     break;
@@ -1328,6 +1530,7 @@ public class RecordView extends RelativeLayout
 
         // 计算保存比例
         mCamera.getVideoEncoderSetting().videoSize = TuSdkSize.create((int) (mCamera.getCameraPreviewSize().width * RatioType.ratio(type)), mCamera.getCameraPreviewSize().width);
+
     }
 
     /**
@@ -1517,7 +1720,7 @@ public class RecordView extends RelativeLayout
         }
 
         // 切换相机速率
-        TuSDKRecordVideoCamera.SpeedMode speedMode = TuSDKRecordVideoCamera.SpeedMode.values()[selectedSpeedMode];
+        TuSdkRecorderVideoCamera.SpeedMode speedMode = TuSdkRecorderVideoCamera.SpeedMode.values()[selectedSpeedMode];
         mCamera.setSpeedMode(speedMode);
     }
 
@@ -1540,244 +1743,7 @@ public class RecordView extends RelativeLayout
         }
     }
 
-
-    /*********************************** 美颜 ********************/
-    /** 美颜等级 */
-    private int beautyLevel = 1;
-    /** 美颜微整形是否选中 */
-    private boolean isBeautyChecked = true;
-    /** 微整形参数 */
-    private String[] mBeautyPlastics = new String[]{"reset","eyeSize","chinSize","noseSize","mouthWidth","archEyebrow","jawSize","eyeAngle","eyeDis"};
-    /** 美颜适配器 */
-    private BeautyRecyclerAdapter mBeautyRecyclerAdapter;
-    /** 微整形适配器 */
-    private BeautyPlasticRecyclerAdapter mBeautyPlasticRecyclerAdapter;
-
-    /** 美颜Item点击事件 */
-    BeautyRecyclerAdapter.OnBeautyItemClickListener beautyItemClickListener = new BeautyRecyclerAdapter.OnBeautyItemClickListener() {
-        @Override
-        public void onItemClick(View v, int position) {
-            switchConfigLevel(position);
-        }
-
-        @Override
-        public void onClear() {
-            hideBeautyBarLayout();
-        }
-    };
-
-    /** 微整形Item点击事件 */
-    BeautyPlasticRecyclerAdapter.OnBeautyPlasticItemClickListener beautyPlasticItemClickListener = new BeautyPlasticRecyclerAdapter.OnBeautyPlasticItemClickListener() {
-        @Override
-        public void onItemClick(View v, int position) {
-            switchBeautyPlasticConfig(position);
-        }
-
-        @Override
-        public void onClear() {
-
-            hideBeautyBarLayout();
-
-            AlertDialog.Builder adBuilder = new AlertDialog.Builder(mContext, android.R.style.Theme_Material_Dialog_Alert);
-            adBuilder.setTitle(R.string.lsq_text_beauty_type);
-            adBuilder.setMessage(R.string.lsq_clear_beauty_plastic_hit);
-            adBuilder.setNegativeButton(R.string.lsq_audioRecording_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            adBuilder.setPositiveButton(R.string.lsq_audioRecording_next, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    clearBeautyPlastic();
-                    dialog.dismiss();
-                }
-            });
-            adBuilder.show();
-        }
-    };
-
-    /**
-     * 隐藏美颜参数调节栏
-     */
-    private void hideBeautyBarLayout(){
-        mBeautyTypeBarLayout.setVisibility(GONE);
-        mSmoothingBarLayout.setVisibility(GONE);
-        mWhiteningBarLayout.setVisibility(GONE);
-    }
-
-    /**
-     * 重置微整形
-     */
-    private void clearBeautyPlastic(){
-
-        float[] mPercentParams = mBeautyPlasticRecyclerAdapter.resetPercentParams();
-
-        // 重置微整形
-        for (int i = 1; i < mBeautyPlastics.length; i++){
-            if(mBeautyPlastics[i].equals("eyeSize") || mBeautyPlastics[i].equals("chinSize") || mBeautyPlastics[i].equals("noseSize")){
-                applyFilter(mBeautyTypeBarLayout,mBeautyPlastics[i],0);
-            }else{
-                applyBeautyPlasticFilter(mBeautyTypeBarLayout,mBeautyPlastics[i],mPercentParams[i]);
-            }
-        }
-    }
-
-    /** 微整形拖动条监听事件 */
-    private TuSeekBar.TuSeekBarDelegate mBeautyTypeSeekBarDelegate = new TuSeekBar.TuSeekBarDelegate()
-    {
-        @Override
-        public void onTuSeekBarChanged(TuSeekBar seekBar, float progress)
-        {
-            if (seekBar == mBeautyTypeBarLayout.getSeekbar())
-            {
-                String key = mBeautyPlasticRecyclerAdapter.getBeautyParams().get(mBeautyPlasticRecyclerAdapter.getCurrentPos());
-                mBeautyTypeBarLayout.getSeekbar().setProgress(mBeautyPlasticRecyclerAdapter.getPercentParams());
-                mBeautyPlasticRecyclerAdapter.setPercentParamByPos(mBeautyPlasticRecyclerAdapter.getCurrentPos(),progress);
-                if(key.equals("eyeSize") || key.equals("chinSize") || key.equals("noseSize")){
-                    applyFilter(mBeautyTypeBarLayout,mBeautyPlasticRecyclerAdapter.getBeautyParams().get(mBeautyPlasticRecyclerAdapter.getCurrentPos()),progress);
-                }else{
-                    applyBeautyPlasticFilter(mBeautyTypeBarLayout,mBeautyPlasticRecyclerAdapter.getBeautyParams().get(mBeautyPlasticRecyclerAdapter.getCurrentPos()),progress);
-                }
-            }
-        }
-    };
-
-    /**
-     * 切换美颜、微整形Tab
-     * @param view
-     */
-    private void switchBeautyConfigTab(View view)
-    {
-        switch (view.getId())
-        {
-            // 美颜
-            case R.id.lsq_beauty_tab:
-                isBeautyChecked = true;
-                ((TextView)findViewById(R.id.lsq_beauty_tab)).setTextColor(getResources().getColor(R.color.lsq_color_white));
-                ((TextView)findViewById(R.id.lsq_beauty_shape_tab)).setTextColor(getResources().getColor(R.color.lsq_alpha_white_66));
-                findViewById(R.id.lsq_beauty_tab_line).setBackgroundResource(R.color.lsq_color_white);
-                findViewById(R.id.lsq_beauty_shape_tab_line).setBackgroundResource(R.color.lsq_alpha_white_00);
-
-                mBeautyRecyclerView.setAdapter(mBeautyRecyclerAdapter);
-                mBeautyRecyclerView.scrollToPosition(mBeautyRecyclerAdapter.getCurrentPos() - 1);
-                hideBeautyBarLayout();
-                break;
-            // 微整形
-            case R.id.lsq_beauty_shape_tab:
-                isBeautyChecked = false;
-                ((TextView)findViewById(R.id.lsq_beauty_tab)).setTextColor(getResources().getColor(R.color.lsq_alpha_white_66));
-                ((TextView)findViewById(R.id.lsq_beauty_shape_tab)).setTextColor(getResources().getColor(R.color.lsq_color_white));
-                findViewById(R.id.lsq_beauty_tab_line).setBackgroundResource(R.color.lsq_alpha_white_00);
-                findViewById(R.id.lsq_beauty_shape_tab_line).setBackgroundResource(R.color.lsq_color_white);
-
-                mBeautyRecyclerView.setAdapter(mBeautyPlasticRecyclerAdapter);
-                mBeautyRecyclerView.scrollToPosition(mBeautyPlasticRecyclerAdapter.getCurrentPos() - 1);
-                hideBeautyBarLayout();
-                break;
-        }
-    }
-
-    /**
-     * 设置美颜、微整形视图状态
-     * @param isVisible true显示false隐藏
-     */
-    private void setBeautyViewVisible(boolean isVisible)
-    {
-
-        if(isVisible)
-        {
-            setBeautyLayout(true);
-            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty_selected);
-
-            TextView lsq_beauty_tab = findViewById(R.id.lsq_beauty_tab);
-            TextView lsq_beauty_shape_tab = findViewById(R.id.lsq_beauty_shape_tab);
-
-            lsq_beauty_tab.setTag(0);
-            lsq_beauty_shape_tab.setTag(1);
-
-            lsq_beauty_tab.setOnClickListener(onClickListener);
-            lsq_beauty_shape_tab.setOnClickListener(onClickListener);
-
-            switchBeautyConfigTab(isBeautyChecked ? lsq_beauty_tab : lsq_beauty_shape_tab);
-        }
-        else
-        {
-            setBeautyLayout(false);
-            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty);
-        }
-    }
-
-    /**
-     * 设置美颜视图
-     * @param isVisible 是否可见
-     */
-    private void setBeautyLayout(boolean isVisible){
-        mSmartBeautyTabLayout.setVisibility(isVisible ? VISIBLE : GONE);
-    }
-
-    /**
-     * 切换美颜预设按键
-     * @param level 等级
-     */
-    private void switchConfigLevel(int level)
-    {
-        mBeautyTypeBarLayout.setVisibility(GONE);
-
-        mSmoothingBarLayout.setVisibility(beautyLevel == level ? ((mSmoothingBarLayout.getVisibility() == VISIBLE) ? GONE : VISIBLE) : GONE);
-
-        mSmoothingBarLayout.getSeekbar().setProgress(level * 20f / 100);
-        applyFilter(mSmoothingBarLayout,"smoothing",level * 20f / 100);
-
-        if(keyTempList.contains("whitening")) {
-            mWhiteningBarLayout.setVisibility(beautyLevel == level ? ((mWhiteningBarLayout.getVisibility() == VISIBLE) ? GONE : VISIBLE) : GONE);
-            mWhiteningBarLayout.getSeekbar().setProgress(level*20f/100);
-            applyFilter(mWhiteningBarLayout, "whitening", level * 20f / 100);
-        }else{
-            mWhiteningBarLayout.setVisibility(GONE);
-        }
-
-        beautyLevel = level;
-    }
-
-    /**
-     * 切换微整形类型
-     * @param position
-     */
-    private void switchBeautyPlasticConfig(int position){
-
-        mBeautyTypeBarLayout.setVisibility(VISIBLE);
-        mSmoothingBarLayout.setVisibility(GONE);
-        mWhiteningBarLayout.setVisibility(GONE);
-
-        mBeautyTypeBarLayout.getTitleView().setText(
-                TuSdkContext.getString("lsq_ic_" + mBeautyPlasticRecyclerAdapter.getBeautyParams().get(position)));
-
-        String key = mBeautyPlasticRecyclerAdapter.getBeautyParams().get(position);
-        mBeautyTypeBarLayout.getSeekbar().setProgress(mBeautyPlasticRecyclerAdapter.getPercentParams());
-        if(key.equals("eyeSize") || key.equals("chinSize") || key.equals("noseSize")){
-            applyFilter(mBeautyTypeBarLayout,key,mBeautyPlasticRecyclerAdapter.getPercentParams());
-        }else{
-            applyBeautyPlasticFilter(mBeautyTypeBarLayout,key,mBeautyPlasticRecyclerAdapter.getPercentParams());
-        }
-    }
-
-    /**
-     * 应用整形值
-     * @param viewSeekBar
-     * @param key
-     * @param progress
-     */
-    private void applyBeautyPlasticFilter(ConfigViewSeekBar viewSeekBar, String key, float progress)
-    {
-        if (viewSeekBar == null || mSelesOutInput == null) return;
-
-        viewSeekBar.getConfigValueView().setText((int)((progress - 0.5)*100) + "%");
-        SelesParameters params = mSelesOutInput.getFilterParameter();
-        params.setFilterArg(key, progress);
-        mSelesOutInput.submitFilterParameter();
-    }
+    /****************************** 视图控制 ****************************/
 
     /**
      * 设置按键图片
@@ -1790,8 +1756,6 @@ public class RecordView extends RelativeLayout
         top.setBounds(0, 0, top.getMinimumWidth(), top.getMinimumHeight());
         textButton.setCompoundDrawables(null, top, null, null);
     }
-
-    /****************************** 视图控制 ****************************/
 
     /**
      * 底部控件是否可见 滤镜、美颜、贴纸切换时
@@ -1876,9 +1840,9 @@ public class RecordView extends RelativeLayout
      * @param state 录制状态
      * @param recording 是否正在录制中
      */
-    public void updateMovieRecordState(TuSDKRecordVideoCamera.RecordState state, boolean recording){
+    public void updateMovieRecordState(TuSdkRecorderVideoCamera.RecordState state, boolean recording){
 
-        if (state == TuSDKRecordVideoCamera.RecordState.Recording) // 开始录制
+        if (state == TuSdkRecorderVideoCamera.RecordState.Recording) // 开始录制
         {
             if(mRecordMode == RecordType.LONG_CLICK_RECORD)
                 updateRecordButtonResource(RecordType.LONG_CLICK_RECORDING);
@@ -1888,7 +1852,7 @@ public class RecordView extends RelativeLayout
             mMoreConfigLayout.setVisibility(GONE);
             setTextButtonDrawableTop(mMoreButton,false ? R.drawable.video_nav_ic_more_selected : R.drawable.video_nav_ic_more);
 
-        } else if (state == TuSDKRecordVideoCamera.RecordState.Paused) // 已暂停录制
+        } else if (state == TuSdkRecorderVideoCamera.RecordState.Paused) // 已暂停录制
         {
             if (mRecordProgress.getProgress() != 0) {
                 addInteruptPoint(TuSdkContext.getDisplaySize().width * mRecordProgress.getProgress());
@@ -1896,7 +1860,7 @@ public class RecordView extends RelativeLayout
             mRecordProgress.pauseRecord();
             setViewHideOrVisible(true);
             updateRecordButtonResource(mRecordMode);
-        } else if (state == TuSDKRecordVideoCamera.RecordState.RecordCompleted) //录制完成弹出提示（续拍模式下录过程中超过最大时间时调用）
+        } else if (state == TuSdkRecorderVideoCamera.RecordState.RecordCompleted) //录制完成弹出提示（续拍模式下录过程中超过最大时间时调用）
         {
             String msg = getStringFromResource("max_recordTime") + Constants.MAX_RECORDING_TIME + "s";
             TuSdk.messageHub().showToast(mContext, msg);
@@ -1904,7 +1868,7 @@ public class RecordView extends RelativeLayout
             updateRecordButtonResource(mRecordMode);
             setViewHideOrVisible(true);
 
-        } else if (state == TuSDKRecordVideoCamera.RecordState.Saving) // 正在保存视频
+        } else if (state == TuSdkRecorderVideoCamera.RecordState.Saving) // 正在保存视频
         {
             String msg = getStringFromResource("new_movie_saving");
             TuSdk.messageHub().setStatus(mContext, msg);
@@ -1918,7 +1882,7 @@ public class RecordView extends RelativeLayout
     private void addInteruptPoint(float margingLeft) {
         // 添加断点标记
         Button interuptBtn = new Button(mContext);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(2,
+        LayoutParams lp = new LayoutParams(2,
                 LayoutParams.MATCH_PARENT);
 
         interuptBtn.setBackgroundColor(TuSdkContext.getColor("lsq_progress_interupt_color"));
@@ -1933,7 +1897,7 @@ public class RecordView extends RelativeLayout
      * @param durationTime
      */
     public void updateViewOnMovieRecordProgressChanged(float progress, float durationTime) {
-        TLog.e("progress -- %s durationTime -- %s",progress,durationTime);
+//        TLog.e("progress -- %s durationTime -- %s",progress,durationTime);
         mRecordProgress.setProgress(progress);
     }
 
@@ -1943,17 +1907,17 @@ public class RecordView extends RelativeLayout
      * @param error
      * @param isRecording
      */
-    public void updateViewOnMovieRecordFailed(TuSDKRecordVideoCamera.RecordError error, boolean isRecording) {
-        if (error == TuSDKRecordVideoCamera.RecordError.MoreMaxDuration) // 超过最大时间 （超过最大时间是再次调用startRecording时会调用）
+    public void updateViewOnMovieRecordFailed(TuSdkRecorderVideoCamera.RecordError error, boolean isRecording) {
+        if (error == TuSdkRecorderVideoCamera.RecordError.MoreMaxDuration) // 超过最大时间 （超过最大时间是再次调用startRecording时会调用）
         {
             String msg = getStringFromResource("over_max_recordTime");
             TuSdk.messageHub().showError(mContext, msg);
 
-        } else if (error == TuSDKRecordVideoCamera.RecordError.SaveFailed) // 视频保存失败
+        } else if (error == TuSdkRecorderVideoCamera.RecordError.SaveFailed) // 视频保存失败
         {
             String msg = getStringFromResource("new_movie_error_saving");
             TuSdk.messageHub().showError(mContext, msg);
-        } else if (error == TuSDKRecordVideoCamera.RecordError.InvalidRecordingTime) {
+        } else if (error == TuSdkRecorderVideoCamera.RecordError.InvalidRecordingTime) {
             TuSdk.messageHub().showError(mContext, R.string.lsq_record_time_invalid);
         }
         setViewHideOrVisible(true);

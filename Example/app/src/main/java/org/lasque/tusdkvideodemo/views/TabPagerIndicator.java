@@ -175,7 +175,7 @@ public class TabPagerIndicator extends LinearLayout{
             return;
         for (int i = 0;i < counts; i++){
             View view = getChildAt(i);
-            LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
+            LayoutParams params = (LayoutParams) view.getLayoutParams();
             params.weight = 0;
             params.width = getMeasuredWidth() / mDefaultVisibleCounts;
             view.setLayoutParams(params);

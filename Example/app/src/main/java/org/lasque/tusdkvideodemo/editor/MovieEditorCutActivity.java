@@ -1,5 +1,6 @@
 package org.lasque.tusdkvideodemo.editor;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
@@ -32,6 +33,8 @@ import org.lasque.tusdkvideodemo.ScreenAdapterActivity;
 import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.views.editor.EditorCutView;
 import org.lasque.tusdkvideodemo.views.editor.LineView;
+import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollContent;
+import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 
 import java.util.List;
 
@@ -145,7 +148,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
     private void initView() {
         mVideoPaths = (List<MovieInfo>) getIntent().getSerializableExtra("videoPaths");
 
-        mEditorCutView = findViewById(R.id.lsq_editor_cut);
+        mEditorCutView = new EditorCutView(this);
         mBackBtn = findViewById(R.id.lsq_back);
         mBackBtn.setOnClickListener(mOnClickListener);
         mNextBtn = findViewById(R.id.lsq_next);
@@ -154,52 +157,47 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         mLoadContent = findViewById(R.id.lsq_editor_cut_load);
         mLoadProgress = findViewById(R.id.lsq_editor_cut_load_parogress);
 
-        mEditorCutView.loadView();
 
-        mEditorCutView.setOnPlayPointerChangeListener(new LineView.OnPlayPointerChangeListener() {
+        mEditorCutView.setOnPlayPointerChangeListener(new TuSdkMovieScrollContent.OnPlayProgressChangeListener() {
             @Override
-            public void onPlayPointerPosition(long playPointerPositionTime, float playPointerPositionTimePercent) {
-                if(mVideoPlayer != null && mEditorCutView.getLineView().getTouchingState()){
-                    mVideoPlayer.seekTo(playPointerPositionTime);
-                }
+            public void onProgressChange(float percent) {
+                if(!mVideoPlayer.isPause())mVideoPlayer.pause();
+                mVideoPlayer.seekToPercentage(percent);
             }
         });
-        mEditorCutView.setOnSelectCeoverTimeListener(new LineView.OnSelectTimeChangeListener() {
+
+        mEditorCutView.getLineView().setExceedCriticalValueListener(new TuSdkRangeSelectionBar.OnExceedCriticalValueListener() {
             @Override
-            public void onTimeChange(long startTime, long endTime, long selectTime, float startTimePercent, float endTimePercent, float selectTimePercent) {
+            public void onMaxValueExceed() {
 
             }
 
             @Override
-            public void onLeftTimeChange(long startTime, float startTimePercent) {
-                mLeftTimeRangUs = startTime;
-                float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
-                mEditorCutView.setRangTime(selectTime);
-                if(!mVideoPlayer.isPause())mVideoPlayer.pause();
-                mEditorCutView.setVideoPlayPercent(startTimePercent);
-                mVideoPlayer.seekTo(startTime);
-            }
-
-            @Override
-            public void onRightTimeChange(long endTime, float endTimePercent) {
-                mRightTimeRangUs = endTime;
-                float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
-                mEditorCutView.setRangTime(selectTime);
-                if(!mVideoPlayer.isPause())mVideoPlayer.pause();
-                mEditorCutView.setVideoPlayPercent(endTimePercent);
-                mVideoPlayer.seekTo(endTime);
-            }
-
-            @Override
-            public void onMaxValue() {
-
-            }
-
-            @Override
-            public void onMinValue() {
+            public void onMinValueExceed() {
                 Integer minTime = (int) (mMinCutTimeUs / 1000000);
-                String tips = String.format(getString(R.string.lsq_min_time_effect_tips), minTime);
+                @SuppressLint("StringFormatMatches") String tips = String.format(getString(R.string.lsq_min_time_effect_tips), minTime);
                 TuSdk.messageHub().showToast(MovieEditorCutActivity.this, tips);
+            }
+        });
+
+        mEditorCutView.setOnSelectCeoverTimeListener(new TuSdkRangeSelectionBar.OnSelectRangeChangedListener() {
+            @Override
+            public void onSelectRangeChanged(float leftPercent, float rightPerchent, int type) {
+                if(type == 0 ){
+                    mLeftTimeRangUs = (long) (leftPercent * mVideoPlayer.durationUs());
+                    float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
+                    mEditorCutView.setRangTime(selectTime);
+                    if(!mVideoPlayer.isPause())mVideoPlayer.pause();
+                    mEditorCutView.setVideoPlayPercent(leftPercent);
+                    mVideoPlayer.seekToPercentage(leftPercent);
+                }else if(type == 1){
+                    mRightTimeRangUs = (long) (rightPerchent * mVideoPlayer.durationUs());;
+                    float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
+                    mEditorCutView.setRangTime(selectTime);
+                    if(!mVideoPlayer.isPause())mVideoPlayer.pause();
+                    mEditorCutView.setVideoPlayPercent(mRightTimeRangUs);
+                    mVideoPlayer.seekToPercentage(rightPerchent);
+                }
             }
         });
 
@@ -221,8 +219,8 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         mRightTimeRangUs = mDurationTimeUs;
         mEditorCutView.setRangTime(duration);
         mEditorCutView.setTotalTime(mDurationTimeUs);
-        mEditorCutView.getLineView().setLeftBarPosition(0f);
-        mEditorCutView.getLineView().setRightBarPosition(1f);
+//        mEditorCutView.getLineView().setLeftBarPosition(0f);
+//        mEditorCutView.getLineView().setRightBarPosition(1f);
 
         //加载封面图
         loadVideoThumbList();
@@ -237,7 +235,6 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
     }
 
     private void setEnable(boolean enable){
-        mEditorCutView.setEnabled(enable);
         mBackBtn.setEnabled(enable);
         mNextBtn.setEnabled(enable);
         mPlayBtn.setEnabled(enable);
@@ -275,7 +272,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
     protected void onResume() {
         super.onResume();
         if(mEditorCutView != null)
-        mEditorCutView.setEnable(true);
+            mEditorCutView.setEnable(true);
     }
 
     /** 获取编辑转码器 **/
@@ -337,7 +334,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
                 public void onVideoNewImageLoaded(Bitmap bitmap) {
                     mEditorCutView.addBitmap(bitmap);
                     mEditorCutView.setTotalTime(mDurationTimeUs);
-                    mEditorCutView.setMinCutTimeUs(mMinCutTimeUs);
+                    mEditorCutView.setMinCutTimeUs(mMinCutTimeUs/(float)mDurationTimeUs);
                 }
             });
         }

@@ -2,7 +2,6 @@ package org.lasque.tusdkvideodemo.editor.component;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.annotation.IdRes;
@@ -18,13 +17,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
-import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoder;
 import org.lasque.tusdk.core.seles.tusdk.textSticker.TextStickerData;
 import org.lasque.tusdk.core.seles.tusdk.textSticker.TuSdkTextStickerImage;
-import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
@@ -36,14 +33,22 @@ import org.lasque.tusdk.modules.view.widget.sticker.StickerFactory;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerItemViewInterface;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerText;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerTextData;
+import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaTextEffectData;
 import org.lasque.tusdk.video.editor.TuSdkTimeRange;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.editor.MovieEditorController;
 import org.lasque.tusdkvideodemo.views.editor.LineView;
+import org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView;
 import org.lasque.tusdkvideodemo.views.editor.color.ColorView;
+import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollView;
+import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
+import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorGroupView;
+import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorRectView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static android.view.View.GONE;
 
@@ -79,7 +84,13 @@ public class EditorTextComponent extends EditorComponent {
     private long defaultDurationUs =  5 * 1000000;
     /** 最小持续时间 **/
     private int minSelectTimeUs =  1 * 1000000;
+    /** 文字特效备忘管理 **/
+    private EditorTextBackups mTextBackups;
+    /** 文字与色块对应 **/
+    private List<StickerTextData> mStickerDataList = new ArrayList<>();
+    private List<TuSdkMovieColorRectView> mColorRectList = new ArrayList<>();
 
+    private TuSdkMovieColorRectView mCurrentColorRectView;
     /**
      * 显示区域改变回调
      *
@@ -109,9 +120,12 @@ public class EditorTextComponent extends EditorComponent {
         @Override
         public void onStickerItemViewSelected(StickerData stickerData, String text, boolean needReverse) {
             if (stickerData != null && stickerData instanceof StickerTextData) {
-                mBottomView.mLineView.setShowRangeBar(true);
-                mBottomView.mLineView.setLeftBarPosition(((StickerTextData) stickerData).starTimeUs);
-                mBottomView.mLineView.setRightBarPosition(((StickerTextData) stickerData).stopTimeUs);
+                mBottomView.mLineView.setShowSelectBar(true);
+                mStickerData = (StickerTextData) stickerData;
+                mBottomView.mLineView.setLeftBarPosition(((StickerTextData) stickerData).starTimeUs/(float)getEditorPlayer().getTotalTimeUs());
+                mBottomView.mLineView.setRightBarPosition(((StickerTextData) stickerData).stopTimeUs/(float)getEditorPlayer().getTotalTimeUs());
+//                mCurrentColorRectView = mStickerColorMap.get(stickerData);
+                mCurrentColorRectView = mColorRectList.get(mStickerDataList.indexOf(stickerData));
             }
         }
 
@@ -129,11 +143,21 @@ public class EditorTextComponent extends EditorComponent {
         }
 
         @Override
-        public void onStickerCountChanged(StickerData stickerData, int operation, int count) {
+        public void onStickerCountChanged(StickerData stickerData, final StickerItemViewInterface stickerItemViewInterface, int operation, int count) {
             if (mBottomView == null || mBottomView.mBottomOptions == null) return;
             mBottomView.mBottomOptions.setOptionsEnable(count > 0);
-            if(operation == 0)mBottomView.getLineView().setShowRangeBar(false);
-            else mBottomView.getLineView().setShowRangeBar(true);
+            if(operation == 0) {
+                mTextBackups.removeStickerText((StickerTextItemView) stickerItemViewInterface);
+
+                int index = mStickerDataList.indexOf(stickerData);
+                mStickerDataList.remove(stickerData);
+                mBottomView.mLineView.deletedColorRect( mColorRectList.remove(index));
+
+                mBottomView.getLineView().setShowSelectBar(false);
+            } else{
+                mBottomView.getLineView().setShowSelectBar(true);
+                mTextBackups.addStickerText((StickerTextItemView) stickerItemViewInterface);
+            }
         }
     };
 
@@ -148,26 +172,20 @@ public class EditorTextComponent extends EditorComponent {
         @Override
         public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
             if (mBottomView == null) return;
-            mBottomView.mLineView.moveToPercent(percentage);
+            mBottomView.mLineView.seekTo(percentage);
         }
     };
 
-    /** 转码回调 **/
-    private TuSdkEditorTranscoder.TuSdkTranscoderProgressListener mOnTranscoderProgressListener = new TuSdkEditorTranscoder.TuSdkTranscoderProgressListener() {
+    /** 最大值最小值判断 **/
+    private TuSdkRangeSelectionBar.OnExceedCriticalValueListener mOnExceedValueListener = new TuSdkRangeSelectionBar.OnExceedCriticalValueListener() {
         @Override
-        public void onProgressChanged(float percentage) {
-
+        public void onMaxValueExceed() {
+            TuSdk.messageHub().showToast(getBottomView().getContext(),R.string.lsq_max_time_effect);
         }
 
         @Override
-        public void onLoadComplete(TuSDKVideoInfo outputVideoInfo, TuSdkMediaDataSource outputVideoSource) {
-            if (mBottomView == null || mBottomView.mLineView == null) return;
-            mBottomView.mLineView.setTotalTimeUs(outputVideoInfo.durationTimeUs);
-        }
-
-        @Override
-        public void onError(Exception e) {
-            TLog.e(e);
+        public void onMinValueExceed() {
+            TuSdk.messageHub().showToast(getBottomView().getContext(),R.string.lsq_min_time_effect);
         }
     };
 
@@ -182,10 +200,13 @@ public class EditorTextComponent extends EditorComponent {
         mComponentType = EditorComponentType.Text;
         mStickerView = editorController.getActivity().getStickerView();
         mStickerView.setDelegate(mStickerDelegate);
+
+        getBottomView();
+        mTextBackups = new EditorTextBackups(mStickerView,mBottomView);
+
         getEditorPlayer().addPreviewSizeChangeListener(mOnDisplayChangeListener);
         getEditorPlayer().addProgressListener(mPlayProgressListener);
 
-        editorController.getMovieEditor().getEditorTransCoder().addTransCoderProgressListener(mOnTranscoderProgressListener);
         // 初始化软键盘管理器
         mInputMethodManager = (InputMethodManager)editorController.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -193,21 +214,25 @@ public class EditorTextComponent extends EditorComponent {
         setListenerToRootView();
     }
 
-
     @Override
     public void attach() {
         getEditorController().getBottomView().addView(getBottomView());
         if(getEditorPlayer().isReversing()) {
-            mBottomView.mLineView.moveToPercent(1f);
+            mBottomView.mLineView.seekTo(1f);
         }else {
-            mBottomView.mLineView.moveToPercent(0f);
+            mBottomView.mLineView.seekTo(0f);
         }
         getEditorPlayer().seekOutputTimeUs(0);
         getEditorController().getVideoContentView().setClickable(false);
         getEditorController().getPlayBtn().setVisibility(View.GONE);
+        getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeText);
+
         mBottomView.mBottomOptions.setOptionsEnable(false);
-        mBottomView.mLineView.setShowRangeBar(false);
+        mBottomView.mLineView.setShowSelectBar(false);
         mBottomView.setPlayState(1);
+
+        mTextBackups.onComponentAttach();
+
     }
 
     @Override
@@ -217,6 +242,8 @@ public class EditorTextComponent extends EditorComponent {
         getEditorController().getPlayBtn().setVisibility(View.VISIBLE);
         getEditorController().getVideoContentView().setClickable(true);
         mBottomView.mBottomOptions.backToOptionView();
+
+        mTextBackups.onComponentDetach();
     }
 
 
@@ -447,7 +474,7 @@ public class EditorTextComponent extends EditorComponent {
         //播放|暂停 按钮
         private ImageView mPlayBtn;
         //进度以及区间选择View
-        private LineView mLineView;
+        private TuSdkMovieScrollPlayLineView mLineView;
 
         //选项View
         private EditorBottomOptions mBottomOptions;
@@ -471,15 +498,14 @@ public class EditorTextComponent extends EditorComponent {
             mBackBtn.setOnClickListener(mOnClickListener);
             mNextBtn.setOnClickListener(mOnClickListener);
             mPlayBtn.setOnClickListener(mOnClickListener);
-            mLineView.setInitType(LineView.LineViewType.CanRolling, Color.WHITE);
-            mLineView.setTotalTimeUs(getEditorController().getMovieEditor().getEditorPlayer().getOutputTotalTimeUS());
-            mLineView.setOnPlayPointerChangeListener(mOnPlayPointerChangeListener);
-            mLineView.setOnSelectCoverTimeListener(mOnSelectCoverTimeListener);
-            mLineView.setOnScrollingPlayPositionListener(mOnScrollingPlayPositionListener);
-            mLineView.setOnSelectTimeChangeListener(mOnSelectTimeChangeListener);
-            mLineView.setOnStopPlayListener(mOnStopPlayListener);
-            mLineView.loadView();
-            mLineView.setMinSelectTimeUs(minSelectTimeUs);
+            mLineView.setType(1);
+            mLineView.setOnProgressChangedListener(mOnScrollingPlayPositionListener);
+            mLineView.setSelectRangeChangedListener(mOnSelectTimeChangeListener);
+            mLineView.setOnTouchSelectBarListener(mOnTouchSelectBarlistener);
+            mLineView.setOnSelectColorRectListener(mSelectColorListener);
+            mLineView.setExceedCriticalValueListener(mOnExceedValueListener);
+            float minPercent = minSelectTimeUs/(float)getEditorPlayer().getTotalTimeUs();
+            mLineView.setMinWidth(minPercent);
         }
 
         //获取底部View
@@ -493,13 +519,14 @@ public class EditorTextComponent extends EditorComponent {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.lsq_text_close:
-                        mStickerView.cancelAllStickerSelected();
-                        mStickerView.getStickerItems().clear();
-                        mStickerView.removeAllViews();
+                        mTextBackups.onBackEffect();
+                        mCurrentColorRectView = null;
                         getEditorController().onBackEvent();
                         break;
                     case R.id.lsq_text_sure:
+                        mTextBackups.onApplyEffect();
                         handleCompleted();
+                        mCurrentColorRectView = null;
                         getEditorController().onBackEvent();
                         break;
                     case R.id.lsq_editor_text_play:
@@ -512,7 +539,7 @@ public class EditorTextComponent extends EditorComponent {
             }
         };
 
-        private void handleCompleted() {
+        protected void handleCompleted() {
             for (StickerItemViewInterface stickerTextItemView : mStickerView.getStickerItems()) {
 
                 StickerTextItemView stickerItemView = ((StickerTextItemView) stickerTextItemView);
@@ -523,6 +550,7 @@ public class EditorTextComponent extends EditorComponent {
                 //生成相应的图片
                 Bitmap textBitmap = StickerFactory.getBitmapForText(stickerItemView.getTextView()).copy(Bitmap.Config.ARGB_8888, false);
 
+                stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_white), 2);
                 //获取计算相应的位置
                 int[] locaiont = new int[2];
                 stickerItemView.getTextView().getLocationOnScreen(locaiont);
@@ -530,6 +558,7 @@ public class EditorTextComponent extends EditorComponent {
                 int pointY = locaiont[1] - mStickerView.getTop();
 
                 //设置初始化的时间
+
                 long starTimeUs = ((StickerTextData) stickerItemView.getSticker()).starTimeUs;
                 long stopTimeUs = ((StickerTextData) stickerItemView.getSticker()).stopTimeUs;
 
@@ -546,7 +575,7 @@ public class EditorTextComponent extends EditorComponent {
 
             //清空重置相关数据
             mStickerView.cancelAllStickerSelected();
-            mStickerView.getStickerItems().clear();
+            mStickerView.removeAllViews();
         }
 
         /**
@@ -591,16 +620,20 @@ public class EditorTextComponent extends EditorComponent {
             }
         };
 
-        public LineView getLineView() {
+        public TuSdkMovieScrollPlayLineView getLineView() {
             return mLineView;
         }
 
-        //滚动时的进度
-        private LineView.OnScrollingPlayPositionListener mOnScrollingPlayPositionListener = new LineView.OnScrollingPlayPositionListener() {
 
+        private TuSdkMovieScrollView.OnProgressChangedListener mOnScrollingPlayPositionListener = new TuSdkMovieScrollView.OnProgressChangedListener() {
             @Override
-            public void onPlayPosition(long playPositionTime, float playPositionTimePercent, boolean isTouch) {
-                if (getEditorPlayer().isPause() && isTouch)
+            public void onProgressChanged(float progress, boolean isTouching) {
+                if(isTouching){
+                    getEditorPlayer().pausePreview();
+                }
+
+                long playPositionTime = (long) (progress * getEditorPlayer().getTotalTimeUs());
+                if (getEditorPlayer().isPause())
                     getEditorPlayer().seekOutputTimeUs(playPositionTime);
 
                 for (StickerItemViewInterface itemViewInterface : mStickerView.getStickerItems()) {
@@ -616,48 +649,59 @@ public class EditorTextComponent extends EditorComponent {
                 }
 
             }
+        };
 
+        private TuSdkRangeSelectionBar.OnSelectRangeChangedListener mOnSelectTimeChangeListener = new TuSdkRangeSelectionBar.OnSelectRangeChangedListener() {
             @Override
-            public void noticePlayerStop() {
-                getEditorPlayer().pausePreview();
+            public void onSelectRangeChanged(float leftPercent, float rightPerchent, int type) {
+                if (mStickerData == null) return;
+                if(type == 0){
+                    mStickerData.starTimeUs = (long) (leftPercent * getEditorPlayer().getTotalTimeUs());
+                }else if(type == 1) {
+                    mStickerData.stopTimeUs = (long) (rightPerchent * getEditorPlayer().getTotalTimeUs());
+                }
+                mLineView.changeColorRect(mCurrentColorRectView,leftPercent,rightPerchent);
             }
         };
 
-        //bar 移动之后 选择的时间范围
-        private LineView.OnSelectTimeChangeListener mOnSelectTimeChangeListener = new LineView.OnSelectTimeChangeListener() {
+
+        private TuSdkRangeSelectionBar.OnTouchSelectBarListener mOnTouchSelectBarlistener = new TuSdkRangeSelectionBar.OnTouchSelectBarListener() {
             @Override
-            public void onTimeChange(long startTimeUs, long endTimeUs, long selectTimeUs, float startTimePercent, float endTimePercent, float selectTimePercent) {
-                TLog.d("%s OnSelectTimeChangeListener", TAG);
-            }
-
-            @Override
-            public void onLeftTimeChange(long startTime, float startTimePercent) {
-                if (mStickerData == null) return;
-                mStickerData.starTimeUs = startTime;
-            }
-
-            @Override
-            public void onRightTimeChange(long endTime, float endTimePercent) {
-                if (mStickerData == null) return;
-                mStickerData.stopTimeUs = endTime;
-            }
-
-            @Override
-            public void onMaxValue() {
-
-            }
-
-            @Override
-            public void onMinValue() {
-
+            public void onTouchBar(float leftPercent, float rightPerchent, int type) {
+                if(type == 0){
+                    mLineView.seekTo(leftPercent);
+                }else if(type == 1) {
+                    mLineView.seekTo(rightPerchent);
+                }
             }
         };
 
-        //bar移动后
-        private LineView.OnStopPlayListener mOnStopPlayListener = new LineView.OnStopPlayListener() {
+
+        private TuSdkMovieColorGroupView.OnSelectColorRectListener mSelectColorListener = new TuSdkMovieColorGroupView.OnSelectColorRectListener() {
             @Override
-            public void stopPlay() {
-                TLog.d("%s OnStopPlayListener", TAG);
+            public void onSelectColorRect(TuSdkMovieColorRectView rectView) {
+                int index = mColorRectList.indexOf(rectView);
+                if(index == -1 || mStickerView.getStickerItems().size() == 0)return;
+                StickerTextData stickerData = mStickerDataList.get(index);
+                if(rectView == mCurrentColorRectView)return;
+                mStickerView.getStickerItems().get(index).setSelected(true);
+                if (stickerData != null && stickerData instanceof StickerTextData) {
+                    mLineView.setShowSelectBar(true);
+                    mStickerData = stickerData;
+                    final float leftPercent =  stickerData.starTimeUs/(float)getEditorPlayer().getTotalTimeUs();
+                    float rightPercent =stickerData.stopTimeUs/(float)getEditorPlayer().getTotalTimeUs();
+                    mLineView.setLeftBarPosition(leftPercent);
+                    mLineView.setRightBarPosition(rightPercent);
+                    mCurrentColorRectView = mColorRectList.get(index);
+
+                    ThreadHelper.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mLineView.seekTo(leftPercent);
+                        }
+                    });
+
+                }
             }
         };
 
@@ -757,8 +801,8 @@ public class EditorTextComponent extends EditorComponent {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.lsq_editor_options_add:
-                        if(!mBottomView.mLineView.isShowRangeBar())
-                        mBottomView.mLineView.setShowRangeBar(true);
+                        if(!mBottomView.mLineView.isShowSelectBar())
+                        mBottomView.mLineView.setShowSelectBar(true);
                         addStickerItemView();
                         break;
                     case R.id.lsq_editor_options_font:
@@ -788,9 +832,7 @@ public class EditorTextComponent extends EditorComponent {
             mBottomView.mControlContent.addView(mOptionView);
         }
 
-        /**
-         * 添加文本贴纸
-         */
+        /** 添加文本贴纸 */
         public void addStickerItemView() {
             mStickerData = new StickerTextData();
             /** 贴纸元素类型:1:图片贴纸 ,2:文字水印贴纸,3:动态贴纸 */
@@ -806,8 +848,8 @@ public class EditorTextComponent extends EditorComponent {
             text.shadowColor = mTextConfig.mTextShadowColor;
 
             // 设置文字区域位置相对上边距百分比信息
-            text.rectTop = 0;
-            text.rectLeft = 0;
+            text.rectTop = 0f;
+            text.rectLeft = 0f;
             text.rectWidth = 1.0f;
             text.rectHeight = 1.0f;
 
@@ -823,8 +865,15 @@ public class EditorTextComponent extends EditorComponent {
 
 
             if (mBottomView != null && mBottomView.mLineView != null) {
-                mBottomView.mLineView.setLeftBarPosition(mStickerData.starTimeUs);
-                mBottomView.mLineView.setRightBarPosition(mStickerData.stopTimeUs);
+                mBottomView.mLineView.setLeftBarPosition(mStickerData.starTimeUs/(float)getEditorPlayer().getTotalTimeUs());
+                mBottomView.mLineView.setRightBarPosition(mStickerData.stopTimeUs/(float)getEditorPlayer().getTotalTimeUs());
+
+                float startPercent = mStickerData.starTimeUs/(float)getEditorPlayer().getTotalTimeUs();
+                float endPercent = mStickerData.stopTimeUs/(float)getEditorPlayer().getTotalTimeUs();
+                TuSdkMovieColorRectView rectView = mBottomView.mLineView.recoverColorRect(R.color.lsq_scence_effect_color_EdgeMagic01,startPercent,endPercent);
+//                mStickerColorMap.put(mStickerData,rectView);
+                mStickerDataList.add(mStickerData);
+                mColorRectList.add(rectView);
             }
 
 

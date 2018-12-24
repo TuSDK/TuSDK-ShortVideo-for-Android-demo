@@ -7,14 +7,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkImageView;
-import org.lasque.tusdk.impl.view.widget.TuGifView;
 import org.lasque.tusdkvideodemo.R;
 
 import java.util.ArrayList;
@@ -34,7 +31,7 @@ public class MagicRecyclerAdapter extends RecyclerView.Adapter<MagicRecyclerAdap
     private boolean isCanDeleted = false;
 
     public interface ItemClickListener {
-        void onItemClick(int position,MagicViewHolder MagicViewHolder);
+        void onItemClick(int position, MagicViewHolder MagicViewHolder);
     }
 
     public interface OnItemTouchListener{
@@ -86,7 +83,7 @@ public class MagicRecyclerAdapter extends RecyclerView.Adapter<MagicRecyclerAdap
 
     @Override
     public MagicViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.magic_recycler_item_view, null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.lsq_magic_recycler_item_view, null);
         MagicViewHolder viewHolder = new MagicViewHolder(view);
         return viewHolder;
     }

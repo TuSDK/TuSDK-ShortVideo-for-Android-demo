@@ -30,9 +30,9 @@ public class MvRecyclerAdapter extends RecyclerView.Adapter<MvRecyclerAdapter.Mv
     public interface ItemClickListener{
         void onItemClick(int position);
     }
-    public MvRecyclerAdapter.ItemClickListener listener;
+    public ItemClickListener listener;
 
-    public void setItemClickListener(MvRecyclerAdapter.ItemClickListener listener){
+    public void setItemClickListener(ItemClickListener listener){
         this.listener = listener;
     }
 
@@ -62,7 +62,7 @@ public class MvRecyclerAdapter extends RecyclerView.Adapter<MvRecyclerAdapter.Mv
 
     @Override
     public MvViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.filter_recycler_item_view,null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.lsq_filter_recycler_item_view,null);
         MvViewHolder viewHolder = new MvViewHolder(view);
         return viewHolder;
     }

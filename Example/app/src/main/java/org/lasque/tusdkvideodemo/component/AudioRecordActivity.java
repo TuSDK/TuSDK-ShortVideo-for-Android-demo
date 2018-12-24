@@ -9,6 +9,10 @@ import android.widget.TextView;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.audio.TuSDKAudioFileRecorder;
+import org.lasque.tusdk.core.audio.TuSdkAudioRecorder;
+import org.lasque.tusdk.core.utils.StringHelper;
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.image.AlbumHelper;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.ScreenAdapterActivity;
 
@@ -40,8 +44,9 @@ public class AudioRecordActivity extends ScreenAdapterActivity {
     /** 生成的录音文件 */
     private File mAudioFile;
 
+    private TuSdkAudioRecorder mAudioRecorder;
     /** 音频文件录制实例 */
-    private TuSDKAudioFileRecorder mAudioRecorder;
+//    private TuSDKAudioFileRecorder mAudioRecorder;
 
     /** 音视频播放器 */
     private MediaPlayer mMediaPlayer;
@@ -71,32 +76,37 @@ public class AudioRecordActivity extends ScreenAdapterActivity {
 
     }
 
-    private TuSDKAudioFileRecorder getAudioFileRecorder() {
+    private TuSdkAudioRecorder getAudioFileRecorder() {
         if(mAudioRecorder == null) {
-            mAudioRecorder = new TuSDKAudioFileRecorder();
-            mAudioRecorder.setOutputFormat(TuSDKAudioFileRecorder.OutputFormat.AAC);
-            mAudioRecorder.setAudioRecordDelegate(mRecordAudioDelegate);
+            //支持断点录制
+            TuSdkAudioRecorder.TuSdkAudioRecorderSetting setting = new TuSdkAudioRecorder.TuSdkAudioRecorderSetting();
+            mAudioRecorder = new TuSdkAudioRecorder(setting,mRecordListener);
+            mAudioRecorder.setMaxRecordTime(10 * 1000000);
+            mAudioRecorder.setOutputFile(getOutputFile());
         }
         return mAudioRecorder;
+    }
+
+    public File getOutputFile(){
+        mAudioFile = new File(AlbumHelper.getAblumPath(), String.format("lsq_%s.aac", StringHelper.timeStampString()));
+        return mAudioFile;
     }
 
     /**
      * 录音委托事件
      */
-    private TuSDKAudioFileRecorder.TuSDKRecordAudioDelegate mRecordAudioDelegate = new TuSDKAudioFileRecorder.TuSDKRecordAudioDelegate() {
-
+    private TuSdkAudioRecorder.TuSdkAudioRecorderListener mRecordListener = new TuSdkAudioRecorder.TuSdkAudioRecorderListener() {
         @Override
-        public void onAudioRecordComplete(File file) {
-            mAudioFile = file;
+        public void onRecordProgress(long durationTimeUS, float percent) {
+
         }
 
         @Override
-        public void onAudioRecordStateChanged(TuSDKAudioFileRecorder.RecordState state) {
-
-            if (state == TuSDKAudioFileRecorder.RecordState.Recording) {
+        public void onStateChanged(int state) {
+            if(state == TuSdkAudioRecorder.START_RECORD){
                 String hintMsg = getResources().getString(R.string.lsq_audio_record_recording);
                 TuSdk.messageHub().showToast(AudioRecordActivity.this, hintMsg);
-            } else if (state == TuSDKAudioFileRecorder.RecordState.Stoped) {
+            }else if(state == TuSdkAudioRecorder.STOP_RECORD){
                 String hintMsg = getResources().getString(R.string.lsq_audio_record_stopped);
                 TuSdk.messageHub().showToast(AudioRecordActivity.this, hintMsg);
                 mAudioRecorder = null;
@@ -104,13 +114,16 @@ public class AudioRecordActivity extends ScreenAdapterActivity {
         }
 
         @Override
-        public void onAudioRecordError(TuSDKAudioFileRecorder.RecordError error) {
-            if (error == TuSDKAudioFileRecorder.RecordError.InitializationFailed) {
+        public void onRecordError(int code) {
+            if (code == PERMISSION_ERROR) {
                 String hintMsg = getResources().getString(R.string.lsq_audio_initialization_failed_hint);
                 TuSdk.messageHub().showError(AudioRecordActivity.this, hintMsg);
             }
         }
     };
+
+
+
 
     private void initMediaPlayer() {
         mMediaPlayer = new MediaPlayer();
@@ -179,7 +192,6 @@ public class AudioRecordActivity extends ScreenAdapterActivity {
     protected void onDestroy() {
         super.onDestroy();
         if(mAudioRecorder != null){
-            mAudioRecorder.setAudioRecordDelegate(null);
             mAudioRecorder.stop();
             mAudioRecorder = null;
         }

@@ -386,14 +386,20 @@
     <string name="lsq_time">Time</string>
     <string name="lsq_magic">Magic</string>
 
-    <string name="lsq_ic_eyesize">Eye</string>
-    <string name="lsq_ic_jawsize">Jaw</string>
-    <string name="lsq_ic_eyedis">Eye Distance</string>
-    <string name="lsq_ic_archeyebrow">Eyebrow</string>
-    <string name="lsq_ic_eyeangle">Eye Angle</string>
-    <string name="lsq_ic_chinsize">Chin</string>
-    <string name="lsq_ic_mouthwidth">Mouth</string>
-    <string name="lsq_ic_nosesize">Nose</string>
+    <string name="lsq_beauty_reset">reset</string>
+    <string name="lsq_beauty_eyesize">Eye</string>
+    <string name="lsq_beauty_jawsize">Jaw</string>
+    <string name="lsq_beauty_eyedis">Eye Distance</string>
+    <string name="lsq_beauty_archeyebrow">Eyebrow</string>
+    <string name="lsq_beauty_eyeangle">Eye Angle</string>
+    <string name="lsq_beauty_chinsize">Chin</string>
+    <string name="lsq_beauty_mouthwidth">Mouth</string>
+    <string name="lsq_beauty_nosesize">Nose</string>
+    <string name="lsq_beauty_skin_extreme">skin_extreme</string>
+    <string name="lsq_beauty_skin_precision">skin_precision</string>
+    <string name="lsq_beauty_whitening">whitening</string>
+    <string name="lsq_beauty_smoothing">smoothing</string>
+    <string name="lsq_beauty_ruddy">ruddy</string>
 
     <string name="lsq_text_home_title_tusdk">TUSDK</string>
     <string name="lsq_text_home_title_video">VIDEO</string>
@@ -428,4 +434,19 @@
     <string name="lsq_filter_ink_video">Ink_Video</string>
     <string name="lsq_filter_monochrome_video">Monochrome_Video</string>
     <string name="lsq_filter_jpcomics_video">JPComics_Video</string>
+
+    <string name="lsq_filter_SkinNature10">Nature</string>
+    <string name="lsq_filter_SkinPink10">Pink</string>
+    <string name="lsq_filter_SkinJelly10">Jelly</string>
+    <string name="lsq_filter_SkinNoir10">Noir</string>
+    <string name="lsq_filter_SkinRuddy10">Ruddy</string>
+    <string name="lsq_filter_SkinSugar10">Sugar</string>
+    <string name="lsq_filter_SkinPowder10">Powder</string>
+    <string name="lsq_filter_SkinWheat10">Wheat</string>
+    <string name="lsq_filter_SkinSoft10">Soft</string>
+    <string name="lsq_filter_SkinPure10">Pure</string>
+    <string name="lsq_filter_SkinMoving10">Moving</string>
+    <string name="lsq_filter_SkinPast10">Past</string>
+    <string name="lsq_filter_SkinCookies10">Cookies</string>
+    <string name="lsq_filter_SkinRose10">Rose</string>
 </resources>

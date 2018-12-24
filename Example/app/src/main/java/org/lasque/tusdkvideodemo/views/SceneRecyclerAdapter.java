@@ -40,7 +40,7 @@ public class SceneRecyclerAdapter extends RecyclerView.Adapter<SceneRecyclerAdap
     }
 
     public interface OnItemTouchListener{
-        void onItemTouch(MotionEvent event,int position,SceneViewHolder ScreenViewHolder);
+        void onItemTouch(MotionEvent event, int position, SceneViewHolder ScreenViewHolder);
     }
 
     public ItemClickListener listener;

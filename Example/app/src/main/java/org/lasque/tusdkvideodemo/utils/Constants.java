@@ -21,6 +21,9 @@ public class Constants {
      */
     public static final int MIN_RECORDING_TIME = 3;
 
+    /** 最大合成 */
+    public static final int MAX_EDITOR_SELECT_MUN = 1;
+
 
     public static int[] AUDIO_EFFECTS = new int[]{R.raw.lsq_audio_lively, R.raw.lsq_audio_oldmovie, R.raw.lsq_audio_relieve};
 
@@ -28,14 +31,15 @@ public class Constants {
     public static String[] AUDIO_EFFECTS_CODES = new String[]{"none","record","lively", "oldmovie", "relieve"};
 
     /**
-     * 滤镜 filterCode 列表
+     * 漫画滤镜 filterCode 列表
      */
     public static String[] COMICSFILTERS = {"None","CHComics_Video","USComics_Video","JPComics_Video","Lightcolor_Video","Ink_Video","Monochrome_Video"};
     /**
      * 滤镜 filterCode 列表
      */
-    public static String[] VIDEOFILTERS = {"None", "porcelain","nature", "pink", "jelly", "ruddy",
-            "sugar", "honey", "clear", "timber", "whitening"};
+    public static String[] VIDEOFILTERS = {"None", "SkinNature10","SkinPink10", "SkinJelly10", "SkinNoir10", "SkinRuddy10",
+            "SkinSugar10", "SkinPowder10", "SkinWheat10","SkinSoft10","SkinPure10","SkinMoving10","SkinPast10","SkinCookies10",
+            "SkinRose10"};
 
     /** -----------注意事项：视频录制使用人像美颜滤镜(带有磨皮、大眼、瘦脸)，编辑组件尽量不要使用人像美颜滤镜，会造成视频处理过度，效果更不好，建议使用纯色偏滤镜 ----------------*/
     /**

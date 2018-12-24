@@ -1,84 +1,84 @@
 {
     "filterGroups":[
         {
-            "file":"lsq_filter_teamwork_115.gfilter",
-            "name":"lsq_filter_group_teamwork",
-            "default_filter_id":764,
+            "file":"lsq_filter_zhuanye_113.gfilter",
+            "name":"lsq_filter_group_zhuanye",
+            "default_filter_id":742,
             "type":0,
             "filters":[
                 {
-                    "id":764,
-                    "name":"lsq_filter_nature",
+                    "id":742,
+                    "name":"lsq_filter_nature01",
                     "color":"#E9807E",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.7,
+                        "smoothing":1,
+                        "mixied":1,
                         "whitening":0
                     }
                 },
                 {
-                    "id":765,
-                    "name":"lsq_filter_pink",
+                    "id":743,
+                    "name":"lsq_filter_pink01",
                     "color":"#E9807E",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.7,
+                        "smoothing":1,
+                        "mixied":1,
                         "whitening":0.3
                     }
                 },
                 {
-                    "id":766,
-                    "name":"lsq_filter_jelly",
+                    "id":744,
+                    "name":"lsq_filter_jelly01",
                     "color":"#E9807E",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.7,
+                        "smoothing":1,
+                        "mixied":0.8,
                         "whitening":0
                     }
                 },
                 {
-                    "id":767,
-                    "name":"lsq_filter_ruddy",
+                    "id":745,
+                    "name":"lsq_filter_ruddy01",
                     "color":"#E9807E",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.7,
+                        "smoothing":1,
+                        "mixied":1,
                         "whitening":0
                     }
                 },
                 {
-                    "id":768,
-                    "name":"lsq_filter_sugar",
+                    "id":746,
+                    "name":"lsq_filter_sugar01",
                     "color":"#E9807E",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.7,
+                        "smoothing":1,
+                        "mixied":0.75,
                         "whitening":0
                     }
                 },
                 {
-                    "id":769,
-                    "name":"lsq_filter_honey",
+                    "id":747,
+                    "name":"lsq_filter_honey01",
                     "color":"#E9807E",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.6,
+                        "smoothing":1,
+                        "mixied":1,
                         "whitening":0.24
                     }
                 },
                 {
-                    "id":770,
-                    "name":"lsq_filter_clear",
+                    "id":748,
+                    "name":"lsq_filter_clear01",
                     "color":"#dfaea7",
                     "args":{
-                        "smoothing":0.6,
-                        "mixied":0.6,
+                        "smoothing":1,
+                        "mixied":1,
                         "whitening":0.8
                     }
                 },
                 {
-                    "id":771,
-                    "name":"lsq_filter_timber",
+                    "id":750,
+                    "name":"lsq_filter_timber01",
                     "color":"#fecfcf",
                     "args":{
                         "smoothing":0.75,
@@ -86,8 +86,8 @@
                     }
                 },
                 {
-                    "id":772,
-                    "name":"lsq_filter_whitening",
+                    "id":751,
+                    "name":"lsq_filter_whitening01",
                     "color":"#E9807E",
                     "args":{
                         "smoothing":0.7,
@@ -95,12 +95,21 @@
                     }
                 },
                 {
-                    "id":773,
-                    "name":"lsq_filter_porcelain",
+                    "id":752,
+                    "name":"lsq_filter_porcelain01",
                     "color":"#E9807E",
                     "args":{
                         "smoothing":0.7,
                         "mixied":0.5
+                    }
+                },
+                {
+                    "id":912,
+                    "name":"lsq_filter_Skinwhitening_1",
+                    "color":"#ffffff",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":1
                     }
                 }
             ]
@@ -512,6 +521,148 @@
                     "color":"#FFFFFF"
                 }
             ]
+        },
+        {
+            "file":"lsq_filter_Beauty02_257.gfilter",
+            "name":"lsq_filter_group_Beauty02",
+            "default_filter_id":1281,
+            "type":0,
+            "filters":[
+                {
+                    "id":1281,
+                    "name":"lsq_filter_SkinNature10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":1,
+                        "whitening":0
+                    }
+                },
+                {
+                    "id":1282,
+                    "name":"lsq_filter_SkinPink10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":1,
+                        "whitening":0.3
+                    }
+                },
+                {
+                    "id":1283,
+                    "name":"lsq_filter_SkinJelly10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":0.8,
+                        "whitening":0
+                    }
+                },
+                {
+                    "id":1284,
+                    "name":"lsq_filter_SkinNoir10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":1,
+                        "whitening":0
+                    }
+                },
+                {
+                    "id":1285,
+                    "name":"lsq_filter_SkinRuddy10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":1,
+                        "whitening":0
+                    }
+                },
+                {
+                    "id":1286,
+                    "name":"lsq_filter_SkinSugar10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":0.75,
+                        "whitening":0
+                    }
+                },
+                {
+                    "id":1287,
+                    "name":"lsq_filter_SkinPowder10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":1,
+                        "whitening":0.24
+                    }
+                },
+                {
+                    "id":1288,
+                    "name":"lsq_filter_SkinWheat10",
+                    "color":"#dfaea7",
+                    "args":{
+                        "smoothing":1,
+                        "mixied":1,
+                        "whitening":0.8
+                    }
+                },
+                {
+                    "id":1297,
+                    "name":"lsq_filter_SkinSoft10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":1
+                    }
+                },
+                {
+                    "id":1298,
+                    "name":"lsq_filter_SkinPure10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":0.75
+                    }
+                },
+                {
+                    "id":1299,
+                    "name":"lsq_filter_SkinMoving10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":0.75
+                    }
+                },
+                {
+                    "id":1300,
+                    "name":"lsq_filter_SkinPast10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":1
+                    }
+                },
+                {
+                    "id":1301,
+                    "name":"lsq_filter_SkinCookies10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":0.75
+                    }
+                },
+                {
+                    "id":1302,
+                    "name":"lsq_filter_SkinRose10",
+                    "color":"#E9807E",
+                    "args":{
+                        "smoothing":0.7,
+                        "mixied":0.75
+                    }
+                }
+            ]
         }
     ],
     "stickerCategories":[
@@ -658,5 +809,5 @@
             ]
         }
     ],
-    "master":"EDvjlznGFEtuj2t54n6Q4McGL7OkrxKlaepYRKaJ2BHu0bPKoCGWFFGqKbMbxyZCR12pfgZDiJobNkigzljDot9wiKY1TGesLT3B7Nd5j5I1eH26r0PI4uL+4PVe1mXKWX\/+FgAHWtYvCP3F8KeUpFmrABk7ZWhBIHQR5tG8MmxC5+RPoETIjqC\/O+ZaIqEA0PnOYCxOhUk1IpXoAyBHLuy7Ta9ZrTLIJw4Z\/5+maRY8qkCr3sHBitQ5f5kDfFcG0iV0P8erEp132e3YF0jCkq\/bByJDRKEpporM77TblEGxVI\/mcVM\/DkE7XkfAw\/s0D+BUXLBekXXOsgwJzDYGoIkJpyhmIy8Lwryy3s0FGEm1NHS\/Ch9xl9mGkQVqsjipkS\/TPUAO4y1Hd0k8EJ0yeIf7DO2IBdd5YmrLWDLvTvxJf4Kjd4A2QgGy3gFezKddQE2CNFsgUzzVeENJeAO5csaQwtCQODSvoXMiJtI3sNw6PybS0N2TsOH1UNXM14LWibGnqw1xK7SG8K1+\/1irjXh2Qddx7TVAdT+eCQVGVKbLxk68WNstkQLtOoRa5OEjF1nOPAY9KcaQefLgvVriWKkvQW6CPOqvfq4hZJdgpaHRPAJHJcJUSflI9iNEeu\/LsWV5nyDr6GavwkBRbeROMA4YTu2XT0EjrX8S9r5qZxMbkB2AtvCHM4\/bEByzka3g0siwDhShOSz8qs4P9JAndDNdNPNQiiSaztYDsF3HCDs27UJVV6SsU+LfeO5MU4J9dbJvdu2\/fdoYCTFsQuoVf96dPn62VFnaMYLS+Ypxg6xJGUBWLPhlMojDB4Nai5lb5CI+cvT2TJjkXa6Zmde\/bPRsg9Tsqqqc\/cJ0LX\/tERwQOBfPj6h5icCRZuH6TY8FRvIMbPb8JIQ0CRPAkK7DAz8wjOFFuaJE8oXdp0RqILBS8GKVfu3XFoiUh1kq\/gNbWpQXz7VVQGX\/XOHJAwyOlNZlZZ5ASEo96byINLsOVpOfUUbIS9TqGYH3xNiG\/zRFUN0Y28UcO2uM+zjqeZXy7MYsg4wUuxe2A7xrkp0tWLJrgjb+WAavWWp2GcSB8lrNOeIYy8PmNbJynyUESCMTgyh\/zDhsjAKgt9nWx+9lxZeZop00b6AnTUOo5PlKjW0XAyGgHSHXOSz6UtdZLloBRBfeoDZOkEDIDjhpO3Yxe7not9x+y3DFTEEuhEnIbjZcIJjW1tgY8aHLWVSWiKX9RG2P\/NiMRYMSCg8QVHJZ3n7NO5JJ1PsgZv2B9RPV2UBZJcsqhYRooQL7\/zeoJCZ4cH\/nfOLlfyjJlC4FWwsSgWLGjCVzEOkO\/WQHniu\/Du08Djdx2GD0CZvL5RZ+GqjG1d0wO\/5hTaNx2ckctikB2e6l9SlX4+GS6lEXlfpRB3wEXglA9tjJDrjFgSz3v+bNm8p0Q+fs1WtM7\/po0DWkgzvWxrMk5fOMMeKg3YYOpEaq\/x+i2gujjTXK\/5Qkcnx2kmrsRR8mai+eByIZeO+A16JVFpZdnq\/bsIv4Pje3vrTpDky6T+wzMcN5nMRU7RB2XZv3xwbDr4WtASBP2ORVrHeJSSPaNEQtiSME0emhk4tczwuXBrmADzh56uU9sOhOZklNxJETlTHEGGzfAwHaVop4B1E6MFNraZxPZ9ayK8aVeN3r3IGwDqT0uLBuOBv4ATpNEjg\/U\/JEwZx9aVc59XMkvvBuiy\/OnuNWrBXjBjCrEg+1jqP3F0pyKHvjizEKKrqBh5s7cS1FPhPCqhYX7ggAy8LszeiW6iStOLzpeza\/thE89FeiMld2WHIwbG+tEUUfGtuC55+v9DoktmOnSffM5CKmpj6u5NXJ55LU9O90zLFkdu2KiAiCJT08ivCj13gd4rGvRC6aN0TD2YQN9sLkf7P1T3oYJ5FTk0iKRGTgdHHN0I4PUSONjyCzQe5LqJ+B5jc\/g9eGPBkTfvp2oF9feMW\/FiXc4M5L05vGQSoj+7qasSDtPGZmZxWZDSJC+d4s9ycKHttE23wdulGWyXqgDoESQu76bmYJHdiiZC1QVoEnrBvOm9ccFHOIDTTHqWLFqlo9teqwbu\/EDJJy8Fk14Cw2pBx+Lle+NlK26lUNz7FnEJy+cr39Ls5Vt5S7zZtRijpOQwoBFqaTckP\/Rbny1H2qMOWbInKxQmMgRHM4kUg6TlZPhZgGbi8KqzVpI4Bptjq\/Pp7v3jmDhpqHCuteqZrRIe+38ysgE7o9D5IJRC\/iXJcGmJGt2oquVsFVLMfWXyROz70oWWrkTy\/shA7r6iyVR\/7BBfziTOY+cuV60AL27x9zUcxe2+n31yJZndStxDYRM4EmjrP3eevcTAf7iAybE5eGfakzlrn3gDRvgiGvmOdEO9OtI0iAbdW2SccpYyr9Q7NwRcyd2nexytYNV9RXPpQfdTWtFjmpqOwh4OeLoBIZIukvzhjgTHLmdx+74e5gGBb5yPthI4r4wBiIT7kbP3ZvsJ+dcbCQHWBZmeFjpgeGqGtDfm2C70bA5OsevFheWMlEvWmINamXt1GtewH2ike9RVK7N5rfloEobdHfDuR75RG+s0liNRxRvD75NxKr6RtrUDnJmwuPso6SgRMo7qaFIwzAjLkClUSn56NWVeTmkeAsDTCQ0Kvupa2xvzylqPX++NWBeRhRQ90JcEb+CAWrD0xSAFQCBk88+eETGQfycIT5VQ6DEQxq61nibZtmS0gK7HQm7ZtRbFjhKMd3KrczOS7mqeILO\/5cyGiHAmmMCv8KG3xVLsRKr5GRPrLP0kr1QbqDbEuwENciB+wAJZLrSqH7k31TlhdmRMoonLrByEHwyVL+UxC8NNlDqttsmxS\/fdVuLNXTTQ8qBshKrSqEWuFG6hro02euVwQCTuEKCQTMcJx41GdNPaKo8ClG42jTzlQNiCxswF6ul\/Vj5bl4hpI70YpvEWukyze9zQ49idIGiKZbmJQIHSh3ui9SuaLpnWbOpPTynOU7HLEPNTvEVJl4zhVAMQTV1apwdRquB1+4f14O2zeBJstGvUYzEcYq\/hFLFrii9KoQcLqgGd84+o+1QJa8rDth9FZXIX+OkliUa1v1iYD3GgcwtvIwR1ym0pRaXl\/wGtcGE2AUtYjdSLA3jIOp6dpMBiyBdHd3uBVBLQyOdhjybFTleWHX7UVL98hJEdVE\/gE1NfSIwyCSxol8wgJgmoHBA3DH1lXJey4xJSn60HQvXw==0559634E4E"
+    "master":"EFZM8z3c6LfQ2nTBTtlSHQ0prvc8fHbRoBrhlpW2rLTCmBNPJZfb4tbytpmbliY6h28pUou+gXDHy4CRljd7TKhiyxJ498VvxMmFD4nby42AxK+JsBiqo6Pc33785yPQyzL6WVH8b4f1r20MvCji8oCdxs9zkueWyzXivUq8RZ21SLJ\/rXOETG1PHDDjisOrkswzlkD6wv+OYUaPMBYlvcIIPTQwRyMuSFC3IuC+3kb7DmZ74JwEKPhXWd8GlVVaDw583SNebfTibCIp9z5osyHtqan\/8sHRstIrYIqvUpmRL6NfUJGd4POC2fvn7fyYSgPewrtM8glKV2w73Ctc+K2VlqK7lj2hgoo+aAebO64wraQ6C\/8PCTGToGv6KqbFhiwiCtwLJD2ngvfmIwBxyYX7qDoSqYs3a9ALlcX6PShcdsuH844Y7\/4cfmhu0G7HswbjJaUqXXTDaj0f8EwT8pYN7BfXZYVHfexmJvQPSLNhm8I\/OiiRWuitf4QXK+PtOtpEHC+3fhM5GJmsTv2vX8a279Osfz6qxfprlyPFHZoDYLitH5YHZB1+hh0FbYHbbnAe0n+9+b4Fr4l+sjGyJcRUbhgp4x7sqnSwWSoGSiuVA7NnvaUoFdLO+7ca6GHG3Fsjgw3IrYL5eJ1WUbeq8dLGgssg+lKCgYn4u+NlFhxjfLWvIvrGHYhiUzYN57R2SMd2h4Ux7w6Wy5ysPsStgyyLUPsWWtqTmwEdnVqfG6CE\/7eGkz5uRPdqiV9SWkS78BV7fOZpuw5bKSW+qnpo0Qx\/AYQJ1K55Ls10RmTtJhYhlamlHz78dZkGZMbPGc3RYZFdRlfTRFgbGgsA3\/e7dvNIFKhpXwTfi6uCoBcdJJuxCe8bhu0sGz538SoVZIznKfDAdfC2kL8v8JwvEXKvgJzGbwvn1+va82sIlhMfU9d5JxOG9vXe03Icd3t9Z+DZy8qFY+x9ZdAt5qpdi1XCJf2QkNTKZQ7U+MfDsbi3TcvHoeJ2JQPIFhPq7RhIz89O1BT03bOfXYvDBxhgGFzaLSPquQgkDdL+rT1pJutPZrHQC6aVk4M1XUQwDy\/uKf0xjQH8iKxOm3a9xFBbsVjTxqtLBiFkyyCZVn1AC6NFbjIDCAtwTly7Hs5XBYpNc2jvR+bx4sIUxqInUPQ2kjV0gBB6iJ5BUfdbbcO5wW0I1+477rVRqVBkAKHZqXQgMUbz82NY1i1Qb4EkmPEQw7dAIBGdjg9lrW\/sYQyqSP\/ABI63jHxGyMyd8LBbMsOigXezEinKpQLlEmCgAR6BzC\/6eAlQ891l7aYlJfHq3vZZQ9xK4wTbkRKdN\/BjXoNRbZt3Kz2ihK4YgZvvUnPWV3twlu3I8897Xfg5NscnxAuXfqh3iIebR7C0m5JwV3hiYcB8OLq\/Wh6pSqZ6T3HaqEH9180th80AlBUTiSVvdEmI1uSd3WA9wU+1\/rSFUTASLxsV8BF\/GGhB3h7gMg+fdxClyOy3rU\/xKFjybX2KoBqpByVhQArnoDwzBsDs5PAbNfVbErnS++oN55nt3h8afBH9WcpgrRmZ3OCS4+ZoJqUTte7hR9xQqNsL07mU49rRNoBl5UyfiY9lGibxX2LYkz9XgMar0STzCRlwxYlgwBStLWfRCjOs\/6FfROx7uHyKvzfTVyz\/uhgzJys2\/zWjtuQjpdsZQSEjrC26DmJ6N+yyvjtp2Matm6\/\/037gPPdmVmfv+87zIx1uO50vvY6C9LZgVLGphaXgj5m0GAlIuhUnXluTaeHg9Eu7zx82LvviC40pmTTPQuH6Ff+I5TQQIb6MBzSwXESHxU2RldGM8QHsWqaQXer\/q95L0pApnctYxxo6A0aIXSw8BZPlXLW114+mRHVy58ChxphXGo20glYLxCIFTPkDztJGdXJEOvoKxWTtzta2KmwXeM+sFnaWrRD5H\/tqHQEE+SzpWHg5gbLYdFHInnfZlPsYo7qCoiSpYEl29ntQ5DUERFdwa9VfeHV2fUfzUaGmqTrcKSDPkk4excIxoiVAkPHlQW\/wcyukL\/odl6+UVThUGBgdweOULlJ6OrRbk9kU0E9Fgmv9E4TP6E+OZP\/B+NJFrPzr6I3w1hGNoqQhW0PynrK\/UejJfprOPVDOmXbG4\/+Z633UR2\/uuZF8SdkviUjE8nhZN1IA38d3S43wMW1paXcIePVpukCaC7tZ+jHJ9MfpsS2Eqy+tSQdVm13EAEQvJqqalS1oK0wa3p0RdPweELvxAvaogyYOETWa68p2pZB+W5V0jNiu3CbiowIoC4KZXeQweHCw5qmrYhBa6mLsJWIrr6vP2cccz4ltzKLov399yaBfArluvjzTqOfjOo22vuT\/HSNfvmrXYV9eYMK8vqFVDpZ4AdD\/iS4iXESct2vG4DiDP9IJE+SnqSDHcvM1kwOyyPfyNGnYeVGxNbCF4hGcfkPr50cP9ZkmBQnoTwsfPvFGYPgBllCVgm6PeZ01M9TjmoauH4d6v3CN78QZtF9skAyEaVAvAWxRgvm2jO1emye5+Ux\/wQlCzsnzOL8LmdiivhASKSWPuGja4+q2CtUIJBB\/NQW9rlM3IOFY72aguOAaAN7dQXZLCl6dIKavu3dcocxBo4Dv+TsYdEyPvOhkwae\/8AlQ\/JYYSWIOUukmtWO9Nzf04IRebfhzDupcoqTR8drpolIeNC4q94+jj8J2twHaljskd2Az+D7kWD0krmbOIAF3817gulZHuGCb3XoexIy\/0FZsullro9SfnIYHnMKyzRkS3AEPQytE\/aEf5lcdejRSMfqY7hRBczlgJxlB+QHU8+cRmMnJV3AsSoNPFSYnL3cqKRWhCuwlUuHe7okGJmEA2pPXcOlcXxcrFsavWGWaTGJy95YyhLXAV81xgMnMtXEWAdXavlPv\/9W5PPV5Q4G8oqFCidqFxU1leVL4i0ZWzSpKYdmafhfehl9fT6j4SK1TR5hxYtiB\/\/p187cItw3KvINBAlhIv7i+3Hz8fxiSNBKMwA3Wr\/Y7K8cg8fuNzFTyDFVPrt7Jl7JezQmzgSY6I8+9mKM433awZVnqDRp8HoM+UOEOYltfKXF1CBIMmW3JYTotRlk9d42Bhxzph\/eKjaljlOaxbJom7xCDITEb7TY8psxvqMggslv2voPl8Ns3B+p2QyJXO1pNSwQGwi651OAfaLJvMDO4eoHODaigsTC5E3wrKoHst\/nyeGN243iawVd6DduAbJqJ4N\/t7ZT5Fg8QBZrT+rwqpz5KVe2vBLnJEIdSlGnDugiLCpRY1cMzQg==6E951C5D53"
 }

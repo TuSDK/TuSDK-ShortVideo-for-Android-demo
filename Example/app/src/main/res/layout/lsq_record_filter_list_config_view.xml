@@ -6,13 +6,19 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true">
 
+    <!--<include-->
+        <!--android:layout_marginBottom="@dimen/lsq__space_10"-->
+        <!--android:id="@+id/lsq_filter_config_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/lsq__space_50"-->
+        <!--layout="@layout/tusdk_config_seekbar_one"-->
+        <!--android:visibility="invisible"/>-->
     <include
-        android:layout_marginBottom="@dimen/lsq__space_10"
         android:id="@+id/lsq_filter_config_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/lsq__space_50"
-        layout="@layout/tusdk_config_seekbar_one"
-        android:visibility="invisible"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/lsq__space_10"
+        layout="@layout/lsq_params_config_view"/>
     <LinearLayout
         android:id="@+id/lsq_tab_layout"
         android:weightSum="2"

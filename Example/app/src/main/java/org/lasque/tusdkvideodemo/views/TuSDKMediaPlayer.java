@@ -301,8 +301,7 @@ public class TuSDKMediaPlayer extends FrameLayout {
 
             int w = rect.right - rect.left;
             int h = rect.bottom - rect.top;
-            FrameLayout.LayoutParams lp = new FrameLayout
-                    .LayoutParams(w, h);
+            LayoutParams lp = new LayoutParams(w, h);
             lp.setMargins(rect.left, rect.top, 0, 0);
             surfaceView.setLayoutParams(lp);
         }

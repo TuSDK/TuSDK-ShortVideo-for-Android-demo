@@ -45,7 +45,7 @@ public class StickerRecyclerAdapter extends RecyclerView.Adapter<StickerRecycler
     public ItemDownStateListener downStateListener;
 
     public interface ItemDownStateListener{
-        void onDownState(int position,float progress,DownloadTaskStatus status);
+        void onDownState(int position, float progress, DownloadTaskStatus status);
     }
     public void setItemDownStateListener(ItemDownStateListener listener){
         this.downStateListener = listener;

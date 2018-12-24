@@ -28,49 +28,21 @@ public class BeautyPlasticRecyclerAdapter extends RecyclerView.Adapter<BeautyPla
     private Context mContext;
     private List<String> mBeautyParams;
     private int mCurrentPos = -1;
-    private float[] mPercentParams = new float[]{0f,0.3f,0.2f,0.2f,0.5f,0.5f,0.5f,0.5f,0.5f};
 
-    public BeautyPlasticRecyclerAdapter.OnBeautyPlasticItemClickListener listener;
+    public OnBeautyPlasticItemClickListener listener;
 
     public interface OnBeautyPlasticItemClickListener{
-        void onItemClick(View v,int position);
+        void onItemClick(View v, int position);
         void onClear();
     }
 
-    public void setOnBeautyPlasticItemClickListener(BeautyPlasticRecyclerAdapter.OnBeautyPlasticItemClickListener onBeautyPlasticItemClickListener){
+    public void setOnBeautyPlasticItemClickListener(OnBeautyPlasticItemClickListener onBeautyPlasticItemClickListener){
         this.listener = onBeautyPlasticItemClickListener;
     }
 
-    public BeautyPlasticRecyclerAdapter(Context context) {
-        super();
+    public BeautyPlasticRecyclerAdapter(Context context, List<String> params) {
         mContext = context;
-        mBeautyParams = new ArrayList<>();
-    }
-
-    /**
-     * 重置微整形值
-     * @return
-     */
-    public float[] resetPercentParams(){
-        mPercentParams = new float[]{0f,0.3f,0.2f,0.2f,0.5f,0.5f,0.5f,0.5f,0.5f};
-        return mPercentParams;
-    }
-
-    /**
-     * 改变默认值
-     * @param pos position
-     * @param percentParam 百分比
-     */
-    public void setPercentParamByPos(int pos,float percentParam){
-        mPercentParams[pos] = percentParam;
-    }
-
-    /**
-     * 获取当前选中的百分比值
-     * @return
-     */
-    public float getPercentParams(){
-        return mPercentParams[mCurrentPos < 0 ? 0 : mCurrentPos];
+        mBeautyParams = new ArrayList<>(params);
     }
 
     /**
@@ -107,24 +79,17 @@ public class BeautyPlasticRecyclerAdapter extends RecyclerView.Adapter<BeautyPla
 
     @Override
     public void onBindViewHolder(final BeautyViewHolder beautyViewHolder,final int position) {
+
         String code = mBeautyParams.get(position);
         code = code.toLowerCase();
-        String codeName = getPrefix() + code;
-        beautyViewHolder.mBeautyLevelImage.setSelected(false);
-        beautyViewHolder.mBeautyName.setChecked(false);
 
-        if(position == 0){
-            beautyViewHolder.mBeautyLevelImage.setImageResource(R.drawable.lsq_ic_reset_normall);
-            beautyViewHolder.mBeautyName.setText(R.string.lsq_reset);
-        }else if(mCurrentPos == position && position != 0){
-            beautyViewHolder.mBeautyLevelImage.setSelected(true);
-            beautyViewHolder.mBeautyName.setChecked(true);
-            beautyViewHolder.mBeautyLevelImage.setImageResource(TuSdkContext.getDrawableResId(codeName));
-            beautyViewHolder.mBeautyName.setText(TuSdkContext.getString(codeName));
-        }else{
-            beautyViewHolder.mBeautyLevelImage.setImageResource(TuSdkContext.getDrawableResId(codeName));
-            beautyViewHolder.mBeautyName.setText(TuSdkContext.getString(codeName));
-        }
+        boolean selected = mCurrentPos == position && position != 0;
+        beautyViewHolder.mBeautyLevelImage.setSelected(selected);
+        beautyViewHolder.mBeautyName.setChecked(selected);
+
+        beautyViewHolder.mBeautyLevelImage.setImageResource(TuSdkContext.getDrawableResId("lsq_ic_"+ code));
+        beautyViewHolder.mBeautyName.setText(TuSdkContext.getString("lsq_beauty_"+code));
+
         beautyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,16 +108,6 @@ public class BeautyPlasticRecyclerAdapter extends RecyclerView.Adapter<BeautyPla
         });
     }
 
-    /**
-     * 获取前缀
-     *
-     * @return
-     */
-    protected String getPrefix()
-    {
-        return "lsq_ic_";
-    }
-
     @Override
     public int getItemCount() {
         return mBeautyParams.size();
@@ -164,12 +119,13 @@ public class BeautyPlasticRecyclerAdapter extends RecyclerView.Adapter<BeautyPla
         public ImageView mBeautyLevelImage;
         public CheckedTextView mBeautyName;
 
+
         public BeautyViewHolder(View itemView) {
             super(itemView);
-            mBeautyLevelText =  itemView.findViewById(R.id.lsq_beauty_level_text);
-            mBeautyLevelImage =  itemView.findViewById(R.id.lsq_beauty_level_image);
+            mBeautyLevelText =  (TextView)itemView.findViewById(R.id.lsq_beauty_level_text);
+            mBeautyLevelImage =  (ImageView)itemView.findViewById(R.id.lsq_beauty_level_image);
             mBeautyLevelText.setVisibility(View.GONE);
-            mBeautyName = itemView.findViewById(R.id.lsq_beauty_name);
+            mBeautyName = (CheckedTextView)itemView.findViewById(R.id.lsq_beauty_name);
             mBeautyName.setVisibility(View.VISIBLE);
         }
     }

@@ -6,13 +6,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.encoder.video.TuSDKVideoEncoderSetting;
+import org.lasque.tusdk.core.media.codec.video.TuSdkVideoQuality;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs;
 import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera;
+import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCamera;
+import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoEncoderSetting;
 import org.lasque.tusdk.core.utils.json.JsonHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoResult;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
+import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
+import org.lasque.tusdk.video.editor.TuSdkMediaStickerEffectData;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.StickerFragment;
@@ -30,7 +35,7 @@ import java.util.List;
  *
  */
 public class MovieRecordFullScreenActivity extends SimpleCameraActivity implements
-        RecordView.TuSDKMovieRecordDelegate, TuSDKRecordVideoCamera.TuSDKRecordVideoCameraDelegate {
+        RecordView.TuSDKMovieRecordDelegate, TuSdkRecorderVideoCamera.TuSdkRecorderVideoCameraCallback {
     // 录制界面视图
     protected RecordView mRecordView;
     // 贴纸PagerAdapter
@@ -57,9 +62,6 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
         getRecordView();
 
         // 设置录制界面背景为透明色
-//        setRecordViewBackgroundColor(getRecordView());
-//        getRecordView().setSquareSticker(false);
-
 //        hideNavigationBar();
         TuSdk.messageHub().applyToViewWithNavigationBarHidden(true);
     }
@@ -101,10 +103,12 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
     private StickerFragment.OnStickerItemClickListener onStickerItemClickListener = new StickerFragment.OnStickerItemClickListener() {
         @Override
         public void onStickerItemClick(StickerGroup itemData) {
-            if(itemData == null)
-                mVideoCamera.removeAllLiveSticker();
+            if(itemData == null) {
+                mVideoCamera.removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker);
+            }
             else {
-                mVideoCamera.showGroupSticker(itemData);
+                TuSdkMediaStickerEffectData mediaStickerEffectData = new TuSdkMediaStickerEffectData(itemData);
+                mVideoCamera.addMediaEffectData(mediaStickerEffectData);
                 TabViewPagerAdapter.mStickerGroupId = itemData.groupId;
             }
         }
@@ -170,31 +174,27 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
     {
         super.initCamera();
 
-        mVideoCamera.setVideoDelegate(this);
+        mVideoCamera.setRecorderVideoCameraCallback(this);
         mVideoCamera.setMinRecordingTime(Constants.MIN_RECORDING_TIME);
         mVideoCamera.setMaxRecordingTime(Constants.MAX_RECORDING_TIME);
 
         // 设置使用录制相机最小空间限制,开发者可根据需要自行设置（默认：50M）
         mVideoCamera.setMinAvailableSpaceBytes(1024*1024*50l);
 
-        // 录制模式
-        mVideoCamera.setRecordMode(TuSDKRecordVideoCamera.RecordMode.Keep);
         // 限制录制尺寸不超过 1280
-        mVideoCamera.setPreviewEffectScale(1.0f);
-        mVideoCamera.setPreviewMaxSize(1280);
+//        mVideoCamera.setPreviewEffectScale(1.0f);
+//        mVideoCamera.setPreviewMaxSize(1280);
         // 指定为全屏画面比例
-        mVideoCamera.setPreviewRatio(0);
+//        mVideoCamera.setPreviewRatio(0);
         // 开启人脸检测 开启后方可使用人脸贴纸及微整形功能
         mVideoCamera.setEnableFaceDetection(true);
 
         // 编码配置
-        TuSDKVideoEncoderSetting encoderSetting = TuSDKVideoEncoderSetting.getDefaultRecordSetting();
+        TuSdkRecorderVideoEncoderSetting encoderSetting = TuSdkRecorderVideoEncoderSetting.getDefaultRecordSetting();
         // 输出全屏尺寸
         encoderSetting.videoSize = TuSdkSize.create(0, 0);
         // 这里可以修改帧率和码率; RECORD_MEDIUM2第一个参数代表帧率，第二参数代表码率;选择VideoQuality参数尽量选用RECORD开头(专门为视频录制设计)
-        encoderSetting.videoQuality = TuSDKVideoEncoderSetting.VideoQuality.RECORD_MEDIUM2;
-        // 完全自定义帧率和码率
-        // encoderSetting.videoQuality = TuSDKVideoEncoderSetting.VideoQuality.RECORD_MEDIUM2.setFps(30).setBitrate(3000 * 1000);
+        encoderSetting.videoQuality = TuSdkVideoQuality.RECORD_HIGH2;
 
         mVideoCamera.setVideoEncoderSetting(encoderSetting);
 
@@ -215,17 +215,16 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
     }
 
     @Override
-    public void onMovieRecordStateChanged(TuSDKRecordVideoCamera.RecordState state)
-    {
+    public void onMovieRecordStateChanged(TuSdkRecorderVideoCamera.RecordState state) {
         mRecordView.updateMovieRecordState(state, isRecording());
     }
 
     @Override
-    public void onMovieRecordFailed(TuSDKRecordVideoCamera.RecordError error)
-    {
+    public void onMovieRecordFailed(TuSdkRecorderVideoCamera.RecordError error) {
         TLog.e("RecordError : %s",error);
         mRecordView.updateViewOnMovieRecordFailed(error, isRecording());
     }
+
 
     @Override
     public void stopRecording()

@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.editor.MovieEditorCutActivity;
+import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollContent;
+import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 import org.lasque.tusdkvideodemo.views.editor.ruler.RulerView;
 
 import java.util.ArrayList;
@@ -29,27 +32,24 @@ import java.util.List;
  * <p>
  * 编辑里选取裁剪的View
  */
-public class EditorCutView extends FrameLayout {
-    private View mContentView;
+public class EditorCutView {
     //时间选择
-    private LineView mRangeView;
+    private TuSdkMovieScrollContent mRangeView;
     //刻度
     private RulerView mRulerView;
     private TextView mTimeRangView;
     //最小裁剪时间
     private long mMinCutTimeUs =  3 * 1000000;
     private boolean isEnable = true;
+    private MovieEditorCutActivity mActivity;
 
 
-    public EditorCutView(@NonNull Context context) {
-        super(context);
+    public EditorCutView(MovieEditorCutActivity activity) {
+        this.mActivity = activity;
         init();
     }
 
-    public EditorCutView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+
 
     /** 获取布局Id */
     protected int getLayoutId() {
@@ -58,26 +58,22 @@ public class EditorCutView extends FrameLayout {
 
     /** 初始化View */
     private void init() {
-        mContentView = LayoutInflater.from(getContext()).inflate(getLayoutId(), null);
-        mRangeView = mContentView.findViewById(R.id.lsq_range_line);
-        mRangeView.setInitType(LineView.LineViewType.DrawPointer,getResources().getColor(R.color.lsq_color_white));
-        mRulerView = mContentView.findViewById(R.id.lsq_rule_view);
-        mTimeRangView = mContentView.findViewById(R.id.lsq_range_time);
-        addView(mContentView);
-    }
-
-    public void loadView(){
-        mRangeView.loadView();
+        mRangeView = mActivity.findViewById(R.id.lsq_range_line);
+        mRangeView.setType(1);
+        mRangeView.setShowSelectBar(true);
+        mRangeView.setNeedShowCursor(true);
+        mRulerView = mActivity.findViewById(R.id.lsq_rule_view);
+        mTimeRangView = mActivity.findViewById(R.id.lsq_range_time);
     }
 
     private int mTwoBarsDistance = 0;
     public void setTwoBarsMinDistance(int twoBarsDistance){
         this.mTwoBarsDistance = twoBarsDistance;
-        mRangeView.setTwoBarsMinDistance(twoBarsDistance);
+//        mRangeView.setTwoBarsMinDistance(twoBarsDistance);
     }
 
-    public void setMinCutTimeUs(long timeUs){
-        mRangeView.setMinSelectTimeUs(timeUs);
+    public void setMinCutTimeUs(float timeUs){
+        mRangeView.setMinWidth(timeUs);
     }
 
     /**
@@ -85,7 +81,7 @@ public class EditorCutView extends FrameLayout {
      * @param times
      */
     public void setRangTime(float times){
-        String rangeTime = String.format("%s %.1f %s",getResources().getString(R.id.lsq_movie_cut_selecttime),times,"s");
+        String rangeTime = String.format("%s %.1f %s",mActivity.getResources().getString(R.id.lsq_movie_cut_selecttime),times,"s");
         mTimeRangView.setText(rangeTime);
     }
 
@@ -98,8 +94,8 @@ public class EditorCutView extends FrameLayout {
             TLog.e(" bitmap list of cover is null !!!");
             return;
         }
-        mRangeView.setBitmapList(coverList);
-        mRangeView.setMinSelectTimeUs(mMinCutTimeUs);
+//        mRangeView.setBitmapList(coverList);
+//        mRangeView.setMinSelectTimeUs(mMinCutTimeUs);
     }
 
     /**
@@ -112,33 +108,33 @@ public class EditorCutView extends FrameLayout {
             TLog.e(" video time length mast > 0  !!!");
             return;
         }
-        mRangeView.setTotalTimeUs(totalTimeUs);
-        mRulerView.setMaxValueAndPaintColor(totalTimeUs, getResources().getColor(R.color.lsq_color_white));
+//        mRangeView.setTotalTimeUs(totalTimeUs);
+        mRulerView.setMaxValueAndPaintColor(totalTimeUs, mActivity.getResources().getColor(R.color.lsq_color_white));
     }
 
     /**
      * 设置选择区间回调
      * @param onSelectTimeChangeListener
      */
-    public void setOnSelectCeoverTimeListener(LineView.OnSelectTimeChangeListener onSelectTimeChangeListener){
+    public void setOnSelectCeoverTimeListener(TuSdkRangeSelectionBar.OnSelectRangeChangedListener onSelectTimeChangeListener){
         if(onSelectTimeChangeListener == null)
         {
             TLog.e("setSelectCoverTimeListener is null !!!");
             return;
         }
-        mRangeView.setOnSelectTimeChangeListener(onSelectTimeChangeListener);
+        mRangeView.setSelectRangeChangedListener(onSelectTimeChangeListener);
     }
 
     /**
      * 播放指针 位置改变监听
-     * @param onPlayPointerChangeListener
+     * @param progressChangeListener
      */
-    public void setOnPlayPointerChangeListener(LineView.OnPlayPointerChangeListener onPlayPointerChangeListener){
-        if(onPlayPointerChangeListener == null){
+    public void setOnPlayPointerChangeListener(TuSdkMovieScrollContent.OnPlayProgressChangeListener progressChangeListener){
+        if(progressChangeListener == null){
             TLog.e("setSelectCoverTimeListener is null !!!");
             return;
         }
-        mRangeView.setOnPlayPointerChangeListener(onPlayPointerChangeListener);
+        mRangeView.setProgressChangeListener(progressChangeListener);
     }
 
 
@@ -152,10 +148,10 @@ public class EditorCutView extends FrameLayout {
             TLog.e("setSelectCoverTimeListener is null !!!");
             return;
         }
-        mRangeView.pointerMoveToPercent(percent);
+        mRangeView.setPercent(percent);
     }
 
-    public LineView getLineView(){
+    public TuSdkMovieScrollContent getLineView(){
         return mRangeView;
     }
 
@@ -168,8 +164,5 @@ public class EditorCutView extends FrameLayout {
         this.isEnable = isEnable;
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return !isEnable;
-    }
+
 }

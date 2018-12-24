@@ -6,10 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true">
+
     <include
+        android:id="@+id/lsq_beauty_plastics_config_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/beauty_wrap_layout" />
+        android:layout_marginBottom="@dimen/lsq__space_10"
+        layout="@layout/lsq_params_config_view"/>
 
     <View
         android:layout_width="match_parent"
@@ -67,17 +70,17 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="@dimen/lsq_font_size_26"
                     android:text="@string/lsq_text_beauty_type"
-                    android:id="@+id/lsq_beauty_shape_tab"
+                    android:id="@+id/lsq_beauty_plastic_tab"
                     android:textColor="@color/lsq_alpha_white_66"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/lsq_beauty_shape_tab_line"
+                    android:id="@+id/lsq_beauty_plastic_tab_line"
                     android:background="@color/lsq_alpha_white_66"
-                    android:layout_alignLeft="@+id/lsq_beauty_shape_tab"
-                    android:layout_alignRight="@+id/lsq_beauty_shape_tab"
-                    android:layout_below="@+id/lsq_beauty_shape_tab"
+                    android:layout_alignLeft="@+id/lsq_beauty_plastic_tab"
+                    android:layout_alignRight="@+id/lsq_beauty_plastic_tab"
+                    android:layout_below="@+id/lsq_beauty_plastic_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="2dp"
                     android:layout_marginLeft="@dimen/lsq__space_10"

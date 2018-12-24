@@ -155,7 +155,7 @@
     <string name="lsq_time_effect_text">时间特效</string>
     <string name="lsq_text_beauty_type">微整形</string>
     <string name="lsq_beauty_text">美颜</string>
-    <string name="lsq_text_beauty">美颜</string>
+    <string name="lsq_text_beauty">美肤</string>
     <string name="lsq_filter_text">滤镜</string>
     <string name="lsq_magic_text">魔法</string>
     <string name="lsq_text_MV">MV</string>
@@ -389,14 +389,20 @@
     <string name="lsq_time">时间</string>
     <string name="lsq_magic">魔法</string>
 
-    <string name="lsq_ic_eyesize">大眼</string>
-    <string name="lsq_ic_jawsize">下巴</string>
-    <string name="lsq_ic_eyedis">眼距</string>
-    <string name="lsq_ic_archeyebrow">眉型</string>
-    <string name="lsq_ic_eyeangle">眼角</string>
-    <string name="lsq_ic_chinsize">瘦脸</string>
-    <string name="lsq_ic_mouthwidth">嘴型</string>
-    <string name="lsq_ic_nosesize">瘦鼻</string>
+    <string name="lsq_beauty_reset">重置</string>
+    <string name="lsq_beauty_eyesize">大眼</string>
+    <string name="lsq_beauty_jawsize">下巴</string>
+    <string name="lsq_beauty_eyedis">眼距</string>
+    <string name="lsq_beauty_archeyebrow">眉型</string>
+    <string name="lsq_beauty_eyeangle">眼角</string>
+    <string name="lsq_beauty_chinsize">瘦脸</string>
+    <string name="lsq_beauty_mouthwidth">嘴型</string>
+    <string name="lsq_beauty_nosesize">瘦鼻</string>
+    <string name="lsq_beauty_skin_extreme">极致美颜</string>
+    <string name="lsq_beauty_skin_precision">精准美颜</string>
+    <string name="lsq_beauty_whitening">美白</string>
+    <string name="lsq_beauty_smoothing">磨皮</string>
+    <string name="lsq_beauty_ruddy">红润</string>
 
     <string name="lsq_text_home_title_tusdk">TUSDK</string>
     <string name="lsq_text_home_title_video">VIDEO</string>
@@ -431,5 +437,20 @@
     <string name="lsq_filter_ink_video">墨水</string>
     <string name="lsq_filter_monochrome_video">单色</string>
     <string name="lsq_filter_jpcomics_video">日漫</string>
+
+    <string name="lsq_filter_SkinNature10">自然</string>
+    <string name="lsq_filter_SkinPink10">粉嫩</string>
+    <string name="lsq_filter_SkinJelly10">果冻</string>
+    <string name="lsq_filter_SkinNoir10">深黑</string>
+    <string name="lsq_filter_SkinRuddy10">红润</string>
+    <string name="lsq_filter_SkinSugar10">糖水</string>
+    <string name="lsq_filter_SkinPowder10">蜜粉</string>
+    <string name="lsq_filter_SkinWheat10">原麦</string>
+    <string name="lsq_filter_SkinSoft10">柔和</string>
+    <string name="lsq_filter_SkinPure10">清纯</string>
+    <string name="lsq_filter_SkinMoving10">动人</string>
+    <string name="lsq_filter_SkinPast10">过往</string>
+    <string name="lsq_filter_SkinCookies10">曲奇</string>
+    <string name="lsq_filter_SkinRose10">蔷薇</string>
 
 </resources>

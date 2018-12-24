@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/lsq_alpha_black_7f"
-    >
+    android:layout_height="120dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/lsq_alpha_black_7f">
 
     <TextView
         android:id="@+id/lsq_range_time"
@@ -15,13 +15,12 @@
         android:text="已选择0.0秒"
         />
 
-    <!--选择框-->
-    <org.lasque.tusdkvideodemo.views.editor.LineView
+    <!--选择框 TuSdkMovieScrollContent-->
+    <org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollContent
         android:id="@+id/lsq_range_line"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_above="@+id/lsq_rule_view"
-        android:layout_marginLeft="@dimen/lsq__space_8"
         android:layout_marginBottom="@dimen/lsq__space_10"/>
 
     <!--刻度-->

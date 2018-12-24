@@ -5,12 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.lasque.tusdkvideodemo.R;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,17 +22,17 @@ import java.util.List;
 public class BeautyRecyclerAdapter extends RecyclerView.Adapter<BeautyRecyclerAdapter.BeautyViewHolder>{
 
     private Context mContext;
-    private List<String> mBeautyParams;
-    private int mCurrentPos = 1;
+    private List<String> mBeautyParams = Arrays.asList("skin");
+    private boolean useSkinNatural = false;
 
     public OnBeautyItemClickListener listener;
 
     public interface OnBeautyItemClickListener{
-        void onItemClick(View v,int position);
+        void onChangeSkin(View v, String key, boolean useSkinNatural);
         void onClear();
     }
 
-    public void setOnBeautyItemClickListener(OnBeautyItemClickListener onBeautyItemClickListener){
+    public void setOnSkinItemClickListener(OnBeautyItemClickListener onBeautyItemClickListener){
         this.listener = onBeautyItemClickListener;
     }
 
@@ -40,29 +40,11 @@ public class BeautyRecyclerAdapter extends RecyclerView.Adapter<BeautyRecyclerAd
     public BeautyRecyclerAdapter(Context context) {
         super();
         mContext = context;
-        mBeautyParams = new ArrayList<>();
-    }
-
-    /**
-     * 设置美颜参数
-     * @param beautyParams
-     */
-    public void setBeautyParams(List<String> beautyParams){
-        mBeautyParams = beautyParams;
-        notifyDataSetChanged();
-    }
-
-    /**
-     * 获取当前选中position
-     * @return
-     */
-    public int getCurrentPos(){
-        return mCurrentPos;
     }
 
     @Override
     public BeautyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.lsq_recycler_beauty_item_layout,null);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.lsq_recycler_skin_item_layout,null);
         BeautyViewHolder viewHolder = new BeautyViewHolder(view);
         return viewHolder;
     }
@@ -70,32 +52,83 @@ public class BeautyRecyclerAdapter extends RecyclerView.Adapter<BeautyRecyclerAd
     @Override
     public void onBindViewHolder(final BeautyViewHolder beautyViewHolder,final int position) {
 
-        mBeautyParams.get(position);
-
-        if(listener != null && mCurrentPos == 0) listener.onClear();
-
-        if(position == 0){
-            beautyViewHolder.mBeautyLevelText.setText("");
-            beautyViewHolder.mBeautyLevelText.setBackgroundResource(R.drawable.tusdk_view_widget_beauty_unselect);
-            beautyViewHolder.mBeautyLevelImage.setImageResource(R.drawable.ic_nix);
-        }else if(mCurrentPos == position && position != 0){
-            beautyViewHolder.mBeautyLevelText.setText("");
-            beautyViewHolder.mBeautyLevelText.setBackgroundResource(R.drawable.tusdk_view_widget_beauty_select);
-            beautyViewHolder.mBeautyLevelImage.setImageResource(R.drawable.lsq_ic_parameter);
-        }else{
-            beautyViewHolder.mBeautyLevelText.setText(String.valueOf(position));
-            beautyViewHolder.mBeautyLevelText.setBackgroundResource(R.drawable.tusdk_view_widget_beauty_unselect);
-            beautyViewHolder.mBeautyLevelImage.setImageBitmap(null);
-        }
-        beautyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        beautyViewHolder.resetImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notifyItemChanged(mCurrentPos);
-                mCurrentPos = position;
-                if(listener != null) listener.onItemClick(beautyViewHolder.itemView,position);
-                notifyItemChanged(position);
+                if(listener != null) listener.onClear();
+
+                beautyViewHolder.whiteningImage.setImageResource(R.drawable.lsq_ic_whitening_norl);
+                beautyViewHolder.smoothingImage.setImageResource(R.drawable.lsq_ic_smoothing_norl);
+                beautyViewHolder.ruddyImage.setImageResource(R.drawable.lsq_ic_ruddy_norl);
+                beautyViewHolder.whiteningName.setChecked(false);
+                beautyViewHolder.smoothingName.setChecked(false);
+                beautyViewHolder.ruddyName.setChecked(false);
             }
         });
+        beautyViewHolder.skinBeautyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) {
+                    listener.onChangeSkin(v,"smoothing",useSkinNatural);
+                }
+                if(!useSkinNatural) {
+                    beautyViewHolder.skinBeautyImage.setImageResource(R.drawable.lsq_ic_skin_extreme_nor);
+                    beautyViewHolder.skinBeautyName.setText(R.string.lsq_beauty_skin_extreme);
+                }else {
+                    beautyViewHolder.skinBeautyImage.setImageResource(R.drawable.lsq_ic_skin_precision_nor);
+                    beautyViewHolder.skinBeautyName.setText(R.string.lsq_beauty_skin_precision);
+                }
+
+                useSkinNatural = !useSkinNatural;
+
+                beautyViewHolder.whiteningImage.setImageResource(R.drawable.lsq_ic_whitening_norl);
+                beautyViewHolder.smoothingImage.setImageResource(R.drawable.lsq_ic_smoothing_sele);
+                beautyViewHolder.ruddyImage.setImageResource(R.drawable.lsq_ic_ruddy_norl);
+                beautyViewHolder.whiteningName.setChecked(false);
+                beautyViewHolder.smoothingName.setChecked(true);
+                beautyViewHolder.ruddyName.setChecked(false);
+            }
+        });
+        beautyViewHolder.whiteningImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) listener.onChangeSkin(v,"whitening",!useSkinNatural);
+
+                beautyViewHolder.whiteningImage.setImageResource(R.drawable.lsq_ic_whitening_sele);
+                beautyViewHolder.smoothingImage.setImageResource(R.drawable.lsq_ic_smoothing_norl);
+                beautyViewHolder.ruddyImage.setImageResource(R.drawable.lsq_ic_ruddy_norl);
+                beautyViewHolder.whiteningName.setChecked(true);
+                beautyViewHolder.smoothingName.setChecked(false);
+                beautyViewHolder.ruddyName.setChecked(false);
+            }
+        });
+        beautyViewHolder.smoothingImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) listener.onChangeSkin(v,"smoothing",!useSkinNatural);
+
+                beautyViewHolder.whiteningImage.setImageResource(R.drawable.lsq_ic_whitening_norl);
+                beautyViewHolder.smoothingImage.setImageResource(R.drawable.lsq_ic_smoothing_sele);
+                beautyViewHolder.ruddyImage.setImageResource(R.drawable.lsq_ic_ruddy_norl);
+                beautyViewHolder.whiteningName.setChecked(false);
+                beautyViewHolder.smoothingName.setChecked(true);
+                beautyViewHolder.ruddyName.setChecked(false);
+            }
+        });
+        beautyViewHolder.ruddyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null) listener.onChangeSkin(v,"ruddy",!useSkinNatural);
+
+                beautyViewHolder.whiteningImage.setImageResource(R.drawable.lsq_ic_whitening_norl);
+                beautyViewHolder.smoothingImage.setImageResource(R.drawable.lsq_ic_smoothing_norl);
+                beautyViewHolder.ruddyImage.setImageResource(R.drawable.lsq_ic_ruddy_seel);
+                beautyViewHolder.whiteningName.setChecked(false);
+                beautyViewHolder.smoothingName.setChecked(false);
+                beautyViewHolder.ruddyName.setChecked(true);
+            }
+        });
+
     }
 
     @Override
@@ -105,13 +138,31 @@ public class BeautyRecyclerAdapter extends RecyclerView.Adapter<BeautyRecyclerAd
 
     class BeautyViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView mBeautyLevelText;
-        public ImageView mBeautyLevelImage;
+        public ImageView resetImage;
+
+        public CheckedTextView skinBeautyName;
+        public ImageView skinBeautyImage;
+
+        public CheckedTextView whiteningName;
+        public ImageView whiteningImage;
+        public CheckedTextView smoothingName;
+        public ImageView smoothingImage;
+        public CheckedTextView ruddyName;
+        public ImageView ruddyImage;
 
         public BeautyViewHolder(View itemView) {
             super(itemView);
-            mBeautyLevelText =  itemView.findViewById(R.id.lsq_beauty_level_text);
-            mBeautyLevelImage =  itemView.findViewById(R.id.lsq_beauty_level_image);
+            resetImage =  itemView.findViewById(R.id.lsq_reset_image);
+
+            skinBeautyName =  itemView.findViewById(R.id.lsq_skin_beauty_name);
+            skinBeautyImage =  itemView.findViewById(R.id.lsq_skin_beauty_image);
+
+            whiteningName =  itemView.findViewById(R.id.lsq_whitening_name);
+            whiteningImage =  itemView.findViewById(R.id.lsq_whitening_image);
+            smoothingName =  itemView.findViewById(R.id.lsq_smoothing_name);
+            smoothingImage =  itemView.findViewById(R.id.lsq_smoothing_image);
+            ruddyName =  itemView.findViewById(R.id.lsq_ruddy_name);
+            ruddyImage =  itemView.findViewById(R.id.lsq_ruddy_image);
         }
     }
 }

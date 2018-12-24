@@ -18,11 +18,11 @@
             android:layout_marginTop="@dimen/lsq__space_20"
             android:src="@drawable/edit_ic_play" />
 
-        <org.lasque.tusdkvideodemo.views.editor.LineView
+        <org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView
             android:id="@+id/lsq_editor_text_play_range"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginTop="@dimen/lsq__space_20"></org.lasque.tusdkvideodemo.views.editor.LineView>
+            android:layout_marginTop="@dimen/lsq__space_20"></org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView>
 
     </LinearLayout>
     <!--文字控制content-->

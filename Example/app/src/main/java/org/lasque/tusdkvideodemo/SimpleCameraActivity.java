@@ -24,6 +24,8 @@ import org.lasque.tusdk.core.utils.ContextUtils;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption.WaterMarkPosition;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs.CameraAntibanding;
 import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera;
+import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderCameraSetting;
+import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCameraImpl;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting;
 import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting.AVCodecType;
@@ -37,7 +39,7 @@ import org.lasque.tusdk.impl.TuSpecialScreenHelper;
  */
 public class SimpleCameraActivity extends ScreenAdapterActivity
 {
-    protected TuSDKRecordVideoCamera mVideoCamera;
+    protected TuSdkRecorderVideoCameraImpl mVideoCamera;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -54,15 +56,15 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
 		RelativeLayout cameraView = (RelativeLayout) findViewById(R.id.lsq_cameraView);
 		
 		// 录制相机采集配置，目前只支持硬编
-		TuSDKVideoCaptureSetting captureSetting = new TuSDKVideoCaptureSetting();
-		captureSetting.fps = 30;
-		captureSetting.videoAVCodecType = AVCodecType.HW_CODEC;
+        TuSdkRecorderCameraSetting captureSetting = new TuSdkRecorderCameraSetting();
+//		captureSetting.fps = 30;
+//		captureSetting.videoAVCodecType = AVCodecType.HW_CODEC;
 		
-		mVideoCamera = new TuSDKRecordVideoCamera(getBaseContext(), captureSetting, cameraView);
+		mVideoCamera = new TuSdkRecorderVideoCameraImpl(getBaseContext(), cameraView,captureSetting);
 		// 是否开启动态贴纸
 		mVideoCamera.setEnableLiveSticker(true);
 		// 禁用自动持续对焦 (默认: false)
-		mVideoCamera.setDisableContinueFoucs(false);
+		mVideoCamera.setDisableContinueFocus(false);
 		// 启用防闪烁功能，默认关闭。
 		mVideoCamera.setAntibandingMode(CameraAntibanding.Auto);
 
@@ -74,7 +76,7 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
 		mVideoCamera.setWaterMarkImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark));
 		mVideoCamera.setWaterMarkPosition(WaterMarkPosition.BottomRight);
 		
-		mVideoCamera.initOutputSettings();
+//		mVideoCamera.initOutputSettings();
     }
     
     protected String getStringFromResource(String fieldName)

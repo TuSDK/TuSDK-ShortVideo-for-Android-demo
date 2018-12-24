@@ -32,8 +32,8 @@ import java.util.Arrays;
 
 import static android.view.View.VISIBLE;
 import static org.lasque.tusdk.core.TuSdkContext.getPackageName;
-import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSDKMediaEffectDataTypeAudio;
-import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSDKMediaEffectDataTypeSticker;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeAudio;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker;
 
 /**
  * droid-sdk-video
@@ -304,8 +304,8 @@ public class EditorMusicComponent extends EditorComponent {
         mSelectIndex = position;
         if (position == 0) {
             // 取消所有音特效
-            getEditorEffector().removeMediaEffectsWithType(TuSDKMediaEffectDataTypeSticker);
-            getEditorEffector().removeMediaEffectsWithType(TuSDKMediaEffectDataTypeAudio);
+            getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+            getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
             getEditorAudioMixer().clearAllAudioData();
             mSelectEffectData = null;
             mVolumeConfigView.showView(false);

@@ -150,12 +150,12 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
     private void initView() {
 
         mRecordProgressBar = getRecordProgressBar();
-        RelativeLayout.LayoutParams progressLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(mRecordBarHeight));
+        LayoutParams progressLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(mRecordBarHeight));
         progressLayoutParams.addRule(ALIGN_PARENT_TOP);
         addView(mRecordProgressBar, progressLayoutParams);
 
         mRecordBottomView = new RecordBottomView();
-        RelativeLayout.LayoutParams bottomLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(170));
+        LayoutParams bottomLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(170));
         bottomLayoutParams.addRule(ALIGN_PARENT_BOTTOM);
         addView(mRecordBottomView.mRecordBottomView, bottomLayoutParams);
 
