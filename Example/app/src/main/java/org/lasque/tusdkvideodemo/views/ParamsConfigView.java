@@ -21,6 +21,8 @@ import java.util.List;
  */
 
 public class ParamsConfigView extends TuSdkRelativeLayout{
+
+    /** 当前特效 */
     private TuSdkMediaEffectData mMediaEffect;
 
     /**

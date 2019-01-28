@@ -211,6 +211,7 @@
     <string name="lsq_album_video_timecut_save">視頻時間裁剪</string>
     <string name="lsq_audio_file_recorder">錄製音頻</string>
     <string name="lsq_audio_engine_pitch">音頻变声</string>
+    <string name="lsq_camera_record_to_edit">錄制轉編輯</string>
 
     <!-- 配音音乐 -->
     <string name="lsq_mixing_lively">歡快</string>
@@ -276,6 +277,7 @@
     <string name="lsq_audio_mixer_delete_success">混合音頻刪除成功</string>
     <string name="lsq_audio_mixer_delete_failed">混合音頻刪除失敗</string>
     <string name="lsq_cut_choose_cutrange">請先選擇裁剪區域</string>
+    <string name="lsq_select_include_audio">不支持无音轨视频</string>
 
     <!-- 播放器 -->
     <string name="lsq_muti_audio_player">多音軌音頻播放器</string>
@@ -422,6 +424,7 @@
 
     <string name="lsq_max_audio_record_time">已達到最大錄製時长</string>
     <string name="lsq_album_select_min_time">視頻時長不得小於3秒，請重新選擇。</string>
+    <string name="lsq_record_completed">录制完成</string>
 
     <string name="lsq_filter_chcomics_video">國漫</string>
     <string name="lsq_filter_lightcolor_video">淡彩</string>

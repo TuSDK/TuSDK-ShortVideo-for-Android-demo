@@ -22,7 +22,7 @@ import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieCol
  * 类描述：视频滚动播放
  */
 public class TuSdkMovieScrollPlayLineView extends FrameLayout {
-
+    private static final String TAG = "TuSdkMovieScrollPlayLineView";
     private TuSdkMovieScrollView mMoviePlayScrollView;
 
     public TuSdkMovieScrollPlayLineView(Context context) {
@@ -64,6 +64,10 @@ public class TuSdkMovieScrollPlayLineView extends FrameLayout {
     /** 设置颜色选择监听 **/
     public void setOnSelectColorRectListener(TuSdkMovieColorGroupView.OnSelectColorRectListener onSelectColorRectListener){
         mMoviePlayScrollView.setOnSelectColorRectListener(onSelectColorRectListener);
+    }
+
+    public void setOnBackListener(TuSdkMovieScrollView.OnColorGotoBackListener onBackListener) {
+        this.mMoviePlayScrollView.setOnBackListener(onBackListener);
     }
 
     /** 设置当前类型 0 没Bar  1有Bar **/

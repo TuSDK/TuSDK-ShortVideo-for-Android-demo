@@ -25,6 +25,11 @@ public class TuSdkMovieColorRectView extends View {
     private int mDrawDirection;
     /** 开始的位置 **/
     private float mStartPercent;
+    /** 结束的位置 **/
+    private float mEndPercent;
+    /** 当前添加的下标 **/
+    private int index;
+
 
     public TuSdkMovieColorRectView(Context context) {
         super(context);
@@ -58,6 +63,14 @@ public class TuSdkMovieColorRectView extends View {
     /** 获取开始的进度 **/
     public float getStartPercent(){
         return mStartPercent;
+    }
+
+    public float getEndPercent() {
+        return mEndPercent;
+    }
+
+    public void setEndPercent(float mEndPercent) {
+        this.mEndPercent = mEndPercent;
     }
 
     /** 设置宽度 **/

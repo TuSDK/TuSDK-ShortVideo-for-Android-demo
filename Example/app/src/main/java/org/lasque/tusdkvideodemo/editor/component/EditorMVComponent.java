@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
@@ -41,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.lasque.tusdk.core.TuSdkContext.getString;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeAudio;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker;
 
@@ -112,11 +114,10 @@ public class EditorMVComponent extends EditorComponent {
 
         // 隐藏主界面播放按钮
         getEditorController().getPlayBtn().setVisibility(View.GONE);
+
         // 暂停
         pausePreview();
-        // seek放到起始位置
-        getEditorPlayer().seekOutputTimeUs(0);
-        mPlayLineView.seekTo(0);
+
 
         // 设置播放回调
         getEditorController().getMovieEditor().getEditorPlayer().addProgressListener(mPlayerProgressListener);
@@ -139,6 +140,18 @@ public class EditorMVComponent extends EditorComponent {
         mOtherVolume = mMementoOtherVolume;
         setSeekBarProgress(0,mMasterVolume);
         setSeekBarProgress(1,mOtherVolume);
+    }
+
+    @Override
+    public void onAnimationEnd() {
+        super.onAnimationEnd();
+        // seek放到起始位置
+        getEditorPlayer().seekOutputTimeUs(0);
+        if(getEditorPlayer().isReversing()) {
+            mPlayLineView.seekTo(1f);
+        }else {
+            mPlayLineView.seekTo(0f);
+        }
     }
 
     @Override
@@ -206,7 +219,7 @@ public class EditorMVComponent extends EditorComponent {
             mPlayLineView = mBottomView.findViewById(R.id.lsq_mv_lineView);
             mPlayLineView.setType(1);
             if(getEditorPlayer().getOutputTotalTimeUS() > 0) {
-                float minPercent = mMinSelectTimeUs / getEditorPlayer().getOutputTotalTimeUS();
+                float minPercent = mMinSelectTimeUs / (float)getEditorPlayer().getOutputTotalTimeUS();
                 mPlayLineView.setMinWidth(minPercent);
             }
             mPlayLineView.setSelectRangeChangedListener(new TuSdkRangeSelectionBar.OnSelectRangeChangedListener() {
@@ -220,6 +233,7 @@ public class EditorMVComponent extends EditorComponent {
             mPlayLineView.setOnProgressChangedListener(new TuSdkMovieScrollView.OnProgressChangedListener() {
                 @Override
                 public void onProgressChanged(float progress, boolean isTouching) {
+                    if(!isTouching)return;
                     if(isTouching){
                         getEditorPlayer().pausePreview();
                     }
@@ -228,6 +242,11 @@ public class EditorMVComponent extends EditorComponent {
                         long seekUs = (long) (getEditorPlayer().getInputTotalTimeUs() * progress);
                         getEditorPlayer().seekOutputTimeUs(seekUs);
                     }
+                }
+
+                @Override
+                public void onCancelSeek() {
+
                 }
             });
         }
@@ -255,8 +274,8 @@ public class EditorMVComponent extends EditorComponent {
             mVoiceVolumeConfigView = (CompoundConfigView) getEditorController().getActivity().findViewById(R.id.lsq_voice_volume_config_view);
             mVoiceVolumeConfigView.setDelegate(mMvVolumeConfigSeekbarDelegate);
             ConfigViewParams params = new ConfigViewParams();
-            params.appendFloatArg(TuSdkContext.getString("originIntensity"), mMasterVolume);
-            params.appendFloatArg(TuSdkContext.getString("dubbingIntensity"), mOtherVolume);
+            params.appendFloatArg(getString("originIntensity"), mMasterVolume);
+            params.appendFloatArg(getString("dubbingIntensity"), mOtherVolume);
             mVoiceVolumeConfigView.setCompoundConfigView(params);
             mVoiceVolumeConfigView.showView(false);
         }
@@ -331,19 +350,19 @@ public class EditorMVComponent extends EditorComponent {
             switch (v.getId()) {
                 case R.id.lsq_mv_close:
                     if (mSelectEffectData != null) {
-                        getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
-                        getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+                        getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
+                        getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
                         mMvRecyclerAdapter.setCurrentPosition(0);
                         if (getEditorController().getMediaEffectData() != null) {
-                            getEditorController().getMovieEditor().getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
+                           getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
                         } else {
                             mPlayLineView.setShowSelectBar(false);
                         }
                     }else{
                         if(getEditorController().getMediaEffectData() != null) {
-                            getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
-                            getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
-                            getEditorController().getMovieEditor().getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
+                            getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
+                            getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+                            getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
                         }
                     }
 

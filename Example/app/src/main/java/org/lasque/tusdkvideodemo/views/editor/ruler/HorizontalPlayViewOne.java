@@ -188,7 +188,7 @@ public class HorizontalPlayViewOne extends View {
 
     /** 大小改变回调 **/
     public interface OnSizeChanedListener{
-        void onSizeChanged(int totalWidth, int height);
+        void onSizeChanged(int totalWidth,int height);
         void onBitmapListSizeChanged(int count);
     }
 
@@ -585,7 +585,7 @@ public class HorizontalPlayViewOne extends View {
     private OnSelfScrollingListener mOnSelfScrollingListener;
 
     public interface OnSelfScrollingListener {
-        void onSelfScrolling(int moveDistance, boolean isTouch);
+        void onSelfScrolling(int moveDistance,boolean isTouch);
     }
 
     /**

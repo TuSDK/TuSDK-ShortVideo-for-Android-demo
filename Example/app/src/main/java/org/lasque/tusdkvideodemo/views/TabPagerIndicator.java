@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.views.props.model.PropsItemCategory;
 
 import java.util.List;
 
@@ -94,14 +95,15 @@ public class TabPagerIndicator extends LinearLayout{
 
     /**
      * 设置Tab数据集
-     * @param stickerGroupCategories
+     * @param items
      */
-    public void setTabItems(List<StickerGroupCategories> stickerGroupCategories){
-        if(stickerGroupCategories == null)
+    public void setTabItems(List<String> items){
+        if(items == null)
             return;
         this.removeAllViews();
-        for (StickerGroupCategories categories : stickerGroupCategories){
-            this.addView(generateTitleView(categories.getCategoryName()));
+
+        for (String title : items){
+            this.addView(generateTitleView(title));
         }
         setItemClickListener();
         setHighLightText(mViewPager.getCurrentItem());
@@ -175,7 +177,7 @@ public class TabPagerIndicator extends LinearLayout{
             return;
         for (int i = 0;i < counts; i++){
             View view = getChildAt(i);
-            LayoutParams params = (LayoutParams) view.getLayoutParams();
+            LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
             params.weight = 0;
             params.width = getMeasuredWidth() / mDefaultVisibleCounts;
             view.setLayoutParams(params);

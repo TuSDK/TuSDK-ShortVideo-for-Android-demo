@@ -28,7 +28,7 @@ public class BeautyRecyclerAdapter extends RecyclerView.Adapter<BeautyRecyclerAd
     public OnBeautyItemClickListener listener;
 
     public interface OnBeautyItemClickListener{
-        void onChangeSkin(View v, String key, boolean useSkinNatural);
+        void onChangeSkin(View v,String key,boolean useSkinNatural);
         void onClear();
     }
 

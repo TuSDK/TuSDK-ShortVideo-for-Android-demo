@@ -30,9 +30,9 @@ public class MvRecyclerAdapter extends RecyclerView.Adapter<MvRecyclerAdapter.Mv
     public interface ItemClickListener{
         void onItemClick(int position);
     }
-    public ItemClickListener listener;
+    public MvRecyclerAdapter.ItemClickListener listener;
 
-    public void setItemClickListener(ItemClickListener listener){
+    public void setItemClickListener(MvRecyclerAdapter.ItemClickListener listener){
         this.listener = listener;
     }
 

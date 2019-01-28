@@ -66,6 +66,7 @@
     <string name="lsq_image_del_ok">图片删除成功</string>
     <string name="lsq_record_movie_error">录制视频出错</string>
     <string name="lsq_record_time_invalid">录制时间过短</string>
+    <string name="lsq_not_file">文件不存在</string>
 
     <!-- 1.8.0 -->
     <string name="lsq_filter_SkinPink010">粉嫩</string>
@@ -213,6 +214,7 @@
     <string name="lsq_album_video_timecut_save">视频时间裁剪</string>
     <string name="lsq_audio_file_recorder">录制音频</string>
     <string name="lsq_audio_engine_pitch">音频变声</string>
+    <string name="lsq_camera_record_to_edit">录制转编辑</string>
 
 
     <!-- 配音音乐 -->
@@ -287,6 +289,7 @@
     <string name="lsq_select_video_hint">请您选择视频</string>
     <string name="lsq_select_video_max">超过最大选择数量</string>
     <string name="lsq_obtain_permission_failed">获取权限失败</string>
+    <string name="lsq_select_include_audio">不支持无音轨视频</string>
 
     <!-- 播放器 -->
     <string name="lsq_muti_audio_player">多音轨音频播放器</string>
@@ -412,6 +415,7 @@
     <string name="lsq_min_time_effect">超过最小时长</string>
     <string name="lsq_max_time_effect_tips">特效时长最多%s秒</string>
     <string name="lsq_min_time_effect_tips">特效时长最少%s秒</string>
+    <string name="lsq_record_completed">录制完成</string>
 
     <string name="lsq_remove_sticker_title">确认删除本地文件?</string>
     <string name="lsq_remove_sticker_confirm">确认</string>
@@ -452,5 +456,9 @@
     <string name="lsq_filter_SkinPast10">过往</string>
     <string name="lsq_filter_SkinCookies10">曲奇</string>
     <string name="lsq_filter_SkinRose10">蔷薇</string>
+
+    <!-- 哈哈镜 -->
+    <string name="lsq_face_monster">哈哈镜</string>
+
 
 </resources>

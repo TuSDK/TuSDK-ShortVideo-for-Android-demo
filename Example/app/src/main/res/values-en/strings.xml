@@ -212,6 +212,7 @@
     <string name="lsq_album_video_timecut_save">Cut Video</string>
     <string name="lsq_audio_file_recorder">Record Audio</string>
     <string name="lsq_audio_engine_pitch">Audio Pitch</string>
+    <string name="lsq_camera_record_to_edit">Recorded Editor</string>
 
     <!-- 配音音乐 -->
     <string name="lsq_mixing_lively">Lively</string>
@@ -269,6 +270,7 @@
     <string name="lsq_movie_mixer_start">Mix Video</string>
     <string name="lsq_movie_mixer_hint">\u3000\u3000Click the 「Video Splicing」 button to make the video. After save successly check the new video in the system album</string>
     <string name="lsq_movie_splicer_processing">Contacting two video</string>
+    <string name="lsq_select_include_audio">No audio track video is supported</string>
     
     <string name="lsq_movie_splicer">Splice Videos</string>
     <string name="lsq_movie_splicer_success">Operation is done，check the new video in the DCIM</string>
@@ -449,4 +451,6 @@
     <string name="lsq_filter_SkinPast10">Past</string>
     <string name="lsq_filter_SkinCookies10">Cookies</string>
     <string name="lsq_filter_SkinRose10">Rose</string>
+
+    <string name="lsq_record_completed">Record Completed</string>
 </resources>

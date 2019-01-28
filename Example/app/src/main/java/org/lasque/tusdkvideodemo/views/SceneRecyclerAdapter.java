@@ -40,7 +40,7 @@ public class SceneRecyclerAdapter extends RecyclerView.Adapter<SceneRecyclerAdap
     }
 
     public interface OnItemTouchListener{
-        void onItemTouch(MotionEvent event, int position, SceneViewHolder ScreenViewHolder);
+        void onItemTouch(MotionEvent event,int position,SceneViewHolder ScreenViewHolder);
     }
 
     public ItemClickListener listener;
@@ -114,7 +114,7 @@ public class SceneRecyclerAdapter extends RecyclerView.Adapter<SceneRecyclerAdap
         if(position > 0) {
             TLog.e("screenImageName : %s", screenImageName);
             int screenId = TuSdkContext.getDrawableResId(screenImageName);
-//            SceneViewHolder.mItemImage.setImageResource(screenId);
+//            SceneViewHolder.mThumbImageView.setImageResource(screenId);
             //设置图片圆角角度
             RoundedCorners roundedCorners= new RoundedCorners(TuSdkContext.dip2px(8));
             RequestOptions options=RequestOptions.bitmapTransform(roundedCorners).override( ScreenViewHolder.mItemImage.getWidth(), ScreenViewHolder.mItemImage.getHeight());

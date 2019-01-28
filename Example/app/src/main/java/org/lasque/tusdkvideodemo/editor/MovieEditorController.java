@@ -6,19 +6,17 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
 import org.lasque.tusdk.core.TuSdk;
-import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
+import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
+import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkVideoImageExtractor;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorSaver;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoder;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
-import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
@@ -128,7 +126,7 @@ public class MovieEditorController {
         @Override
         public void onStateChanged(int state) {
             if (mCurrentComponent instanceof EditorHomeComponent) {
-                mPlayBtn.setVisibility(state == 1 ? View.VISIBLE : View.GONE);
+                mPlayBtn.setVisibility(state == 1 && !isSaving? View.VISIBLE : View.GONE);
             }
         }
 
@@ -142,6 +140,7 @@ public class MovieEditorController {
     private TuSdkEditorSaver.TuSdkSaverProgressListener mSaveProgressListener = new TuSdkEditorSaver.TuSdkSaverProgressListener() {
         @Override
         public void onProgress(float progress) {
+            if(mPlayBtn.getVisibility() == View.VISIBLE)mPlayBtn.setVisibility(View.GONE);
             mProgress.setValue(progress * 100);
         }
 
@@ -149,13 +148,20 @@ public class MovieEditorController {
         public void onCompleted(TuSdkMediaDataSource outputFile) {
             //文件保存路径为 outputFile.getPath()
             isSaving = false;
+            mProgressContent.setVisibility(View.GONE);
+            mProgress.setValue(0);
             TuSdk.messageHub().showSuccess(getActivity(), R.string.new_movie_saved);
+            setSaving(false);
+//            if(mPlayBtn.getVisibility() == View.GONE)mPlayBtn.setVisibility(View.VISIBLE);
+//            getHomeComponent().setEnable(true);
+//            getPlayBtn().setClickable(true);
+//            getMovieEditor().getEditorSaver().destroy();
             ThreadHelper.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     getActivity().finish();
                 }
-            }, 1000);
+            }, 1500);
             AppManager.getInstance().finishAllActivity();
         }
 
@@ -170,7 +176,7 @@ public class MovieEditorController {
                 public void run() {
                     getActivity().finish();
                 }
-            }, 1000);
+            }, 1500);
         }
     };
 
@@ -188,63 +194,127 @@ public class MovieEditorController {
         }
     };
 
-    public MovieEditorController(MovieEditorActivity activity, String videoPath, VideoContent holderView, TuSdkMovieEditor.TuSdkMovieEditorOptions options) {
+    public MovieEditorController(MovieEditorActivity activity, VideoContent holderView, TuSdkMovieEditor.TuSdkMovieEditorOptions options) {
         mHolderView = holderView;
         mWeakActivity = new WeakReference<>(activity);
         mMovieEditor = new TuSdkMovieEditorImpl(activity, holderView, options);
-        //设置数据源
-        mMovieEditor.setDataSource(new TuSdkMediaDataSource(videoPath));
         //设置音效回调
         mMovieEditor.getEditorMixer().addTaskStateListener(mAudioTaskStateListener);
         //设置转码回调
         mMovieEditor.getEditorTransCoder().addTransCoderProgressListener(mOnTranscoderProgressListener);
         //设置播放回调
         mMovieEditor.getEditorPlayer().addProgressListener(mPlayProgressListener);
-        //设置保存回调
-        mMovieEditor.getEditorSaver().addSaverProgressListener(mSaveProgressListener);
         //初始化视图
         init();
         //之前在裁剪页面预加载过 则不用开启转码
         mMovieEditor.setEnableTranscode(false);
+
         mMovieEditor.loadVideo();
         //加载缩略图
-        loadVideoThumbList(videoPath);
+        loadVideoThumbList(options.videoDataSource.getPath());
+    }
+
+    /** 动画改变监听回调 **/
+    private EditorAnimator.OnAnimationEndListener mOnAnimationEndListener = new EditorAnimator.OnAnimationEndListener() {
+        @Override
+        public void onShowAnimationStartListener() {
+            mCurrentComponent.onAnimationStart();
+        }
+
+        @Override
+        public void onShowAnimationEndListener() {
+            if(mCurrentComponent == getTextComponent()){
+                getTextComponent().backUpDatas();
+            }
+            mCurrentComponent.onAnimationEnd();
+        }
+
+        @Override
+        public void onHideAnimationStartListener() {
+
+        }
+
+        @Override
+        public void onHideAnimationEndListener() {
+
+        }
+    };
+
+    public MovieEditorController(MovieEditorActivity activity, VideoContent holderView, ArrayList<TuSdkMediaTimeSlice> timeSlice, TuSdkMovieEditor.TuSdkMovieEditorOptions options) {
+        mHolderView = holderView;
+        mWeakActivity = new WeakReference<>(activity);
+        mMovieEditor = new TuSdkMovieEditorImpl(activity, holderView, options);
+        //设置音效回调
+        mMovieEditor.getEditorMixer().addTaskStateListener(mAudioTaskStateListener);
+        //设置转码回调
+        mMovieEditor.getEditorTransCoder().addTransCoderProgressListener(mOnTranscoderProgressListener);
+        //设置播放回调
+        mMovieEditor.getEditorPlayer().addProgressListener(mPlayProgressListener);
+        //初始化视图
+        init();
+        //之前在裁剪页面预加载过 则不用开启转码
+        mMovieEditor.setEnableTranscode(false);
+
+        //设置需要编辑的时间区间
+        mMovieEditor.getEditorPlayer().setEditTimeSlice(timeSlice);
+
+        mMovieEditor.loadVideo();
+        //加载缩略图
+        loadVideoThumbList(options.videoDataSource.getPath());
     }
 
 
-    /**
-     * 加载缩略图
-     */
-    private void loadVideoThumbList(String videoPath) {
+    /** 加载视频缩略图 */
+    public void loadVideoThumbList(String videoPath) {
+
         if (mThumbBitmapList == null) {
             mThumbBitmapList = new ArrayList<>();
-            //设置输出的图片的大小
-            TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56), TuSdkContext.dip2px(56));
+            List<TuSdkMediaDataSource> sourceList = new ArrayList<>();
+            sourceList.add(TuSdkMediaDataSource.create(videoPath).get(0));
 
-            TuSDKVideoImageExtractor extractor = TuSDKVideoImageExtractor.createExtractor();
-            extractor.setOutputImageSize(tuSdkSize);
-            //设置视频数据源
-            extractor.setVideoDataSource(TuSDKMediaDataSource.create(videoPath));
-            //设置输出文件的数量(建议为20张  输出数量越多,则相应的生成图片的时间也会更长，内存占用更高)
-            extractor.setExtractFrameCount(20);
+            /** 准备视频缩略图抽取器 */
+            final TuSdkVideoImageExtractor imageThumbExtractor = new TuSdkVideoImageExtractor(sourceList);
+            imageThumbExtractor
+                    //.setOutputImageSize(TuSdkSize.create(50,50)) // 设置抽取的缩略图大小
+                    .setExtractFrameCount(20) // 设置抽取的图片数量
+                    .setImageListener(new TuSdkVideoImageExtractor.TuSdkVideoImageExtractorListener() {
 
-            extractor.asyncExtractImageList(new TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate() {
-                @Override
-                public void onVideoImageListDidLoaded(List<Bitmap> images) {
-                    /** 一次性拿到所有图片 只会回调一次 **/
-                }
+                        /**
+                         * 输出一帧略图信息
+                         *
+                         * @param videoImage 视频图片
+                         * @since v3.2.1
+                         */
+                        @Override
+                        public void onOutputFrameImage(final TuSdkVideoImageExtractor.VideoImage videoImage) {
+                            ThreadHelper.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    /** 此方法是在每分离出一张图片就会回调一次  **/
+                                    mThumbBitmapList.add(videoImage.bitmap);
+                                    getMVComponent().addCoverBitmap(videoImage.bitmap);
+                                    getTextComponent().addCoverBitmap(videoImage.bitmap);
+                                    getEffectComponent().addCoverBitmap(videoImage.bitmap);
+                                }
+                            });
+                        }
 
-                @Override
-                public void onVideoNewImageLoaded(Bitmap bitmap) {
-                    /** 此方法是在每分离出一张图片就会回调一次  **/
-                    mThumbBitmapList.add(bitmap);
-                    getMVComponent().addCoverBitmap(bitmap);
-                    getTextComponent().addCoverBitmap(bitmap);
-                    getEffectComponent().addCoverBitmap(bitmap);
-                }
+                        /**
+                         * 抽取器抽取完成
+                         *
+                         * @since v3.2.1
+                         */
+                        @Override
+                        public void onImageExtractorCompleted(List<TuSdkVideoImageExtractor.VideoImage> videoImagesList) {
 
-            });
+                            /** 注意： videoImagesList 需要开发者自己释放 bitmap */
+
+                            imageThumbExtractor.release();
+                        }
+                    })
+                    .extractImages(); // 抽取图片
         }
+
     }
 
     /**
@@ -328,6 +398,7 @@ public class MovieEditorController {
         switchComponent(EditorComponent.EditorComponentType.Home);
         //初始化动画控制器(缩放预览图，改变底部视图宽高)
         mEditorAnimator = new EditorAnimator(this, mHolderView);
+        mEditorAnimator.setAnimationEndListener(mOnAnimationEndListener);
 
         mPlayBtn = getActivity().findViewById(R.id.lsq_play_btn);
         mProgressContent = getActivity().findViewById(R.id.lsq_editor_load);
@@ -470,11 +541,14 @@ public class MovieEditorController {
 
     /** 保存视频 **/
     public void saveVideo() {
-        setSaving(true);
-        mProgressContent.setVisibility(View.VISIBLE);
+        if(!mMovieEditor.getEditorPlayer().isPause())mMovieEditor.getEditorPlayer().pausePreview();
+        //设置保存回调
         mPlayBtn.setVisibility(View.GONE);
+        mMovieEditor.getEditorSaver().addSaverProgressListener(mSaveProgressListener);
+        setSaving(true);
         mHolderView.setClickable(false);
         mMovieEditor.saveVideo();
+        mProgressContent.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -705,7 +779,11 @@ public class MovieEditorController {
     public void onDestroy() {
         if (mCurrentComponent == null) return;
         mCurrentComponent.onDestroy();
+        for (Bitmap bitmap : mThumbBitmapList) {
+            if(!bitmap.isRecycled())bitmap.recycle();
+        }
         mMovieEditor.getEditorPlayer().destroy();
+
     }
 
     /**

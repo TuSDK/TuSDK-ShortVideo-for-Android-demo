@@ -97,7 +97,7 @@ public class HorizontalProgressBar extends View {
      * @return true 删除成功  false 删除失败
      */
     public synchronized boolean removePreSegment() {
-        if(mPauseProgressList == null) return false;
+        if(mPauseProgressList == null || mPauseProgressList.size() == 0) return false;
         mPauseProgressList.removeLast();
         if(mPauseProgressList.size() != 0) setProgress(mPauseProgressList.getLast());
         else setProgress(0);

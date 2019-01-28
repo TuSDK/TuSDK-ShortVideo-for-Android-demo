@@ -94,7 +94,7 @@ public class EditorMusicComponent extends EditorComponent {
                     getEditorPlayer().setVideoSoundVolume(1);
                     getVolumeConfigView().showView(true);
                     getAudioRecordView().gone();
-                    applyAudioEffect(Uri.fromFile(outputFile));
+                    applyAudioEffect(Uri.fromFile(outputFile),false);
                 }
             });
         }
@@ -273,6 +273,7 @@ public class EditorMusicComponent extends EditorComponent {
         public void onItemClick(final String musicCode, final int position) {
             if (TuSdkViewHelper.isFastDoubleClick()) return;
             // 停止预览
+            if(position != 0)
             getEditorPlayer().seekInputTimeUs(0);
 
             //进入录音页面
@@ -311,7 +312,7 @@ public class EditorMusicComponent extends EditorComponent {
             mVolumeConfigView.showView(false);
         } else if (position > 0) {
             Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + TuSdkContext.getRawResId(musicCode));
-            applyAudioEffect(uri);
+            applyAudioEffect(uri,true);
             setSeekBarProgress(0,mMasterVolume);
             setSeekBarProgress(1,mOtherVolume);
             mVolumeConfigView.showView(true);
@@ -323,11 +324,12 @@ public class EditorMusicComponent extends EditorComponent {
      *
      * @param audioPathUri
      */
-    private void applyAudioEffect(Uri audioPathUri) {
+    private void applyAudioEffect(Uri audioPathUri,boolean isLooping) {
         if (audioPathUri == null) return;
 
         TuSdkMediaAudioEffectData audioEffectData = new TuSdkMediaAudioEffectData(new TuSdkMediaDataSource(getEditorController().getActivity(), audioPathUri));
-        audioEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(0, getEditorPlayer().getOutputTotalTimeUS()));
+        audioEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(0, Long.MAX_VALUE));
+        audioEffectData.getAudioEntry().setLooping(isLooping);
         //添加音效
         getEditorEffector().addMediaEffectData(audioEffectData);
         mSelectEffectData = audioEffectData;

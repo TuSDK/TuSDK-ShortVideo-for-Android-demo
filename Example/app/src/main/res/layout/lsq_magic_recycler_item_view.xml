@@ -54,13 +54,7 @@
             android:id="@+id/lsq_none_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <TextView
-                android:background="@drawable/tusdk_view_widget_filter_item_none"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/lsq_item_none"

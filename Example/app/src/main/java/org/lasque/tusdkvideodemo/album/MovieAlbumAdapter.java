@@ -23,8 +23,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.AVAssetFile;
 import org.lasque.tusdkvideodemo.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,7 +184,13 @@ public class MovieAlbumAdapter extends RecyclerView.Adapter<MovieAlbumAdapter.Vi
                         TuSdk.messageHub().showToast(mContext, R.string.lsq_select_video_max);
                         return;
                     }
+                    AVAssetFile assetFile = new AVAssetFile(new File(mVideoInfoList.get(position).getPath()));
+                    if(assetFile.createExtractor().getTrackCount() <= 1){
+                        TuSdk.messageHub().showToast(mContext, R.string.lsq_select_include_audio);
+                        return;
+                    }
                     selectMovieInfos.add(mVideoInfoList.get(position));
+
                 }
 
                 notifyItemChanged(position);

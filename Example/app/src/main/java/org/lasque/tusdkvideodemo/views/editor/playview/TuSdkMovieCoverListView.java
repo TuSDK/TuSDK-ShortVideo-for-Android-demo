@@ -2,12 +2,16 @@ package org.lasque.tusdkvideodemo.views.editor.playview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.lasque.tusdk.core.utils.TLog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,6 +31,8 @@ public class TuSdkMovieCoverListView extends LinearLayout {
     private int mImageHeight;
     /** 视图的宽度 **/
     private int mViewWidth;
+    private int widthTemp = 0;
+    private List<Bitmap> bitmaps = new ArrayList<>(21);
 
     public TuSdkMovieCoverListView(Context context) {
         super(context);
@@ -47,6 +53,7 @@ public class TuSdkMovieCoverListView extends LinearLayout {
 
         //计算图片显示的宽高
         mViewWidth = viewWidth - getPaddingLeft() - getPaddingRight();
+        if(mViewWidth > 0)widthTemp = mViewWidth;
         mImageWidth = mViewWidth/mImageCount ;
         mImageHeight = viewHeight;
 
@@ -79,9 +86,15 @@ public class TuSdkMovieCoverListView extends LinearLayout {
     /** 添加图片 **/
     public synchronized void addBitmap(Bitmap bitmap){
         if(mCurrentImageCount >= mImageCount )return;
+        if(bitmap.isRecycled()){
+            TLog.w("%s bitmap %s isRecycled",TAG,mCurrentImageCount);
+            return;
+        }
+        bitmaps.add(bitmap);
         mCurrentImageCount++;
-        ImageView imageView = new ImageView(getContext());
+        CoverImageView imageView = new CoverImageView(getContext());
         imageView.setImageBitmap(bitmap);
+        imageView.setTag(bitmap);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         this.addView(imageView,mImageWidth,mImageHeight);
     }
@@ -91,7 +104,39 @@ public class TuSdkMovieCoverListView extends LinearLayout {
      * @return
      */
     public int getTotalWidth(){
-        return mViewWidth;
+        int temp = widthTemp;
+        return temp;
+    }
+
+    public void release(){
+        removeAllViews();
+    }
+
+    private class CoverImageView extends ImageView{
+        private boolean isDrawed  = false;
+
+        public CoverImageView(Context context) {
+            super(context);
+        }
+
+        public CoverImageView(Context context, @Nullable AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        public CoverImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+            super(context, attrs, defStyleAttr);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            try {
+                super.onDraw(canvas);
+            }catch (Exception e){
+                TLog.w("CoverImageView is error : %s",getTag());
+                setImageBitmap(bitmaps.get((Integer) getTag()));
+            }
+
+        }
     }
 
 }

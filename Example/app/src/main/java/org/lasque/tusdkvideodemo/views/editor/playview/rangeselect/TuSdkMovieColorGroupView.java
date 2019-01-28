@@ -10,7 +10,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import org.lasque.tusdk.core.utils.TLog;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,8 +26,11 @@ public class TuSdkMovieColorGroupView extends FrameLayout {
     /**
      * 颜色集合
      **/
-    private List<TuSdkMovieColorRectView> mColorRectList = new ArrayList<>();
+    private LinkedList<TuSdkMovieColorRectView> mColorRectList = new LinkedList<>();
     private OnSelectColorRectListener onSelectColorRectListener;
+
+    //添加模式  0是长按添加特效模式
+    private int mAddMode = 0;
 
     /** 选择一个ColorRect **/
     public interface OnSelectColorRectListener{
@@ -56,10 +63,27 @@ public class TuSdkMovieColorGroupView extends FrameLayout {
             TuSdkMovieColorRectView rectView = (TuSdkMovieColorRectView) getChildAt(i);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
             int startPosition = (int) (getMeasuredWidth() * rectView.getStartPercent());
+
             if (rectView.getDrawDirection() == 0) {
-                rectView.layout(startPosition, top, startPosition + rectView.getMeasuredWidth(), bottom);
+                int diff = 0;
+                if(i>0 && getChildAt(i-1) != null && getChildAt(i-1).getVisibility() == VISIBLE){
+                    TuSdkMovieColorRectView preRectView = (TuSdkMovieColorRectView) getChildAt(i - 1);
+                    if(startPosition - preRectView.getRight() < 5 && startPosition - preRectView.getRight() >=0){
+                        diff = startPosition - preRectView.getRight();
+                        startPosition = preRectView.getRight();
+                    }
+                }
+                rectView.layout(startPosition, top, startPosition + rectView.getMeasuredWidth() + diff, bottom);
             } else {
-                rectView.layout(startPosition - rectView.getMeasuredWidth(), top, startPosition, bottom);
+                int diff = 0;
+                if(i>0 && getChildAt(i-1) != null && getChildAt(i-1).getVisibility() == VISIBLE){
+                    TuSdkMovieColorRectView preRectView = (TuSdkMovieColorRectView) getChildAt(i - 1);
+                    if(preRectView.getLeft() - startPosition  < 5 && preRectView.getLeft() - startPosition >= 0){
+                        diff = preRectView.getLeft() - startPosition;
+                        startPosition = preRectView.getLeft();
+                    }
+                }
+                rectView.layout(startPosition - rectView.getMeasuredWidth() - diff, top, startPosition, bottom);
             }
         }
     }
@@ -78,7 +102,9 @@ public class TuSdkMovieColorGroupView extends FrameLayout {
     }
 
     public TuSdkMovieColorRectView getPointColorRect(float pointX,float pointY){
-        for (TuSdkMovieColorRectView rectView : mColorRectList) {
+        LinkedList<TuSdkMovieColorRectView> reverList = (LinkedList<TuSdkMovieColorRectView>) mColorRectList.clone();
+        Collections.reverse(reverList);
+        for (TuSdkMovieColorRectView rectView : reverList) {
             if(isTouchPointInView(rectView,pointX,pointY)){
                 return rectView;
             }
@@ -87,7 +113,7 @@ public class TuSdkMovieColorGroupView extends FrameLayout {
     }
 
     private boolean isTouchPointInView(View view, float x, float y) {
-        if (view == null) {
+        if (view == null || view.getVisibility() == GONE) {
             return false;
         }
         int[] location = new int[2];
@@ -96,8 +122,7 @@ public class TuSdkMovieColorGroupView extends FrameLayout {
         int top = location[1];
         int right = left + view.getMeasuredWidth();
         int bottom = top + view.getMeasuredHeight();
-        if (y >= top && y <= bottom && x >= left
-                && x <= right) {
+        if (x >= left && x <= right) {
             return true;
         }
         return false;
@@ -112,12 +137,24 @@ public class TuSdkMovieColorGroupView extends FrameLayout {
      * 添加颜色区块View
      **/
     public void addColorRect(TuSdkMovieColorRectView rectView) {
-        mColorRectList.add(rectView);
+
         LayoutParams layoutParams = (LayoutParams) rectView.getLayoutParams();
-        if(layoutParams != null)
-        this.addView(rectView,layoutParams.width,rectView.getHeight());
-        else
-            this.addView(rectView,rectView.getWidth(),rectView.getHeight());
+        if(layoutParams != null) {
+            this.addView(rectView, layoutParams.width, rectView.getHeight());
+        }
+        else {
+            this.addView(rectView, rectView.getWidth(), rectView.getHeight());
+        }
+
+        if(mColorRectList.size() > 0){
+            TuSdkMovieColorRectView last = mColorRectList.getLast();
+            if(last.getDrawDirection() == rectView.getDrawDirection() && Math.abs(rectView.getStartPercent() - last.getEndPercent()) <= 0.004){
+                rectView.setStartPercent(last.getEndPercent());
+            }
+        }
+
+        mColorRectList.add(rectView);
+
     }
 
     /**

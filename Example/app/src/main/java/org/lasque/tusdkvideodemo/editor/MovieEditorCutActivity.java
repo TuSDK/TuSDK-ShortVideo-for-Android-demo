@@ -2,8 +2,8 @@ package org.lasque.tusdkvideodemo.editor;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.RectF;
+import android.media.MediaCodecInfo;
+import android.media.MediaFormat;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,34 +11,38 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
 import org.lasque.tusdk.core.TuSdk;
-import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.api.extend.TuSdkMediaPlayerListener;
-import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
+import org.lasque.tusdk.core.api.extend.TuSdkMediaProgress;
 import org.lasque.tusdk.core.common.TuSDKMediaUtils;
-import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
-import org.lasque.tusdk.core.media.codec.suit.TuSdkMediaFilePlayer;
+import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaFormat;
+import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
+import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkMediaFilesCuterImpl;
+import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkMediaMutableFilePlayer;
+import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkVideoImageExtractor;
+import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkVideoImageExtractor.TuSdkVideoImageExtractorListener;
+import org.lasque.tusdk.core.media.codec.video.TuSdkVideoQuality;
 import org.lasque.tusdk.core.media.suit.TuSdkMediaSuit;
 import org.lasque.tusdk.core.seles.output.SelesView;
-import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoder;
-import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoderImpl;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
-import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.JVMUtils;
+import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.TLog;
-import org.lasque.tusdk.video.editor.TuSdkTimeRange;
+import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.ScreenAdapterActivity;
 import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.views.editor.EditorCutView;
-import org.lasque.tusdkvideodemo.views.editor.LineView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollContent;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import at.grabner.circleprogress.CircleProgressView;
+
+import static org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkMediaMutableFilePlayerImpl.TuSdkMediaPlayerStatus.Playing;
 
 /**
  * droid-sdk-video
@@ -66,13 +70,11 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
     private FrameLayout mLoadContent;
     private CircleProgressView mLoadProgress;
     //播放器
-    private TuSdkMediaFilePlayer mVideoPlayer;
+    private TuSdkMediaMutableFilePlayer mVideoPlayer;
     //播放视图
     private SelesView mVideoView;
     //视频路径
     private List<MovieInfo> mVideoPaths;
-    //编辑转码类
-    private TuSdkEditorTranscoder mTransCoder;
 
     /** 当前剪裁后的持续时间   微秒 **/
     private long mDurationTimeUs;
@@ -82,13 +84,18 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
     private long mRightTimeRangUs;
     /** 最小裁切时间 */
     private long mMinCutTimeUs = 3 * 1000000;
-
+    /** 裁切工具 */
+    private TuSdkMediaFilesCuterImpl cuter;
+    /** 是否已经设置总时间 **/
+    private boolean isSetDuration = false;
+    /** 是否正在裁剪中 **/
+    private boolean isCutting = false;
     //播放器回调
     private TuSdkMediaPlayerListener mMediaPlayerListener = new TuSdkMediaPlayerListener() {
         @Override
-        public void onStateChanged(int state) {
-            if(getTransCoder().getStatus() != TuSdkEditorTranscoder.TuSdkTranscoderStatus.Loading)
-                mPlayBtn.setVisibility(state == 1 ? View.VISIBLE : View.GONE);
+        public void onStateChanged(final int state) {
+            if(!isCutting) mPlayBtn.setVisibility(state == Playing.ordinal()? View.GONE:View.VISIBLE );
+            mDurationTimeUs = mVideoPlayer.durationUs();
         }
 
         @Override
@@ -98,7 +105,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
 
         @Override
         public void onProgress(long playbackTimeUs, TuSdkMediaDataSource mediaDataSource, long totalTimeUs) {
-            if(mEditorCutView == null)return;
+            if(mEditorCutView == null )return;
             float playPercent = (float)playbackTimeUs/(float) totalTimeUs;
             mEditorCutView.setVideoPlayPercent(playPercent);
         }
@@ -109,38 +116,17 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         }
     };
 
-
-    /** 转码回调 **/
-    private TuSdkEditorTranscoder.TuSdkTranscoderProgressListener mTranscoderListener = new TuSdkEditorTranscoder.TuSdkTranscoderProgressListener() {
-        @Override
-        public void onProgressChanged(float percentage) {
-            mLoadProgress.setValue(percentage * 100);
-        }
-
-        @Override
-        public void onLoadComplete(TuSDKVideoInfo outputVideoInfo, TuSdkMediaDataSource outputVideoSource) {
-            setEnable(true);
-            mLoadContent.setVisibility(View.GONE);
-            mLoadProgress.setValue(0);
-            mPlayBtn.setVisibility(mVideoPlayer.isPause()?View.VISIBLE:View.GONE);
-            Intent intent = new Intent(MovieEditorCutActivity.this,MovieEditorActivity.class);
-            intent.putExtra("videoPath", outputVideoSource.getPath());
-            startActivity(intent);
-
-        }
-
-        @Override
-        public void onError(Exception e) {
-            mPlayBtn.setVisibility(mVideoPlayer.isPause()?View.VISIBLE:View.GONE);
-            TLog.e(e);
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_editor_cut);
         initView();
+
+        //加载封面图
+        loadVideoThumbList();
+
+
+        // 初始化播放器
         initPlayer();
     }
 
@@ -161,7 +147,10 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         mEditorCutView.setOnPlayPointerChangeListener(new TuSdkMovieScrollContent.OnPlayProgressChangeListener() {
             @Override
             public void onProgressChange(float percent) {
-                if(!mVideoPlayer.isPause())mVideoPlayer.pause();
+                if(!mVideoPlayer.isPause()){
+                    mVideoPlayer.pause();
+                    mPlayBtn.setVisibility(View.VISIBLE);
+                }
                 mVideoPlayer.seekToPercentage(percent);
             }
         });
@@ -182,21 +171,29 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
 
         mEditorCutView.setOnSelectCeoverTimeListener(new TuSdkRangeSelectionBar.OnSelectRangeChangedListener() {
             @Override
-            public void onSelectRangeChanged(float leftPercent, float rightPerchent, int type) {
+            public void onSelectRangeChanged(float leftPercent, float rightPercent, int type) {
                 if(type == 0 ){
                     mLeftTimeRangUs = (long) (leftPercent * mVideoPlayer.durationUs());
                     float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
+                    if(selectTime < 3.0)selectTime = 3.0f;
                     mEditorCutView.setRangTime(selectTime);
-                    if(!mVideoPlayer.isPause())mVideoPlayer.pause();
+                    if(!mVideoPlayer.isPause()){
+                        mVideoPlayer.pause();
+                        mPlayBtn.setVisibility(View.VISIBLE);
+                    }
                     mEditorCutView.setVideoPlayPercent(leftPercent);
                     mVideoPlayer.seekToPercentage(leftPercent);
                 }else if(type == 1){
-                    mRightTimeRangUs = (long) (rightPerchent * mVideoPlayer.durationUs());;
+                    mRightTimeRangUs = (long) (rightPercent * mVideoPlayer.durationUs());;
                     float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
+                    if(selectTime < 3.0)selectTime = 3.0f;
                     mEditorCutView.setRangTime(selectTime);
-                    if(!mVideoPlayer.isPause())mVideoPlayer.pause();
-                    mEditorCutView.setVideoPlayPercent(mRightTimeRangUs);
-                    mVideoPlayer.seekToPercentage(rightPerchent);
+                    if(!mVideoPlayer.isPause()){
+                        mVideoPlayer.pause();
+                        mPlayBtn.setVisibility(View.VISIBLE);
+                    }
+                    mEditorCutView.setVideoPlayPercent(rightPercent);
+                    mVideoPlayer.seekToPercentage(rightPercent);
                 }
             }
         });
@@ -214,16 +211,6 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
             }
         });
 
-        mDurationTimeUs = TuSDKMediaUtils.getVideoInfo(mVideoPaths.get(0).getPath()).durationTimeUs;
-        float duration = mDurationTimeUs / 1000000.0f;
-        mRightTimeRangUs = mDurationTimeUs;
-        mEditorCutView.setRangTime(duration);
-        mEditorCutView.setTotalTime(mDurationTimeUs);
-//        mEditorCutView.getLineView().setLeftBarPosition(0f);
-//        mEditorCutView.getLineView().setRightBarPosition(1f);
-
-        //加载封面图
-        loadVideoThumbList();
     }
 
     @Override
@@ -231,7 +218,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         super.onPause();
         if(mVideoPlayer == null || mVideoPlayer.isPause()) return;
         mVideoPlayer.pause();
-
+        mPlayBtn.setVisibility(View.VISIBLE);
     }
 
     private void setEnable(boolean enable){
@@ -256,11 +243,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
                     setEnable(false);
                     mVideoPlayer.pause();
                     mPlayBtn.setVisibility(View.GONE);
-                    //设置媒体数据源
-                    getTransCoder().setVideoDataSource(new TuSdkMediaDataSource(mVideoPaths.get(0).getPath()));
-                    //设置裁剪范围
-                    getTransCoder().setTimeRange(TuSdkTimeRange.makeTimeUsRange(mLeftTimeRangUs,mRightTimeRangUs));
-                    getTransCoder().startTransCoder();
+                    startCompound();
                     mLoadContent.setVisibility(View.VISIBLE);
                     mEditorCutView.setEnable(false);
                     break;
@@ -275,22 +258,22 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
             mEditorCutView.setEnable(true);
     }
 
-    /** 获取编辑转码器 **/
-    private TuSdkEditorTranscoder getTransCoder(){
-        if(mTransCoder == null){
-            mTransCoder = new TuSdkEditorTranscoderImpl();
-            //设置画布裁剪区域()
-            mTransCoder.setCanvasRect(new RectF(0,0,1,1));
-            //设置图像裁剪区域
-            mTransCoder.setCropRect(new RectF(0,0,1,1));
-            mTransCoder.addTransCoderProgressListener(mTranscoderListener);
-        }
-        return mTransCoder;
-    }
-
     /** 初始化播放器 **/
     public void initPlayer(){
-        mVideoPlayer = TuSdkMediaSuit.playMedia(new TuSdkMediaDataSource(mVideoPaths.get(0).getPath()),true,mMediaPlayerListener);
+        List<TuSdkMediaDataSource> sourceList = new ArrayList<>();
+
+        for (MovieInfo movieInfo : mVideoPaths) {
+            sourceList.add(TuSdkMediaDataSource.create(movieInfo.getPath()).get(0));
+            mDurationTimeUs += TuSDKMediaUtils.getVideoInfo(movieInfo.getPath()).durationTimeUs;
+        }
+
+        float duration = mDurationTimeUs / 1000000.0f;
+        mRightTimeRangUs = mDurationTimeUs;
+        mEditorCutView.setRangTime(duration);
+        mEditorCutView.setTotalTime(mDurationTimeUs);
+
+        mVideoPlayer = (TuSdkMediaMutableFilePlayer) TuSdkMediaSuit.playMedia(sourceList,true,mMediaPlayerListener);
+
         if (mVideoPlayer == null) {
             TLog.e("%s directorPlayer create failed.", TAG);
             return;
@@ -314,29 +297,147 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         JVMUtils.runGC();
     }
 
+    /**
+     * 开始合成视频
+     */
+    private void startCompound(){
+        if (cuter != null) {
+            return;
+        }
+
+        isCutting = true;
+
+        List<TuSdkMediaDataSource> sourceList = new ArrayList<>();
+
+        // 遍历视频源
+        for (MovieInfo movieInfo : mVideoPaths) {
+            sourceList.add(TuSdkMediaDataSource.create(movieInfo.getPath()).get(0));
+        }
+        // 准备切片时间
+        TuSdkMediaTimeSlice tuSdkMediaTimeSlice = new TuSdkMediaTimeSlice(mLeftTimeRangUs,mRightTimeRangUs);
+        tuSdkMediaTimeSlice.speed = mVideoPlayer.speed();
+
+        // 准备裁剪对象
+        cuter = new TuSdkMediaFilesCuterImpl();
+        // 设置裁剪切片时间
+        cuter.setTimeSlice(tuSdkMediaTimeSlice);
+        // 设置数据源
+        cuter.setMediaDataSources(sourceList);
+        // 设置文件输出路径
+        cuter.setOutputFilePath(getOutputTempFilePath().getPath());
+
+        // 准备视频格式
+        MediaFormat videoFormat = TuSdkMediaFormat.buildSafeVideoEncodecFormat( cuter.preferredOutputSize().width,  cuter.preferredOutputSize().height,
+                30, TuSdkVideoQuality.RECORD_MEDIUM2.getBitrate(), MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface, 0, 0);
+
+
+        // 设置视频输出格式
+        cuter.setOutputVideoFormat(videoFormat);
+        // 设置音频输出格式
+        cuter.setOutputAudioFormat(TuSdkMediaFormat.buildSafeAudioEncodecFormat());
+
+        // 开始裁剪
+        cuter.run(new TuSdkMediaProgress() {
+            /**
+             *  裁剪进度回调
+             * @param progress        进度百分比 0-1
+             * @param mediaDataSource 当前处理的视频媒体源
+             * @param index           当前处理的视频索引
+             * @param total           总共需要处理的文件数
+             */
+            @Override
+            public void onProgress(final float progress, TuSdkMediaDataSource mediaDataSource, int index, int total) {
+                ThreadHelper.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mLoadContent.setVisibility(View.VISIBLE);
+                        mLoadProgress.setValue(progress * 100);
+                    }
+                });
+            }
+
+            /**
+             *  裁剪结束回调
+             * @param e 如果成功则为Null
+             * @param outputFile 输出文件路径
+             * @param total 处理文件总数
+             */
+            @Override
+            public void onCompleted(Exception e, TuSdkMediaDataSource outputFile, int total) {
+                isCutting = false;
+                ThreadHelper.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setEnable(true);
+                        mLoadContent.setVisibility(View.GONE);
+                        mLoadProgress.setValue(0);
+                        mPlayBtn.setVisibility(mVideoPlayer.isPause()?View.VISIBLE:View.GONE);
+                    }
+                });
+                Intent intent = new Intent(MovieEditorCutActivity.this,MovieEditorActivity.class);
+                intent.putExtra("videoPath", outputFile.getPath());
+                startActivity(intent);
+                cuter = null;
+            }
+        });
+    }
+
+    /** 获取临时文件路径 */
+    protected File getOutputTempFilePath() {
+        return new File(TuSdk.getAppTempPath(), String.format("lsq_%s.mp4", StringHelper.timeStampString()));
+    }
+
     /** 加载视频缩略图 */
     public void loadVideoThumbList() {
-        if (mEditorCutView != null) {
-            TuSdkSize tuSdkSize = TuSdkSize.create(TuSdkContext.dip2px(56),
-                    TuSdkContext.dip2px(56));
-            TuSDKVideoImageExtractor extractor = TuSDKVideoImageExtractor.createExtractor();
 
-            extractor.setOutputImageSize(tuSdkSize)
-                    .setVideoDataSource(TuSDKMediaDataSource.create(mVideoPaths.get(0).getPath()))
-                    .setExtractFrameCount(20);
+        List<TuSdkMediaDataSource> sourceList = new ArrayList<>();
 
-            extractor.asyncExtractImageList(new TuSDKVideoImageExtractor.TuSDKVideoImageExtractorDelegate() {
-                @Override
-                public void onVideoImageListDidLoaded(List<Bitmap> images) {
-                }
+        for (MovieInfo movieInfo : mVideoPaths)
+            sourceList.add(TuSdkMediaDataSource.create(movieInfo.getPath()).get(0));
 
-                @Override
-                public void onVideoNewImageLoaded(Bitmap bitmap) {
-                    mEditorCutView.addBitmap(bitmap);
-                    mEditorCutView.setTotalTime(mDurationTimeUs);
-                    mEditorCutView.setMinCutTimeUs(mMinCutTimeUs/(float)mDurationTimeUs);
-                }
-            });
-        }
+        /** 准备视频缩略图抽取器 */
+        final TuSdkVideoImageExtractor imageThumbExtractor = new TuSdkVideoImageExtractor(sourceList);
+        imageThumbExtractor
+               //.setOutputImageSize(TuSdkSize.create(50,50)) // 设置抽取的缩略图大小
+                .setExtractFrameCount(20) // 设置抽取的图片数量
+                .setImageListener(new TuSdkVideoImageExtractorListener() {
+
+                    /**
+                     * 输出一帧略图信息
+                     *
+                     * @param videoImage 视频图片
+                     * @since v3.2.1
+                     */
+                    public void onOutputFrameImage(final TuSdkVideoImageExtractor.VideoImage videoImage) {
+                        ThreadHelper.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mEditorCutView.addBitmap(videoImage.bitmap);
+                                if(!isSetDuration) {
+                                    float duration = mVideoPlayer.durationUs() / 1000000.0f;
+                                    mEditorCutView.setRangTime(duration);
+                                    mEditorCutView.setTotalTime(mVideoPlayer.durationUs());
+                                    if(duration >0)
+                                    isSetDuration = true;
+                                }
+                                mEditorCutView.setMinCutTimeUs(mMinCutTimeUs/(float)mDurationTimeUs);
+                            }
+                        });
+                    }
+
+                    /**
+                     * 抽取器抽取完成
+                     *
+                     * @since v3.2.1
+                     */
+                    @Override
+                    public void onImageExtractorCompleted(List<TuSdkVideoImageExtractor.VideoImage> videoImagesList) {
+                        /** 注意： videoImagesList 需要开发者自己释放 bitmap */
+                        imageThumbExtractor.release();
+
+                    }
+                 })
+                .extractImages(); // 抽取图片
+
     }
 }

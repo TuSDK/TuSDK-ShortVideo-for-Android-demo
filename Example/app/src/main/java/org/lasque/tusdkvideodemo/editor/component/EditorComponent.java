@@ -61,6 +61,7 @@ public abstract class EditorComponent {
     protected TuSdkMediaEffectData mSelectEffectData;
     // 备忘其他音轨音量
     protected float mMementoOtherVolume = 0.5f;
+    protected boolean isAnimationStaring = false;
 
 
     /**
@@ -160,6 +161,14 @@ public abstract class EditorComponent {
      * @param bitmap 一个封面视图
      **/
     public abstract void addCoverBitmap(Bitmap bitmap);
+    /** 动画开始 **/
+    public void onAnimationStart(){
+        isAnimationStaring = true;
+    }
+    /** 动画结束 **/
+    public void onAnimationEnd(){
+        isAnimationStaring = false;
+    }
 
     /*---------------------------- 同步Activity的生命周期 ---------------------*/
 

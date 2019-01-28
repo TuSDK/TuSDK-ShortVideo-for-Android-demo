@@ -40,7 +40,7 @@ public class SamplesListAdapter extends ArrayAdapter {
             SampleItem.VIDEO_MIXED,
             SampleItem.ALBUM_VIDEO_TIMECUT_SAVE,
             SampleItem.AUDIO_FILE_RECORDER,
-            SampleItem.AUDIO_ENGINE_PITCH,
+            SampleItem.AUDIO_ENGINE_PITCH
     };
 
     public SamplesListAdapter(@NonNull Context context) {
@@ -85,11 +85,6 @@ public class SamplesListAdapter extends ArrayAdapter {
         ALBUM_VIDEO_TIMECUT_SAVE(R.string.lsq_album_video_timecut_save, MovieCutActivity.class.getName(), 1, false),
         AUDIO_FILE_RECORDER(R.string.lsq_audio_file_recorder, AudioRecordActivity.class.getName(), 0, false),
         AUDIO_ENGINE_PITCH(R.string.lsq_audio_engine_pitch, AudioPitchEngineActivity .class.getName(), 0, false);
-
-//        VIDEO_COMPRESS(R.string.lsq_compresser_compress, MovieCompressActivity.class.getName(), 1, false),
-//        MUTI_AUDIO_PLAYER(R.string.lsq_muti_audio_player, MutiAudioPlayerActivity.class.getName(), 0, false),
-//        AUDIO_PLAYER(R.string.lsq_media_player, MediaPlayerActivity.class.getName(), 1, false),
-//        VIDEO_TRANSCODE(R.string.lsq_transcode_transcode, MovieTranscodeActivity.class.getName(), 1, false);
 
         public String className;
         public int titleId;

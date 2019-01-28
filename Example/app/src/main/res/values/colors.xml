@@ -86,7 +86,7 @@
     <color name="lsq_filter_title_default_color">#9fa0a0</color>
 
     <color name="lsq_filter_title_unselected_color">#d9d9d9</color>
-    <color name="lsq_progress_interupt_color">#d9d9d9</color>
+    <color name="lsq_progress_interupt_color">#FFFFFF</color>
     <color name="shadow_color">#231815</color>
     <!-- camera&&Recording-->
     <color name="lsq_capture_selected">#f6a623</color>

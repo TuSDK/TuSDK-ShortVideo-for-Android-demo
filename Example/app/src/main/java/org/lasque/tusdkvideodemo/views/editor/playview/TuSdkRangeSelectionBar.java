@@ -7,9 +7,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieGrayView;
 
@@ -27,7 +30,7 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
     private OnSelectRangeChangedListener mSelectRangeChangedListener;
     private OnExceedCriticalValueListener mExceedValueListener;
     private OnTouchSelectBarListener onTouchSelectBarListener;
-    private float oldX = 0;
+    private int oldX = 0;
     private int touchType = 0;
     private int mTotalWidth = 0;
     private boolean enableTouchCenter;
@@ -48,6 +51,12 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
      **/
     private float mMaxPercent = 1f;
 
+    /** 总时长 **/
+    public static long mTotalTimeUs;
+    /** 最小时长 **/
+    public static long mMinTimeUs;
+    private boolean isEnable = true;
+
     public static interface OnSelectRangeChangedListener {
         /**
          * 选择区间进度改变回调
@@ -61,7 +70,7 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
 
     /** 触摸选择控件 **/
     public static interface OnTouchSelectBarListener {
-        void onTouchBar(float leftPercent, float rightPerchent, int type);
+        void onTouchBar(float leftPercent, float rightPerchent,int type);
     }
 
     /**
@@ -96,39 +105,43 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
         mLeftGrayView  =  findViewById(R.id.lsq_left_bar);
         mRightGrayView =  findViewById(R.id.lsq_right_bar);
         mCenterFrame   =  findViewById(R.id.lsq_center);
-
     }
-
+    private Object mLock = new Object();
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //0 左边 1 右边 2中间
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                return handleActionDownEvent(event);
-            case MotionEvent.ACTION_MOVE:
-                return handleActionMoveEvent(event);
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                if(touchType == 0){
-                    mLeftGrayView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(onTouchSelectBarListener != null){
-                                onTouchSelectBarListener.onTouchBar(mLastStarPercent,mLastEndPercent,touchType);
+        if(!isEnable) return false;
+        synchronized (mLock) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    return handleActionDownEvent(event);
+                case MotionEvent.ACTION_MOVE:
+                    return handleActionMoveEvent(event);
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (touchType == 0) {
+                        ThreadHelper.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (onTouchSelectBarListener != null) {
+                                    onTouchSelectBarListener.onTouchBar(mLastStarPercent, mLastEndPercent, touchType);
+                                }
                             }
-                        }
-                    });
-                }else if(touchType == 1){
-                    mRightGrayView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(onTouchSelectBarListener != null){
-                                onTouchSelectBarListener.onTouchBar(mLastStarPercent,mLastEndPercent,touchType);
+                        });
+                    } else if (touchType == 1) {
+                        ThreadHelper.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
+                                if (onTouchSelectBarListener != null) {
+                                    onTouchSelectBarListener.onTouchBar(mLastStarPercent, mLastEndPercent, touchType);
+                                }
                             }
-                        }
-                    });
-                }
-                break;
+                        });
+
+                    }
+                    break;
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -157,8 +170,8 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
      * 处理移动的事件
      **/
     private boolean handleActionMoveEvent(MotionEvent event) {
-        float newX = event.getX();
-        float diffX = (newX - oldX);
+        int newX = (int) event.getX();
+        int diffX = (newX - oldX);
         if(Math.abs(diffX) < 5)return false;
         oldX = newX;
         final ViewParent parent = getParent();
@@ -182,11 +195,11 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
                 }
                 return true;
             case 2:
-                if (!enableTouchCenter) return false;
-                if (calcPercentRange(touchType,true,diffX)) {
-                    moveLeftBar(diffX);
-                    moveRightBar(diffX);
-                }
+//                if (!enableTouchCenter) return false;
+//                if (calcPercentRange(touchType,true,diffX)) {
+//                    moveLeftBar(diffX);
+//                    moveRightBar(diffX);
+//                }
                 return true;
             default:
                 return false;
@@ -218,15 +231,17 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
         float stopX = mCenterFrame.getRight();
         float startPercent = starX / mTotalWidth;
         float endPercent = stopX / mTotalWidth;
+        float maxLength = mTotalWidth * mMaxPercent;
+        float minLength = mTotalWidth * mMinPercent;
 
         if(endPercent > 1) endPercent = 1f;
 
         //超过最大值
-        if (endPercent - startPercent > mMaxPercent) {
+        if (mCenterFrame.getWidth() >= maxLength) {
             return handleMax(touchType, diffX);
         }
         //超过最小值
-        if (endPercent - startPercent < mMinPercent) {
+        if (mCenterFrame.getWidth() <= minLength) {
             return handleMin(touchType, diffX);
         }
 
@@ -270,19 +285,20 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
      * @param event
      */
     private boolean handleActionDownEvent(MotionEvent event) {
-        oldX = event.getX();
+        oldX = (int) event.getX();
         //触摸左边视图
-        if (oldX <= mLeftGrayView.getRight() && oldX >= mLeftGrayView.getRight() - mLeftGrayView.getBarWidth()) {
+        boolean isTouchLeftBarRight = 0 <= Math.abs(oldX - mLeftGrayView.getRight()) && 40 >= Math.abs(oldX - mLeftGrayView.getRight());
+        boolean isTouchLeftBarLeft = 0 <= Math.abs(oldX - (mLeftGrayView.getRight() - mLeftGrayView.getBarWidth())) && 40 >= Math.abs(oldX - (mLeftGrayView.getRight() - mLeftGrayView.getBarWidth()));
+        if (isTouchLeftBarRight && isTouchLeftBarLeft) {
             touchType = 0;
             return true;
         }
         //触摸的中间视图
-        if (mCenterFrame.getLeft() <= oldX && oldX <= mCenterFrame.getRight()) {
-            touchType = 2;
-            return false;
-        }
+
+        boolean isTouchRightBarRight = 0 <= Math.abs(oldX - mRightGrayView.getLeft()) && 40 >= Math.abs(oldX - mRightGrayView.getLeft());
+        boolean isTouchRightBarLeft = 0 <= Math.abs(oldX -  (mRightGrayView.getLeft() + mRightGrayView.getBarWidth())) && 40 >= Math.abs(oldX -  (mRightGrayView.getLeft() + mRightGrayView.getBarWidth()));
         //触摸的右边视图
-        if (mRightGrayView.getLeft() <= oldX && oldX <= mRightGrayView.getLeft() + mRightGrayView.getBarWidth()) {
+        if (isTouchRightBarLeft&& isTouchRightBarRight) {
             touchType = 1;
             return true;
         }
@@ -295,42 +311,57 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
      *
      * @param distance 距离
      */
-    private void moveRightBar(float distance) {
+    private int mLastCenterFrameWidth = -1;
+    private void moveRightBar(int distance) {
         LayoutParams rightLayoutParams = (LayoutParams) mRightGrayView.getLayoutParams();
-        if (rightLayoutParams.width - distance >= mRightGrayView.getBarWidth())
-            rightLayoutParams.width = (int) (rightLayoutParams.width - distance);
-        mRightGrayView.setLayoutParams(rightLayoutParams);
-        mRightGrayView.post(new Runnable() {
-            @Override
-            public void run() {
-                float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
-                float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
-                float startPercent = starX / mTotalWidth;
-                float endPercent = stopX / mTotalWidth;
-                if (mSelectRangeChangedListener != null)
-                    mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 1);
+        if(mLastCenterFrameWidth < 0)mLastCenterFrameWidth = mCenterFrame.getWidth();
+        if (rightLayoutParams.width - distance >= mRightGrayView.getBarWidth()) {
+            int minLength = (int) Math.ceil(mTotalWidth * mMinPercent);
 
+            if(mLastCenterFrameWidth + distance < minLength){
+                distance = -(mLastCenterFrameWidth - minLength);
             }
-        });
+
+            int maxLength = (int)Math.ceil(mTotalWidth * mMaxPercent);
+            if(mLastCenterFrameWidth + distance > maxLength){
+                distance = maxLength - mLastCenterFrameWidth;
+            }
+
+            mLastCenterFrameWidth = mLastCenterFrameWidth + distance;
+
+            rightLayoutParams.width = (int) (rightLayoutParams.width - distance);
+        }
+        mRightGrayView.setLayoutParams(rightLayoutParams);
+        invalidate();
+
+        float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
+        float stopX = mCenterFrame.getX() + mLastCenterFrameWidth - mRightGrayView.getBarWidth();
+        float startPercent = starX / mTotalWidth;
+        float endPercent = stopX / mTotalWidth;
+
+        if (mSelectRangeChangedListener != null)
+            mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 1);
+
     }
 
-    private void moveRightBarTo(float distance) {
+    /**
+     *
+     * @param distance
+     * @param isNotifyChanged 是否需要通知
+     */
+    private void moveRightBarTo(float distance,final boolean isNotifyChanged) {
         LayoutParams rightLayoutParams = (LayoutParams) mRightGrayView.getLayoutParams();
-//        if (rightLayoutParams.width - distance >= mRightGrayView.getBarWidth())
-            rightLayoutParams.width = (int) (distance);
+        rightLayoutParams.width = (int) (distance);
         mRightGrayView.setLayoutParams(rightLayoutParams);
-        mRightGrayView.post(new Runnable() {
-            @Override
-            public void run() {
-                float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
-                float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
-                float startPercent = starX / mTotalWidth;
-                float endPercent = stopX / mTotalWidth;
-                if (mSelectRangeChangedListener != null)
-                    mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 1);
+        invalidate();
+        mLastCenterFrameWidth = -1;
+        float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
+        float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
+        float startPercent = starX / mTotalWidth;
+        float endPercent = stopX / mTotalWidth;
+        if (mSelectRangeChangedListener != null && isNotifyChanged)
+            mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 1);
 
-            }
-        });
     }
 
     /**
@@ -338,51 +369,63 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
      *
      * @param distance
      */
-    private void moveLeftBar(float distance) {
+    private void moveLeftBar(int distance) {
         LayoutParams leftLayoutParams = (LayoutParams) mLeftGrayView.getLayoutParams();
-        if (leftLayoutParams.width + distance >= mLeftGrayView.getBarWidth())
-            leftLayoutParams.width = (int) (leftLayoutParams.width + distance);
-        mLeftGrayView.setLayoutParams(leftLayoutParams);
-        mLeftGrayView.post(new Runnable() {
-            @Override
-            public void run() {
-                float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
-                float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
-                float startPercent = starX / mTotalWidth;
-                float endPercent = stopX / mTotalWidth;
-                if (mSelectRangeChangedListener != null)
-                    mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 0);
-
+        if(mLastCenterFrameWidth < 0)mLastCenterFrameWidth = mCenterFrame.getWidth();
+        if (leftLayoutParams.width + distance >= mLeftGrayView.getBarWidth()) {
+            int minLength = (int) Math.ceil(mTotalWidth * mMinPercent);
+            if(mLastCenterFrameWidth - distance < minLength){
+                distance = mLastCenterFrameWidth - minLength;
             }
-        });
+
+            int maxLength = (int)Math.ceil(mTotalWidth * mMaxPercent);
+            if(mLastCenterFrameWidth - distance > maxLength){
+                distance = -(maxLength - mLastCenterFrameWidth);
+            }
+
+            mLastCenterFrameWidth = mLastCenterFrameWidth - distance;
+            leftLayoutParams.width = (int) (leftLayoutParams.width + distance);
+        }
+        mLeftGrayView.setLayoutParams(leftLayoutParams);
+        invalidate();
+
+        float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
+        float stopX = mCenterFrame.getX() + mLastCenterFrameWidth - mRightGrayView.getBarWidth();
+        float startPercent = starX / mTotalWidth;
+        float endPercent = stopX / mTotalWidth;
+        if (mSelectRangeChangedListener != null)
+            mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 0);
+
     }
 
-    private void moveLeftBarTo(float distance){
+    /**
+     *
+     * @param distance
+     * @param isNotifyChanged 是否需要通知
+     */
+    private void moveLeftBarTo(float distance,final boolean isNotifyChanged){
         LayoutParams leftLayoutParams = (LayoutParams) mLeftGrayView.getLayoutParams();
 //        if (leftLayoutParams.width + distance >= mLeftGrayView.getBarWidth())
             leftLayoutParams.width = (int) distance;
         mLeftGrayView.setLayoutParams(leftLayoutParams);
-        mLeftGrayView.post(new Runnable() {
-            @Override
-            public void run() {
-                float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
-                float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
-                float startPercent = starX / mTotalWidth;
-                float endPercent = stopX / mTotalWidth;
-                if (mSelectRangeChangedListener != null)
-                    mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 0);
+        invalidate();
+        mLastCenterFrameWidth = -1;
+        float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
+        float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
+        float startPercent = starX / mTotalWidth;
+        float endPercent = stopX / mTotalWidth;
+        if (mSelectRangeChangedListener != null && isNotifyChanged)
+            mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 0);
 
-            }
-        });
     }
 
     /**
      * 获取进度
      **/
     private float getFormatPerchent(float percent) {
-        DecimalFormat decimalFormat = new DecimalFormat(".00");
-        float p = Float.valueOf(decimalFormat.format(percent));
-        return p;
+//        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+//        float p = Float.valueOf(decimalFormat.format(percent));
+        return percent;
     }
 
     /**
@@ -412,7 +455,7 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
     public void setLeftBarPosition(float percent) {
 //        if (calcPercentRange(0,false)) {
             int totalWidth = getMeasuredWidth() - (getBarWidth() * 2);
-            moveLeftBarTo((totalWidth * percent) + getBarWidth());
+            moveLeftBarTo((totalWidth * percent) + getBarWidth(),false);
 //        }
     }
 
@@ -422,7 +465,7 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
     public void setRightBarPosition(float percent){
 //        if(calcPercentRange(1,false)){
             int totalWidth = getMeasuredWidth() - (getBarWidth() * 2);
-            moveRightBarTo(totalWidth * (1f - percent) + getBarWidth() );
+            moveRightBarTo(totalWidth * (1f - percent) + getBarWidth(),false);
 //        }
     }
 
@@ -434,5 +477,10 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
     /** 获取右边Bar的进度 **/
     public float getRightBarPercent(){
         return mLastEndPercent;
+    }
+
+    /** 是否启用 **/
+    public void setEnable(boolean isEnable){
+        this.isEnable = isEnable;
     }
 }

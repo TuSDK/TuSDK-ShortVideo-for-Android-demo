@@ -31,7 +31,7 @@ public class MagicRecyclerAdapter extends RecyclerView.Adapter<MagicRecyclerAdap
     private boolean isCanDeleted = false;
 
     public interface ItemClickListener {
-        void onItemClick(int position, MagicViewHolder MagicViewHolder);
+        void onItemClick(int position,MagicViewHolder MagicViewHolder);
     }
 
     public interface OnItemTouchListener{
@@ -127,6 +127,7 @@ public class MagicRecyclerAdapter extends RecyclerView.Adapter<MagicRecyclerAdap
                     listener.onItemClick(position,magicViewHolder);
                 notifyItemChanged(mCurrentPosition);
                 notifyItemChanged(position);
+                if(position == 0)return;
                 mCurrentPosition = position;
             }
         });

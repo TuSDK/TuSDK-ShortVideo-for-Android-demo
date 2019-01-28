@@ -21,9 +21,9 @@ import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.impl.activity.TuFragmentActivity;
 import org.lasque.tusdk.impl.view.widget.TuProgressHub;
 import org.lasque.tusdk.modules.components.ComponentActType;
+import org.lasque.tusdkvideodemo.album.AlbumUtils;
 import org.lasque.tusdkvideodemo.editor.MovieEditorCutActivity;
 import org.lasque.tusdkvideodemo.record.MovieRecordFullScreenActivity;
-import org.lasque.tusdkvideodemo.album.AlbumUtils;
 import org.lasque.tusdkvideodemo.utils.Constants;
 import org.lasque.tusdkvideodemo.utils.PermissionUtils;
 
@@ -123,6 +123,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
      */
     private void handleRecordButton()
     {
+
         mRequestCode = 1;
         if (PermissionUtils.hasRequiredPermissions(this, getRequiredPermissions()))
         {
@@ -140,6 +141,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
      */
     private void handleComponentButton()
     {
+
         mRequestCode = 3;
         if (PermissionUtils.hasRequiredPermissions(this, getRequiredPermissions()))
         {
@@ -177,7 +179,11 @@ public class DemoEntryActivity extends TuFragmentActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_WIFI_STATE
         };
 
         return permissions;
@@ -207,7 +213,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
                     Intent intent = new Intent(DemoEntryActivity.this, MovieRecordFullScreenActivity.class);
                     DemoEntryActivity.this.startActivity(intent);
                 }else if(mRequestCode == 2) {
-                    AlbumUtils.openVideoAlbum(EDITOR_CLASS,Constants.MAX_EDITOR_SELECT_MUN);
+                    AlbumUtils.openVideoAlbum(EDITOR_CLASS, Constants.MAX_EDITOR_SELECT_MUN);
                 }else{
                     Intent intent = new Intent(DemoEntryActivity.this, ComponentListActivity.class);
                     startActivity(intent);

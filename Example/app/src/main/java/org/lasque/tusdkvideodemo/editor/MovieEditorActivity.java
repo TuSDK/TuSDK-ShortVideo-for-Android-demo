@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption;
@@ -15,6 +17,9 @@ import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.VideoContent;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import static org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor.TuSdkMovieEditorOptions.TuSdkMediaPictureEffectReferTimelineType.TuSdkMediaEffectReferInputTimelineType;
 
@@ -38,6 +43,10 @@ public class MovieEditorActivity extends FragmentActivity {
     private RelativeLayout mMagicContent;
     /** 视频路径 **/
     private String mVideoPath;
+    /** 是否直接编辑 **/
+    boolean isDirectEdit = false;
+    /** 需要直接编辑的时间区间 **/
+    ArrayList<TuSdkMediaTimeSlice> mTimeSlice;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +60,12 @@ public class MovieEditorActivity extends FragmentActivity {
      */
     private void initView(){
         mVideoPath = getIntent().getStringExtra("videoPath");
+        if(getIntent().hasExtra("isDirectEdit")){
+            isDirectEdit = getIntent().getBooleanExtra("isDirectEdit",false);
+            if(isDirectEdit){
+                mTimeSlice = (ArrayList<TuSdkMediaTimeSlice>) getIntent().getSerializableExtra("timeRange");
+            }
+        }
 
         mHeaderView = findViewById(R.id.lsq_editor_header);
         mBottomView = findViewById(R.id.lsq_editor_bottom);
@@ -58,6 +73,10 @@ public class MovieEditorActivity extends FragmentActivity {
         mStickerView = findViewById(R.id.lsq_stickerView);
         mMagicContent = findViewById(R.id.lsq_magic_content);
 
+        if(!new File(mVideoPath).exists()){
+            TuSdk.messageHub().showToast(this, R.string.lsq_not_file);
+            return;
+        }
         //初始化视频编辑器
         initEditorController();
     }
@@ -70,7 +89,13 @@ public class MovieEditorActivity extends FragmentActivity {
                 .setPictureEffectReferTimelineType(TuSdkMediaEffectReferInputTimelineType)//设置时间线模式
                 //设置水印
                 .setWaterImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark), TuSdkWaterMarkOption.WaterMarkPosition.TopRight, true);
-            mEditorController = new MovieEditorController(this,mVideoPath,mVideoContent,defaultOptions);
+        if(isDirectEdit){
+            //时间轴编辑
+            mEditorController = new MovieEditorController(this,mVideoContent,mTimeSlice,defaultOptions);
+        }else {
+            //编辑
+            mEditorController = new MovieEditorController(this,mVideoContent,defaultOptions);
+        }
     }
 
     /**

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.TuSDKVideo;
 
@@ -28,7 +27,7 @@ public class SplashActivity extends Activity
             @Override
             public void run() {
                 startActivity(new Intent(SplashActivity.this,DemoEntryActivity.class));
-                overridePendingTransition(R.anim.lsq_fade_in,R.anim.lsq_fade_out);
+                overridePendingTransition(R.anim.lsq_fade_in, R.anim.lsq_fade_out);
                 finish();
             }
         },2000);

@@ -9,12 +9,13 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,6 +46,7 @@ import org.lasque.tusdk.core.utils.hardware.TuSdkStillCameraAdapter;
 import org.lasque.tusdk.core.utils.image.AlbumHelper;
 import org.lasque.tusdk.core.utils.image.RatioType;
 import org.lasque.tusdk.core.utils.sqllite.ImageSqlHelper;
+import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdk.video.editor.TuSdkMediaComicEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
@@ -52,16 +54,22 @@ import org.lasque.tusdk.video.editor.TuSdkMediaFilterEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaPlasticFaceEffect;
 import org.lasque.tusdk.video.editor.TuSdkMediaSkinFaceEffect;
 import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.utils.Constants;
 import org.lasque.tusdkvideodemo.views.BeautyPlasticRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.BeautyRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.FilterConfigSeekbar;
+import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.HorizontalProgressBar;
 import org.lasque.tusdkvideodemo.views.ParamsConfigView;
-import org.lasque.tusdkvideodemo.views.TabViewPagerAdapter;
-import org.lasque.tusdkvideodemo.utils.Constants;
-import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
-import org.lasque.tusdkvideodemo.views.StickerGroupCategories;
 import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
+import org.lasque.tusdkvideodemo.views.props.PropsItemMonsterPageFragment;
+import org.lasque.tusdkvideodemo.views.props.PropsItemPageFragment;
+import org.lasque.tusdkvideodemo.views.props.PropsItemPagerAdapter;
+import org.lasque.tusdkvideodemo.views.props.StickerPropsItemPageFragment;
+import org.lasque.tusdkvideodemo.views.props.model.PropsItem;
+import org.lasque.tusdkvideodemo.views.props.model.PropsItemCategory;
+import org.lasque.tusdkvideodemo.views.props.model.PropsItemMonsterCategory;
+import org.lasque.tusdkvideodemo.views.props.model.PropsItemStickerCategory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -213,21 +221,29 @@ public class RecordView extends RelativeLayout
     private RelativeLayout mChangeAudioLayout;
     private RadioGroup mChangeAudioGroup;
 
-    /** 贴纸布局 */
-    private LinearLayout mStickerLayout;
-    /** 取消贴纸 */
-    private ImageView mStickerCancel;
-    /** 贴纸Layout */
-    private ViewPager mViewPager;
-    private TabPagerIndicator mTabPagerIndicator;
-    private TabViewPagerAdapter mStickerPagerAdapter;
+
+   // 道具布局 贴纸+哈哈镜
+
+    /** 道具布局 */
+    private LinearLayout mPropsItemLayout;
+    /** 取消道具 */
+    private ImageView mPropsItemCancel;
+    /** 道具 Layout */
+    private ViewPager mPropsItemViewPager;
+    /** 道具  PropsItemPagerAdapter */
+    private PropsItemPagerAdapter<PropsItemPageFragment> mPropsItemPagerAdapter;
+
+    private TabPagerIndicator mPropsItemTabPagerIndicator;
+    /** 道具分类类别 */
+    private List<PropsItemCategory> mPropsItemCategories = new ArrayList<>();
+
 
     /** 图片预留视图 **/
     private ImageView mPreViewImageView;
     /** 返回拍照按钮 **/
-    private TuSdkTextButton   mBackButton;
+    private TuSdkTextButton mBackButton;
     /** 保存按钮 **/
-    private TuSdkTextButton   mSaveImageButton;
+    private TuSdkTextButton mSaveImageButton;
 
     public RecordView(Context context)
     {
@@ -359,7 +375,7 @@ public class RecordView extends RelativeLayout
         mSmartBeautyTabLayout = findViewById(R.id.lsq_smart_beauty_layout);
         setBeautyLayout(false);
         mBeautyRecyclerView = findViewById(R.id.lsq_beauty_recyclerView);
-        mBeautyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+        mBeautyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
 
         // 美颜类型
         mBeautyRecyclerAdapter = new BeautyRecyclerAdapter(getContext());
@@ -387,6 +403,8 @@ public class RecordView extends RelativeLayout
     public void initRecordProgress(){
         mRecordProgress.clearProgressList();
         interuptLayout.removeAllViews();
+        if(mBottomBarLayout.getVisibility() == VISIBLE)
+            setViewHideOrVisible(true);
     }
 
     /**
@@ -402,15 +420,6 @@ public class RecordView extends RelativeLayout
         mCamera.setCameraListener(mVideoCameraLinstener);
         mCamera.setMediaEffectChangeListener(mMediaEffectChangeListener);
         mCamera.getFocusTouchView().setGestureListener(gestureListener);
-        // 根据录制模式不同，给开始录制按钮加上不同的监听事件 默认Keep
-//        if (mCamera.getRecordMode()== TuSDKRecordVideoCamera.RecordMode.Normal)
-//        {
-//            mRecordButton.setOnClickListener(mButtonClickListener);
-//
-//        } else if(mCamera.getRecordMode()== TuSDKRecordVideoCamera.RecordMode.Keep){
-//
-//            mRecordButton.setOnTouchListener(onTouchListener);
-//        }
 
         ThreadHelper.postDelayed(new Runnable() {
 
@@ -446,8 +455,6 @@ public class RecordView extends RelativeLayout
                             if(filterArg != null)
                                 mFilterConfigView.setFilterArgs(mediaEffectData,Arrays.asList(filterArg));
                             break;
-                        case TuSdkMediaEffectDataTypeSkinFace:
-                            break;
 
                     }
                 }
@@ -473,10 +480,10 @@ public class RecordView extends RelativeLayout
         public boolean onTouch(View v, MotionEvent event)
         {
             if (getDelegate() == null) return false;
-
             switch (event.getAction())
             {
                 case MotionEvent.ACTION_DOWN:
+                    if (TuSdkViewHelper.isFastDoubleClick()) return false;
                     if(mRecordMode == RecordType.LONG_CLICK_RECORD)
                     {
                         setViewHideOrVisible(false);
@@ -565,7 +572,7 @@ public class RecordView extends RelativeLayout
 
         @Override
         public void onAnimationEnd(View view) {
-            ViewCompat.animate(mStickerLayout).setListener(null);
+            ViewCompat.animate(mPropsItemLayout).setListener(null);
             ViewCompat.animate(mFilterContent).setListener(null);
         }
 
@@ -619,7 +626,7 @@ public class RecordView extends RelativeLayout
     {
         if(mFilterRecyclerView == null){
             mFilterRecyclerView = findViewById(R.id.lsq_filter_list_view);
-            mFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+            mFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
             mFilterAdapter = new FilterRecyclerAdapter();
             mFilterAdapter.setItemCilckListener(mFilterItemClickListener);
             mFilterAdapter.setCurrentPosition(mCurrentPosition);
@@ -637,7 +644,7 @@ public class RecordView extends RelativeLayout
     {
         if(mComicsFilterRecyclerView == null){
             mComicsFilterRecyclerView = findViewById(R.id.lsq_comics_filter_list_view);
-            mComicsFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+            mComicsFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
             mComicsFilterAdapter = new FilterRecyclerAdapter();
             mComicsFilterAdapter.isShowImageParameter(false);
             mComicsFilterAdapter.setItemCilckListener(mComicsFilterItemClickListener);
@@ -657,8 +664,10 @@ public class RecordView extends RelativeLayout
         // 漫画滤镜
         getComicsFilterListView();
 
+        // 设置动漫滤镜集合
         this.mComicsFilterAdapter.setFilterList(Arrays.asList(Constants.COMICSFILTERS));
 
+        // 设置普通滤镜集合
         this.mFilterAdapter.setFilterList(Arrays.asList(Constants.VIDEOFILTERS));
     }
 
@@ -727,7 +736,7 @@ public class RecordView extends RelativeLayout
 
         @Override
         public void onVideoCameraStateChanged(TuSdkStillCameraAdapter.CameraState newState) {
-            TLog.e("CameraState : %s",newState);
+
         }
 
         /**
@@ -850,7 +859,7 @@ public class RecordView extends RelativeLayout
                 setStickerVisible(false);
                 mMoreConfigLayout.setVisibility(GONE);
                 setTextButtonDrawableTop(mMoreButton, R.drawable.video_nav_ic_more);
-                mViewPager.getAdapter().notifyDataSetChanged();
+                mPropsItemViewPager.getAdapter().notifyDataSetChanged();
             }
         }
     };
@@ -900,14 +909,14 @@ public class RecordView extends RelativeLayout
      */
     private void initStickerLayout()
     {
-        mViewPager = findViewById(R.id.lsq_viewPager);
-        mTabPagerIndicator = findViewById(R.id.lsq_TabIndicator);
+        mPropsItemViewPager = findViewById(R.id.lsq_viewPager);
+        mPropsItemTabPagerIndicator = findViewById(R.id.lsq_TabIndicator);
 
-        mStickerCancel = findViewById(R.id.lsq_cancel_button);
-        mStickerCancel.setOnClickListener(onClickListener);
+        mPropsItemCancel = findViewById(R.id.lsq_cancel_button);
+        mPropsItemCancel.setOnClickListener(onClickListener);
 
         // 贴纸视图
-        mStickerLayout = findViewById(R.id.lsq_sticker_layout);
+        mPropsItemLayout = findViewById(R.id.lsq_sticker_layout);
         setStickerVisible(false);
     }
 
@@ -916,7 +925,7 @@ public class RecordView extends RelativeLayout
      * @param isVisible 是否可见
      */
     private void setStickerVisible(boolean isVisible){
-        mStickerLayout.setVisibility(isVisible ? VISIBLE : INVISIBLE);
+        mPropsItemLayout.setVisibility(isVisible ? VISIBLE : INVISIBLE);
     }
 
     /**
@@ -925,22 +934,124 @@ public class RecordView extends RelativeLayout
     private void showStickerLayout(){
         setStickerVisible(true);
         // 滤镜栏向上动画并显示
-        ViewCompat.setTranslationY(mStickerLayout,
-                mStickerLayout.getHeight());
-        ViewCompat.animate(mStickerLayout).translationY(0).setDuration(200).setListener(mViewPropertyAnimatorListener);
+        ViewCompat.setTranslationY(mPropsItemLayout,
+                mPropsItemLayout.getHeight());
+        ViewCompat.animate(mPropsItemLayout).translationY(0).setDuration(200).setListener(mViewPropertyAnimatorListener);
     }
+
+    /** 选择贴纸道具物品后回调  */
+    private StickerPropsItemPageFragment.StickerItemDelegate mStickerPropsItemDelegate  = new StickerPropsItemPageFragment.StickerItemDelegate() {
+        /**
+         * 移除道具
+         * @param propsItem
+         */
+        @Override
+        public void removePropsItem(PropsItem propsItem) {
+            if (propsItemUsed(propsItem))
+                mCamera.removeMediaEffectsWithType(mPropsItemCategories.get(mPropsItemViewPager.getCurrentItem()).getMediaEffectType());
+        }
+
+        @Override
+        public void didSelectPropsItem(PropsItem propsItem) {
+            mCamera.addMediaEffectData(propsItem.effect());
+            mPropsItemPagerAdapter.notifyAllPageData();
+
+        }
+
+        /**
+         * 当前道具是否正在被使用
+         *
+         * @param propsItem 道具
+         * @return
+         */
+        @Override
+        public boolean propsItemUsed(PropsItem propsItem) {
+            if (propsItem.effect() == null) return false;
+            List<TuSdkMediaEffectData> mediaEffectDataList = mCamera.mediaEffectsWithType(propsItem.effect().getMediaEffectType());
+
+            if (mediaEffectDataList == null || mediaEffectDataList.size() == 0) return false;
+
+            return mediaEffectDataList.contains(propsItem.effect());
+        }
+    };
+
+    /** 选择道具物品后回调  */
+    private PropsItemPageFragment.ItemDelegate mPropsItemDelegate  = new PropsItemPageFragment.ItemDelegate() {
+        @Override
+        public void didSelectPropsItem(PropsItem propsItem) {
+            mCamera.addMediaEffectData(propsItem.effect());
+            mPropsItemPagerAdapter.notifyAllPageData();
+
+        }
+
+        /**
+         * 当前道具是否正在被使用
+         *
+         * @param propsItem 道具
+         * @return
+         */
+        @Override
+        public boolean propsItemUsed(PropsItem propsItem) {
+            if (propsItem.effect() == null) return false;
+            List<TuSdkMediaEffectData> mediaEffectDataList = mCamera.mediaEffectsWithType(propsItem.effect().getMediaEffectType());
+
+            if (mediaEffectDataList == null || mediaEffectDataList.size() == 0) return false;
+
+            return mediaEffectDataList.contains(propsItem.effect());
+        }
+    };
 
     /**
      * 设置贴纸适配器
-     * @param fragmentPagerAdapter
-     * @param stickerGroupCategories
      */
-    public void setStickerAdapter(TabViewPagerAdapter fragmentPagerAdapter, List<StickerGroupCategories> stickerGroupCategories){
-        mStickerPagerAdapter = fragmentPagerAdapter;
-        mViewPager.setAdapter(mStickerPagerAdapter);
-        mTabPagerIndicator.setViewPager(mViewPager,0);
-        mTabPagerIndicator.setDefaultVisibleCounts(stickerGroupCategories.size());
-        mTabPagerIndicator.setTabItems(stickerGroupCategories);
+    public void init(final FragmentManager fm){
+
+        // 添加贴纸道具分类数据
+        mPropsItemCategories.addAll(PropsItemStickerCategory.allCategories());
+
+        // 添加哈哈镜道具分类
+        mPropsItemCategories.addAll(PropsItemMonsterCategory.allCategories());
+
+        mPropsItemPagerAdapter = new PropsItemPagerAdapter(fm, new PropsItemPagerAdapter.DataSource() {
+            @Override
+            public Fragment frament(int pageIndex) {
+
+                PropsItemCategory category = mPropsItemCategories.get(pageIndex);
+
+                switch (category.getMediaEffectType()) {
+                    case TuSdKMediaEffectDataTypeSticker: {
+                        StickerPropsItemPageFragment fragment = new StickerPropsItemPageFragment(pageIndex, mPropsItemCategories.get(pageIndex).getItems());
+                        fragment.setItemDelegate(mStickerPropsItemDelegate);
+                        return fragment;
+                    }
+                    default: {
+                        PropsItemMonsterPageFragment fragment = new PropsItemMonsterPageFragment(pageIndex, mPropsItemCategories.get(pageIndex).getItems());
+                        fragment.setItemDelegate(mPropsItemDelegate);
+                        return fragment;
+                    }
+                }
+
+            }
+
+            @Override
+            public int pageCount() {
+                return mPropsItemCategories.size();
+            }
+        });
+
+        mPropsItemViewPager.setAdapter(mPropsItemPagerAdapter);
+
+        mPropsItemTabPagerIndicator.setViewPager(mPropsItemViewPager,0);
+        mPropsItemTabPagerIndicator.setDefaultVisibleCounts(mPropsItemCategories.size());
+
+
+
+        List<String> itemTitles  = new ArrayList<>();
+        for (PropsItemCategory category : mPropsItemCategories)
+            itemTitles.add(category.getName());
+
+
+        mPropsItemTabPagerIndicator.setTabItems(itemTitles);
     }
 
     /*********************************** 微整形 ********************/
@@ -1102,7 +1213,7 @@ public class RecordView extends RelativeLayout
         if(isVisible)
         {
             setBeautyLayout(true);
-            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty_selected);
+            setTextButtonDrawableTop(mBeautyButton, R.drawable.video_nav_ic_beauty_selected);
 
             TextView lsq_beauty_tab = findViewById(R.id.lsq_beauty_tab);
             TextView lsq_beauty_shape_tab = findViewById(R.id.lsq_beauty_plastic_tab);
@@ -1118,7 +1229,7 @@ public class RecordView extends RelativeLayout
         else
         {
             setBeautyLayout(false);
-            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty);
+            setTextButtonDrawableTop(mBeautyButton, R.drawable.video_nav_ic_beauty);
         }
     }
 
@@ -1141,10 +1252,13 @@ public class RecordView extends RelativeLayout
 
         // 美白
         SelesParameters.FilterArg whiteningArgs = skinFaceEffect.getFilterArg("whitening");
-        whiteningArgs.setMaxValueFactor(0.6f);//设置最大值限制
+        whiteningArgs.setMaxValueFactor(0.4f);//设置最大值限制
         // 磨皮
         SelesParameters.FilterArg smoothingArgs = skinFaceEffect.getFilterArg("smoothing");
         smoothingArgs.setMaxValueFactor(0.7f);//设置最大值限制
+        // 红润
+        SelesParameters.FilterArg ruddyArgs = skinFaceEffect.getFilterArg("ruddy");
+        ruddyArgs.setMaxValueFactor(0.4f);//设置最大值限制
 
         if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace) == null ||
                 mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).size() == 0) {
@@ -1163,10 +1277,12 @@ public class RecordView extends RelativeLayout
             }
 
             skinFaceEffect.submitParameters();
-        }
 
-        // 滤镜名显示
-        showHitTitle(TuSdkContext.getString(useSkinNatural ? "lsq_beauty_skin_precision" : "lsq_beauty_skin_extreme"));
+            if(!oldSkinFaceEffect.getFilterWrap().equals(skinFaceEffect.getFilterWrap())) {
+                // 滤镜名显示
+                showHitTitle(TuSdkContext.getString(useSkinNatural ? "lsq_beauty_skin_precision" : "lsq_beauty_skin_extreme"));
+            }
+        }
     }
 
     /**
@@ -1423,7 +1539,7 @@ public class RecordView extends RelativeLayout
                 // 视频回退
                 case R.id.lsq_backWrap:
                     // 点击后退按钮删除上一条视频
-                    if (mRecordProgress.getRecordProgressListSize() > 0) {
+                    if (mCamera.getRecordingFragmentSize() > 0) {
                         mCamera.popVideoFragment();
                         mRecordProgress.removePreSegment();
 
@@ -1444,7 +1560,7 @@ public class RecordView extends RelativeLayout
                     // 启动录制隐藏比例调节按钮
                     mCamera.stopRecording();
                     initRecordProgress();
-                    setViewHideOrVisible(false);
+                    setViewHideOrVisible(true);
                     break;
                 // 取消拍摄
                 case R.id.lsq_backButton:
@@ -1456,9 +1572,8 @@ public class RecordView extends RelativeLayout
                     break;
                 // 取消贴纸
                 case R.id.lsq_cancel_button:
-                    mCamera.removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker);
-                    TabViewPagerAdapter.mStickerGroupId = 0;
-                    mViewPager.getAdapter().notifyDataSetChanged();
+                    mCamera.removeMediaEffectsWithType(mPropsItemCategories.get(mPropsItemViewPager.getCurrentItem()).getMediaEffectType());
+                    mPropsItemPagerAdapter.notifyAllPageData();
                     break;
             }
         }
@@ -1733,12 +1848,12 @@ public class RecordView extends RelativeLayout
         isSpeedChecked = isVisible;
         if(isVisible)
         {
-            setTextButtonDrawableTop(mSpeedButton,R.drawable.video_nav_ic_speed_selected);
+            setTextButtonDrawableTop(mSpeedButton, R.drawable.video_nav_ic_speed_selected);
             mSpeedModeBar.setVisibility(VISIBLE);
         }
         else
         {
-            setTextButtonDrawableTop(mSpeedButton,R.drawable.video_nav_ic_speed);
+            setTextButtonDrawableTop(mSpeedButton, R.drawable.video_nav_ic_speed);
             mSpeedModeBar.setVisibility(GONE);
         }
     }
@@ -1765,8 +1880,8 @@ public class RecordView extends RelativeLayout
     {
         mBottomBarLayout.setVisibility(isVisible ? VISIBLE : GONE);
         mRecordButton.setVisibility(isVisible ? VISIBLE : GONE);
-        mRecordModeBarLayout.setVisibility(isVisible && mRecordProgress.getRecordProgressListSize() <= 0 ? VISIBLE : GONE);
-        mRollBackButton.setVisibility(isVisible && mRecordProgress.getRecordProgressListSize() > 0 ? VISIBLE : GONE);
+        mRecordModeBarLayout.setVisibility(isVisible && mCamera.getRecordingFragmentSize() <= 0 ? VISIBLE : GONE);
+        mRollBackButton.setVisibility(isVisible && mCamera.getRecordingFragmentSize() > 0 ? VISIBLE : GONE);
     }
     /**
      * 设置显示隐藏控件（录制、非录制状态下）
@@ -1785,7 +1900,7 @@ public class RecordView extends RelativeLayout
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,2);
 
-        if(mRecordProgress.getRecordProgressListSize() > 0){
+        if(mCamera.getRecordingFragmentSize() > 0){
             layoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1);
             mConfirmButton.setVisibility(visibleState);
             mRollBackButton.setVisibility(visibleState);
@@ -1854,6 +1969,7 @@ public class RecordView extends RelativeLayout
 
         } else if (state == TuSdkRecorderVideoCamera.RecordState.Paused) // 已暂停录制
         {
+            TLog.e("record pasue ---  state Pause");
             if (mRecordProgress.getProgress() != 0) {
                 addInteruptPoint(TuSdkContext.getDisplaySize().width * mRecordProgress.getProgress());
             }
@@ -1862,9 +1978,12 @@ public class RecordView extends RelativeLayout
             updateRecordButtonResource(mRecordMode);
         } else if (state == TuSdkRecorderVideoCamera.RecordState.RecordCompleted) //录制完成弹出提示（续拍模式下录过程中超过最大时间时调用）
         {
-            String msg = getStringFromResource("max_recordTime") + Constants.MAX_RECORDING_TIME + "s";
+            String msg = getStringFromResource("lsq_record_completed");
             TuSdk.messageHub().showToast(mContext, msg);
 
+            if (mRecordProgress.getProgress() != 0) {
+                addInteruptPoint(TuSdkContext.getDisplaySize().width * 0.999f);
+            }
             updateRecordButtonResource(mRecordMode);
             setViewHideOrVisible(true);
 
@@ -1872,6 +1991,13 @@ public class RecordView extends RelativeLayout
         {
             String msg = getStringFromResource("new_movie_saving");
             TuSdk.messageHub().setStatus(mContext, msg);
+        }else if(state == TuSdkRecorderVideoCamera.RecordState.SaveCompleted){
+
+            String msg = getStringFromResource("lsq_video_save_ok");
+            TuSdk.messageHub().showToast(mContext, msg);
+
+            updateRecordButtonResource(mRecordMode);
+            setViewHideOrVisible(true);
         }
     }
 
@@ -1910,8 +2036,8 @@ public class RecordView extends RelativeLayout
     public void updateViewOnMovieRecordFailed(TuSdkRecorderVideoCamera.RecordError error, boolean isRecording) {
         if (error == TuSdkRecorderVideoCamera.RecordError.MoreMaxDuration) // 超过最大时间 （超过最大时间是再次调用startRecording时会调用）
         {
-            String msg = getStringFromResource("over_max_recordTime");
-            TuSdk.messageHub().showError(mContext, msg);
+            String msg = getStringFromResource("max_recordTime") + Constants.MAX_RECORDING_TIME + "s";
+            TuSdk.messageHub().showToast(mContext, msg);
 
         } else if (error == TuSdkRecorderVideoCamera.RecordError.SaveFailed) // 视频保存失败
         {

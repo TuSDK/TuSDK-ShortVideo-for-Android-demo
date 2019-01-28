@@ -108,7 +108,6 @@ public class EditorCutView {
             TLog.e(" video time length mast > 0  !!!");
             return;
         }
-//        mRangeView.setTotalTimeUs(totalTimeUs);
         mRulerView.setMaxValueAndPaintColor(totalTimeUs, mActivity.getResources().getColor(R.color.lsq_color_white));
     }
 
@@ -162,6 +161,7 @@ public class EditorCutView {
     /** 设置是否启用 **/
     public void setEnable(boolean isEnable){
         this.isEnable = isEnable;
+        mRangeView.setEnable(isEnable);
     }
 
 

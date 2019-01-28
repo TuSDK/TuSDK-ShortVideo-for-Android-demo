@@ -92,7 +92,7 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
 
             if(mAudioRecorder.getValidTimeUs() >=
                     mMovieEditor.getEditorPlayer().getInputTotalTimeUs()){
-                TuSdkViewHelper.toast(getContext(),R.string.lsq_max_audio_record_time);
+                TuSdkViewHelper.toast(getContext(), R.string.lsq_max_audio_record_time);
                 return;
             }
 
@@ -211,7 +211,7 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
         setting.channelCount = audioInfo.channel;
         setting.sampleRate = audioInfo.sampleRate;
         mAudioRecorder = new TuSdkAudioRecorder(setting,mAudioRecorderListener);
-        mAudioRecorder.setMaxRecordTime(mMovieEditor.getEditorPlayer().getInputTotalTimeUs());
+        mAudioRecorder.setMaxRecordTime(mMovieEditor.getEditorPlayer().getOutputTotalTimeUS());
         setVisibility(VISIBLE);
         mAudioRecorder.setSoundPitchType(mSoundTypes[mCurrentPos]);
         mRecordProgressBar.clearProgressList();
@@ -251,7 +251,7 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
         public void onRecordError(int code) {
             switch (code){
                 case PERMISSION_ERROR:
-                    TuSdk.messageHub().showError(getContext(),R.string.lsq_record_dialog_message);
+                    TuSdk.messageHub().showError(getContext(), R.string.lsq_record_dialog_message);
                     break;
                 case PARAMETRTS_ERROR:
                     TLog.e("%s record parameter invalid ！",TAG);
@@ -349,6 +349,8 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
                             mOnRecordTouchListener.onStartRecordAudio();
                         updateRecordButtonResource(RECORDING);
                         break;
+                    case MotionEvent.ACTION_MOVE:
+                        if(mAudioRecorder.isPause()) updateRecordButtonResource(LONG_CLICK_RECORD);return false;
                     case MotionEvent.ACTION_UP:
                         if (mOnRecordTouchListener != null)
                             mOnRecordTouchListener.onPauseRecordAudio();

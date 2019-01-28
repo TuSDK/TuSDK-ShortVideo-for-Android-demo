@@ -21,8 +21,8 @@ public class Constants {
      */
     public static final int MIN_RECORDING_TIME = 3;
 
-    /** 最大合成 */
-    public static final int MAX_EDITOR_SELECT_MUN = 1;
+    /** 最大合成数 (单位：个) */
+    public static final int MAX_EDITOR_SELECT_MUN = 9;
 
 
     public static int[] AUDIO_EFFECTS = new int[]{R.raw.lsq_audio_lively, R.raw.lsq_audio_oldmovie, R.raw.lsq_audio_relieve};

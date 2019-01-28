@@ -161,8 +161,18 @@ public class ComponentListActivity extends ListActivity implements TuSdkNavigato
 				return ;
 			}
 		}
-
-		startActivityWithClassName(sample.className, null);
+		//录制跳编辑
+		if(position == mSamplesListAdapter.getCount() - 1){
+			try {
+				Intent intent = new Intent(ComponentListActivity.this, Class.forName(sample.className));
+				intent.putExtra("isDirectEdit",true);
+				startActivity(intent);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}else {
+			startActivityWithClassName(sample.className, null);
+		}
 		super.onListItemClick(parent, view, position, id);
 	}
 

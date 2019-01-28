@@ -20,6 +20,8 @@ import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorGroupView;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorRectView;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * 视频播放滚动视图
  *
@@ -30,6 +32,7 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
     private static final String TAG = "MoviePlayScrollView";
     private TuSdkMovieScrollContent mMovieScrollContentView;
     private OnProgressChangedListener mProgressChangedListener;
+    private OnColorGotoBackListener onBackListener;
     /** 当前进度 **/
     private float mPercent;
     /** 0不带bar  1带bar */
@@ -37,16 +40,28 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
     /** 时间特效的类型  0 正常   1 倒序 **/
     private int mTimeEffectType = 0;
     /** 是否正在添加一个颜色区间 **/
-    private boolean isAddColorRect;
+    private volatile boolean isAddColorRect;
     /** 是否正在触摸中 **/
     private boolean isTouching;
     private boolean isSetLayoutWidth;
+    /** 上一次的进度 **/
+    private float prePercent;
+    private boolean isUpdateColor = true;
+    private AtomicInteger isInit = new AtomicInteger(2);
 
 
     /** 进度改变回调 */
     public static interface OnProgressChangedListener {
         void onProgressChanged(float progress, boolean isTouching);
+
+        void onCancelSeek();
     }
+
+    /**  **/
+    public interface OnColorGotoBackListener{
+        void onGotoBack(float percent);
+    }
+
 
     public TuSdkMovieScrollView(Context context) {
         super(context);
@@ -67,31 +82,53 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if(!isSetLayoutWidth) {
-                    ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(getWidth(),getHeight());
-                    addView(mMovieScrollContentView,layoutParams1);
+                if(isInit.get() <= 0) return;
+
+                if (!isSetLayoutWidth) {
+                    ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(getWidth(), getHeight());
+                    addView(mMovieScrollContentView, layoutParams1);
                     isSetLayoutWidth = true;
+                    isInit.getAndAdd(-1);
                 }
                 if (mType == 1) {
                     TuSdkRangeSelectionBar rangeSelectionBar = (TuSdkRangeSelectionBar) mMovieScrollContentView.getChildAt(2);
                     int barWidth = TuSdkContext.dip2px(15);
                     if (rangeSelectionBar != null) barWidth = rangeSelectionBar.getBarWidth();
                     mMovieScrollContentView.setPadding(getWidth() / 2 - getPaddingLeft() - barWidth, 0, getWidth() / 2 - getPaddingRight() - barWidth, 0);
+                    isInit.getAndAdd(-1);
                 } else {
                     mMovieScrollContentView.setPadding(getWidth() / 2 - getPaddingLeft(), 0, getWidth() / 2 - getPaddingRight(), 0);
+                    isInit.getAndAdd(-1);
                 }
             }
         });
     }
 
-
     @Override
     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
         mPercent = scrollX / (float) mMovieScrollContentView.getTotalWidth();
-        if (mProgressChangedListener != null)
-            mProgressChangedListener.onProgressChanged(mPercent, isTouching);
-        if (mMovieScrollContentView != null && isAddColorRect)
+        if(isTouching) prePercent = mPercent;
+        if (mMovieScrollContentView != null && isAddColorRect) {
+
+            if (prePercent > mPercent) {
+                isUpdateColor = false;
+                if(onBackListener != null) onBackListener.onGotoBack(prePercent);
+            } else {
+                prePercent = mPercent;
+            }
+
+            if(prePercent >= 0.986f) prePercent = 1f;
+            if (mTimeEffectType == 0 && !isUpdateColor) {
+                mMovieScrollContentView.updateScrollPercent(prePercent);
+                return;
+            }
             mMovieScrollContentView.updateScrollPercent(mPercent);
+        }
+
+        if (mProgressChangedListener != null) {
+            mProgressChangedListener.onProgressChanged(mPercent, isTouching);
+        }
+
     }
 
     /**
@@ -112,14 +149,23 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
         this.mProgressChangedListener = progressChangedListener;
     }
 
+    public void setOnBackListener(OnColorGotoBackListener onBackListener) {
+        this.onBackListener = onBackListener;
+    }
+
     /**
      * 跳转到指定进度
      *
      * @param percent 进度
      */
     public void seekTo(float percent) {
-        smoothScrollTo((int) (mMovieScrollContentView.getTotalWidth() * percent), 0);
+        if (percent >= 1.0f) {
+            scrollTo(mMovieScrollContentView.getTotalWidth(), 0);
+        } else {
+            smoothScrollTo((int) (mMovieScrollContentView.getTotalWidth() * percent), 0);
+        }
     }
+
 
     /**
      * 获取当前进度
@@ -171,13 +217,14 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
 
     /**
      * 改变一个色块的位置
-     * @param rectView 当前色块的实体
-     * @param startPercent  开始进度
-     * @param endPercent    结束进度
+     *
+     * @param rectView     当前色块的实体
+     * @param startPercent 开始进度
+     * @param endPercent   结束进度
      */
-    public void changeColorRect(TuSdkMovieColorRectView rectView,float startPercent, float endPercent){
-        if(!mMovieScrollContentView.isContain(rectView)){
-            TLog.e("%s this rect is not contain : start : %s  end : %s",TAG,startPercent,endPercent);
+    public void changeColorRect(TuSdkMovieColorRectView rectView, float startPercent, float endPercent) {
+        if (!mMovieScrollContentView.isContain(rectView)) {
+            TLog.e("%s this rect is not contain : start : %s  end : %s", TAG, startPercent, endPercent);
             return;
         }
         rectView.setDrawDirection(mTimeEffectType);
@@ -191,11 +238,14 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
     /** 取消添加一个颜色色块 **/
     public void endAddColorRect() {
         isAddColorRect = false;
+        isUpdateColor = true;
+        prePercent = mPercent;
     }
 
     /** 删除一个颜色色块 **/
     public void deletedColorRect() {
         TuSdkMovieColorRectView rectView = mMovieScrollContentView.deletedColorRect();
+        prePercent = 0;
         if (rectView == null) return;
         seekTo(rectView.getStartPercent());
     }
@@ -214,14 +264,15 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
         mMovieScrollContentView.setExceedCriticalValueListener(exceedValueListener);
     }
 
-    public void setOnTouchSelectBarListener(TuSdkRangeSelectionBar.OnTouchSelectBarListener onTouchSelectBarListener){
+    public void setOnTouchSelectBarListener(TuSdkRangeSelectionBar.OnTouchSelectBarListener onTouchSelectBarListener) {
         mMovieScrollContentView.setOnTouchSelectBarListener(onTouchSelectBarListener);
     }
 
     /** 设置颜色选择监听 **/
-    public void setOnSelectColorRectListener(TuSdkMovieColorGroupView.OnSelectColorRectListener onSelectColorRectListener){
+    public void setOnSelectColorRectListener(TuSdkMovieColorGroupView.OnSelectColorRectListener onSelectColorRectListener) {
         mMovieScrollContentView.setOnSelectColorRectListener(onSelectColorRectListener);
     }
+
     /**
      * 设置时间特效类型
      *
@@ -292,8 +343,18 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 isTouching = false;
+                if (mProgressChangedListener != null) mProgressChangedListener.onCancelSeek();
                 break;
         }
         return super.onTouchEvent(ev);
+    }
+
+    @Override
+    public void fling(int velocityY) {
+        super.fling(velocityY / 1000);
+    }
+
+    public void release() {
+        if (mMovieScrollContentView != null) mMovieScrollContentView.release();
     }
 }

@@ -24,7 +24,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/loading_icon"  />
         <ImageView
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/lsq_item_state_image"
             android:layout_width="@dimen/lsq__space_20"
             android:layout_height="@dimen/lsq__space_20"

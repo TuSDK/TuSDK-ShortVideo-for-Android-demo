@@ -21,12 +21,21 @@ import org.lasque.tusdkvideodemo.views.VideoContent;
  */
 public class EditorAnimator {
     private static final String TAG = "EditorAnimator";
+
+    public interface OnAnimationEndListener {
+        void onShowAnimationStartListener();
+        void onShowAnimationEndListener();
+        void onHideAnimationStartListener();
+        void onHideAnimationEndListener();
+    }
+
     //动画持续时间
     private static final int DURATION = 250;
     //播放器的content
     private VideoContent mVideoContent;
     private MovieEditorController mEditorController;
     private EditorComponent.EditorComponentType mComponentEnum;
+    private OnAnimationEndListener animationEndListener;
 
     private int mVideoContentHeight;
 
@@ -37,6 +46,10 @@ public class EditorAnimator {
     public EditorAnimator(MovieEditorController editorController, VideoContent videoContent) {
         this.mVideoContent = videoContent;
         this.mEditorController = editorController;
+    }
+
+    public void setAnimationEndListener(OnAnimationEndListener animationEndListener) {
+        this.animationEndListener = animationEndListener;
     }
 
     /**
@@ -112,12 +125,13 @@ public class EditorAnimator {
     private Animator.AnimatorListener mShowAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
-
+            if(animationEndListener != null)animationEndListener.onShowAnimationStartListener();
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
             mBottomShowAnimator.removeAllListeners();
+            if(animationEndListener != null)animationEndListener.onShowAnimationEndListener();
         }
 
         @Override
@@ -136,13 +150,14 @@ public class EditorAnimator {
     private Animator.AnimatorListener mHideAnimatorListener = new Animator.AnimatorListener() {
         @Override
         public void onAnimationStart(Animator animation) {
-
+            if(animationEndListener != null)animationEndListener.onHideAnimationStartListener();
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
             mBottomHideAnimator.removeAllListeners();
             mEditorController.switchComponent(mComponentEnum);
+            if(animationEndListener != null)animationEndListener.onHideAnimationEndListener();
             showComponent();
         }
 

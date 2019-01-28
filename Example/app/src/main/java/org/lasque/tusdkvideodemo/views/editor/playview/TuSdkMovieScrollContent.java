@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorGroupView;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorRectView;
@@ -27,14 +28,17 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
     private static final String TAG = "TuSdkMovieScrollContent";
     private TuSdkMovieCoverListView mCoverListView;
     private TuSdkRangeSelectionBar mSelectRange;
-    private TuSdkMovieColorGroupView mColorGroupView;
+    protected TuSdkMovieColorGroupView mColorGroupView;
     private OnPlayProgressChangeListener progressChangeListener;
     private ImageView mCursorView;
     private boolean isAddedCoverList;
     private boolean isMeasureBarWidth;
     private boolean isNeedShowCursor = false;
+    /** 是否正在触摸中 **/
+    private boolean isTouching = false;
 
     private int mType = 0;
+    private boolean isEnable = true;
 
     public interface OnPlayProgressChangeListener{
         void onProgressChange(float percent);
@@ -64,6 +68,7 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
             public void onGlobalLayout() {
                 int width = getWidth();
                 int height = getHeight();
+                if( isAddedCoverList &&  isMeasureBarWidth && mType == 0)return;
                 if (!isAddedCoverList) {
                     // 添加封面控件
                     LayoutParams layoutParams0 = new LayoutParams(width, height);
@@ -80,7 +85,7 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
 
                     //添加选区控件
                     if (mType == 1) {
-                        LayoutParams layoutParams1 = new LayoutParams(width  + (TuSdkContext.dip2px(15) * 2), height);
+                        LayoutParams layoutParams1 = new LayoutParams(width , height);
                         addView(mSelectRange, layoutParams1);
                     }
 
@@ -147,6 +152,7 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
         TuSdkMovieColorRectView rectView = mColorGroupView.getLastColorRect();
         if (rectView == null) return;
         int distance = (int) (getTotalWidth() * (percent - rectView.getStartPercent()));
+        rectView.setEndPercent(percent);
         mColorGroupView.updateLastWidth(distance);
     }
 
@@ -261,7 +267,8 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
 
     /** 设置游标进度 **/
     public void setPercent(final float percent){
-        mCoverListView.post(new Runnable() {
+        if(isTouching)return;
+        ThreadHelper.post(new Runnable() {
             @Override
             public void run() {
                 mCursorView.setX(mCoverListView.getWidth()*percent + TuSdkContext.dip2px(15));
@@ -272,9 +279,11 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
     private float startX;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(!isEnable)return false;
         if(isTouchPointInView(mCursorView, event.getRawX()) || startX > 0){
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    isTouching = true;
                     startX = event.getX();
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -291,23 +300,29 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
                     mCursorView.setX(event.getX());
                     float percent = mCursorView.getX()/mCoverListView.getWidth();
                     if(percent > 1) percent = 1f;
+                    if(percent < 0.06)percent = 0f;
                     if(progressChangeListener != null) progressChangeListener.onProgressChange(percent);
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     if(mCursorView.getX() < mCoverListView.getLeft() && event.getX() < mCoverListView.getLeft()){
                         mCursorView.setX(mCoverListView.getLeft());
+                        isTouching = false;
                         return false;
                     }
 
                     if(mCursorView.getX() >= mCoverListView.getRight() && event.getX() >=  mCoverListView.getRight()){
                         mCursorView.setX(mCoverListView.getRight()- mCursorView.getWidth()/2);
+                        isTouching = false;
                         return false;
                     }
 
                     float percent1 = mCursorView.getX()/mCoverListView.getWidth();
                     if(percent1 > 1) percent1 = 1f;
-
+                    isTouching = false;
                     startX = -1;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    isTouching = false;
                     break;
             }
             return true;
@@ -328,5 +343,14 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
             return true;
         }
         return false;
+    }
+
+    public void release(){
+        if(mCoverListView != null) mCoverListView.release();
+    }
+
+    public void setEnable(boolean isEnable){
+        this.isEnable = isEnable;
+        if(mSelectRange != null)mSelectRange.setEnable(isEnable);
     }
 }
