@@ -1,13 +1,20 @@
 package org.lasque.tusdkvideodemo.views.props.model;
 
+import android.os.Environment;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.TuSdkBundle;
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.json.JsonHelper;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
+import org.lasque.tusdk.modules.view.widget.sticker.StickerLocalPackage;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
 import org.lasque.tusdkvideodemo.R;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +35,82 @@ public class PropsItemStickerCategory extends PropsItemCategory<PropsItemSticker
     }
 
     /**
+     * 获取本地贴纸
+     * @return
+     */
+    public static void prepareLocalSticker() {
+
+        try
+        {
+
+            /**
+             * step 1. 准备设置 Master 信息
+             * 每次从 TUTU 控制台打包资源后，在 lsq_tusdk_configs.json 文件中可以获取到 master 信息。
+             */
+            String asset = TuSdkBundle.sdkBundleOther(TuSdk.SDK_CONFIGS);
+            String json = TuSdkContext.getAssetsText(asset);
+            String master = JsonHelper.json(json).getString("master");
+
+
+            /**
+             *
+             * step 2. 将下载后的贴纸加入 TuSDKPFStickerLocalPackage.
+             *        将本地贴纸加入 TuSDKPFStickerLocalPackage 后，将负责解析并生成 TuSDKPFStickerGroup 对象。
+             *
+             *  注 ： 为演示方便，示例代码为简陋设计，开发者可读取指定的贴纸目录。
+             */
+            File stickerDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),"stickers");
+
+            if (!stickerDir.exists()) {
+                return ;
+            }
+
+            String[] stickerPaths = stickerDir.list();
+
+            for (String stickerFileName : stickerPaths) {
+
+                // 解析该文件贴纸id (开发者可自己做对照表，这里根据文件名解析id)
+                String groupId = stickerFileName.substring(stickerFileName.lastIndexOf("_") + 1,stickerFileName.lastIndexOf("."));
+
+                File stickerFile = new File(stickerDir,stickerFileName);
+
+
+                //  将下载后的贴纸加入 TuSDKPFStickerLocalPackage
+                boolean result = StickerLocalPackage.shared().addStickerGroupFile(stickerFile,Long.parseLong(groupId),master);
+
+                TLog.e("result" + result);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        /**
+         * 延伸需求 : 如果开发者要移除指定的贴纸，可通过如下方法实现
+         * 注意： TuSDKPFStickerLocalPackage 不负责移除物理贴纸文件，只是移除对贴纸的管理。
+         */
+        // [[TuSDKPFStickerLocalPackage package] removeDownloadWithIdt:1432];
+
+
+        /**
+         * step 3. 通过 addStickerGroupFile 加入后， 可以通过 TuSDKPFStickerLocalPackage 读取贴纸数据。
+         */
+
+//        List<StickerGroup> localList = StickerLocalPackage.shared().getSmartStickerGroups();
+
+    }
+
+
+    /**
      * 获取所有贴纸分类
      *
      * @return List<PropsItemStickerCategory>
      */
     public static List<PropsItemStickerCategory> allCategories() {
+
+        prepareLocalSticker();
 
         List<PropsItemStickerCategory> categories = new ArrayList<>();
 

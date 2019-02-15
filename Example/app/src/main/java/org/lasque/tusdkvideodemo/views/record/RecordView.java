@@ -1546,6 +1546,11 @@ public class RecordView extends RelativeLayout
                         if (interuptLayout.getChildCount() != 0) {
                             interuptLayout.removeViewAt(interuptLayout.getChildCount() - 1);
                         }
+                        // 删除最后一段，重置录制状态
+                        if(mCamera.getRecordingFragmentSize() == 0){
+                            mCamera.cancelRecording();
+                        }
+
                     }
                     // 刷新按钮状态
                     setViewHideOrVisible(true);
