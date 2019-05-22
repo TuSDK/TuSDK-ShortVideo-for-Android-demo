@@ -13,6 +13,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -22,10 +23,14 @@ import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.ContextUtils;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption.WaterMarkPosition;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs.CameraAntibanding;
+import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderCameraSetting;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCameraImpl;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
+import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting;
+import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting.AVCodecType;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
+import org.lasque.tusdk.impl.TuSpecialScreenHelper;
 
 /**
  * 相机界面父类
@@ -54,9 +59,10 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
         TuSdkRecorderCameraSetting captureSetting = new TuSdkRecorderCameraSetting();
 
         //预览视图实时缩放比例 (默认:0.75, 实时预览时，缩小到全屏大小比例，提升预览效率， 0 < mPreviewEffectScale <= 1)
-        captureSetting.previewEffectScale = 0.85f;
+        captureSetting.previewEffectScale = 1f;
         // 最大预览视图
-        captureSetting.previewMaxSize = 1280;
+//        captureSetting.previewMaxSize = 1280;
+        captureSetting.previewMaxSize = 4096;
         // 指定为全屏画面比例
 //        captureSetting.previewRatio = 0;
 
@@ -67,7 +73,6 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
 		mVideoCamera.setDisableContinueFocus(false);
 		// 启用防闪烁功能，默认关闭。
 		mVideoCamera.setAntibandingMode(CameraAntibanding.Auto);
-
         // 设置检测框最小倍数  值越大性能越高,取值范围: 0.1 < x < 0.5, 默认: 0.2
         // 默认人脸识别距离为1米左右； 设置成0.1f, 人脸识别距离可以增加至2米
 //         mVideoCamera.setDetectScale(0.1f);

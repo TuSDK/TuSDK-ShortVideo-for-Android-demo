@@ -25,6 +25,10 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     private TuSdkTextButton mTextTabBtn;
     // 特效Tab
     protected TuSdkTextButton mEffectTabBtn;
+    /** 贴纸Tab  **/
+    protected TuSdkTextButton mStickerTabBtn;
+    /** 裁剪Tab **/
+    protected TuSdkTextButton mTrimTabBtn;
 
     //是否启用
     private boolean mEnable = true;
@@ -43,7 +47,11 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
         //特效
         EffectTab,
         //封面
-        CoverTab
+        CoverTab,
+        //贴纸
+        Sticker,
+        //裁剪
+        Trim
     }
 
     public interface MovieEditorTabBarDelegate {
@@ -86,6 +94,12 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
         mEffectTabBtn = findViewById(R.id.lsq_tab_effect_btn);
         mEffectTabBtn.setOnClickListener(this);
+
+        mStickerTabBtn = findViewById(R.id.lsq_tab_sticker_btn);
+        mStickerTabBtn.setOnClickListener(this);
+
+        mTrimTabBtn = findViewById(R.id.lsq_tab_trim_btn);
+        mTrimTabBtn.setOnClickListener(this);
     }
 
 
@@ -110,6 +124,12 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
                 break;
             case R.id.lsq_tab_effect_btn:
                 mSelectedTabType = TabType.EffectTab;
+                break;
+            case R.id.lsq_tab_sticker_btn:
+                mSelectedTabType = TabType.Sticker;
+                break;
+            case R.id.lsq_tab_trim_btn:
+                mSelectedTabType = TabType.Trim;
                 break;
         }
 

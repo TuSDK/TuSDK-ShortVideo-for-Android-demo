@@ -38,7 +38,7 @@ public class MovieEditorActivity extends FragmentActivity {
     /** 编辑控制器 **/
     private MovieEditorController mEditorController;
     /** 文字贴纸操作视图 **/
-    private StickerView mStickerView;
+    private StickerView mTextStickerView;
     /** 魔法效果操作视图 **/
     private RelativeLayout mMagicContent;
     /** 视频路径 **/
@@ -70,11 +70,11 @@ public class MovieEditorActivity extends FragmentActivity {
         mHeaderView = findViewById(R.id.lsq_editor_header);
         mBottomView = findViewById(R.id.lsq_editor_bottom);
         mVideoContent = findViewById(R.id.lsq_editor_content);
-        mStickerView = findViewById(R.id.lsq_stickerView);
+        mTextStickerView = findViewById(R.id.lsq_stickerView);
         mMagicContent = findViewById(R.id.lsq_magic_content);
 
         if(!new File(mVideoPath).exists()){
-            TuSdk.messageHub().showToast(this, R.string.lsq_not_file);
+            TuSdk.messageHub().showToast(this,R.string.lsq_not_file);
             return;
         }
         //初始化视频编辑器
@@ -84,7 +84,7 @@ public class MovieEditorActivity extends FragmentActivity {
     private void initEditorController() {
         TuSdkMovieEditor.TuSdkMovieEditorOptions defaultOptions = TuSdkMovieEditor.TuSdkMovieEditorOptions.defaultOptions();
         defaultOptions.setVideoDataSource(new TuSdkMediaDataSource(mVideoPath))
-                .setIncludeAudioInVideo(true) // 设置是否保存或者播放原音
+                .setIncludeAudioInVideo(true) // 设置是否保存原音
                 .setClearAudioDecodeCacheInfoOnDestory(false)// 设置MovieEditor销毁时是否自动清除缓存音频解码信息
                 .setPictureEffectReferTimelineType(TuSdkMediaEffectReferInputTimelineType)//设置时间线模式
                 //设置水印
@@ -118,8 +118,13 @@ public class MovieEditorActivity extends FragmentActivity {
      * 获取文字控件
      * @return
      */
-    public StickerView getStickerView() {
-        return mStickerView;
+    public StickerView getTextStickerView() {
+        return mTextStickerView;
+    }
+
+    /** 图片贴纸控件 **/
+    public StickerView getImageStickerView() {
+        return mTextStickerView;
     }
 
     /**

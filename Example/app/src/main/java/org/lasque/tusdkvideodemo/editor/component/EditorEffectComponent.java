@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorEffector;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
+import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayerImpl;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
@@ -1377,6 +1379,8 @@ public class EditorEffectComponent extends EditorComponent {
 
 
                 final PointF pointF = getConvertedPoint(event.getX(), event.getY());
+//                final PointF pointF = new PointF(event.getX(), event.getY());
+
 
 
                 switch (event.getAction()) {
@@ -1472,10 +1476,15 @@ public class EditorEffectComponent extends EditorComponent {
          */
         public PointF getConvertedPoint(float x, float y) {
             // 获取视频大小
-            TuSdkSize videoSize = TuSdkSize.create(mMovieEditor.getEditorTransCoder().getOutputVideoInfo().width, mMovieEditor.getEditorTransCoder().getOutputVideoInfo().height);
+            TuSdkSize videoSize;
+            if(((TuSdkEditorPlayerImpl)getEditorPlayer()).getOutputSize() != null) {
+                videoSize = ((TuSdkEditorPlayerImpl)getEditorPlayer()).getOutputSize();
+            }else {
+                videoSize = TuSdkSize.create(mMovieEditor.getEditorTransCoder().getOutputVideoInfo().width, mMovieEditor.getEditorTransCoder().getOutputVideoInfo().height);
+            }
+
 
             TuSdkSize previewSize = new TuSdkSize(mParticleContent.getMeasuredWidth(), mParticleContent.getMeasuredHeight());
-
             TuSdkSize screenSize = previewSize;
 
             RectF previewRectF = new RectF(0, (screenSize.height - previewSize.height) / (float) 2,
@@ -1487,11 +1496,18 @@ public class EditorEffectComponent extends EditorComponent {
             // 将基于屏幕的坐标转换成基于预览区域的坐标
             y -= previewRectF.top;
 
-            // 将预览区域的坐标转换成基于视频实际大小的坐标点
-            float videoX = x / (float) previewSize.width * videoSize.minSide();
-            float videoY = y / (float) previewSize.height * videoSize.maxSide();
+            float videoX,videoY;
+            PointF convertedPoint;
+            if(previewSize.width > previewSize.height){
+                videoX = x / (float) previewSize.width * videoSize.width;
+                videoY = y / (float) previewSize.height * videoSize.height;
+                convertedPoint = new PointF(videoX, videoSize.minSide() - videoY);
+            }else {
+                videoX = x / (float) previewSize.width * videoSize.minSide();
+                videoY = y / (float) previewSize.height * videoSize.maxSide();
+                convertedPoint = new PointF(videoX, videoSize.maxSide() - videoY);
+            }
 
-            PointF convertedPoint = new PointF(videoX, videoSize.maxSide() - videoY);
             return convertedPoint;
         }
 

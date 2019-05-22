@@ -81,7 +81,7 @@ public class EditorCutView {
      * @param times
      */
     public void setRangTime(float times){
-        String rangeTime = String.format("%s %.1f %s",mActivity.getResources().getString(R.id.lsq_movie_cut_selecttime),times,"s");
+        String rangeTime = String.format("%s %.1f %s",mActivity.getResources().getString(R.string.lsq_movie_cut_selecttime),times,"s");
         mTimeRangView.setText(rangeTime);
     }
 

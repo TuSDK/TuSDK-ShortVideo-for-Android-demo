@@ -54,13 +54,13 @@ import org.lasque.tusdk.video.editor.TuSdkMediaFilterEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaPlasticFaceEffect;
 import org.lasque.tusdk.video.editor.TuSdkMediaSkinFaceEffect;
 import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.utils.Constants;
 import org.lasque.tusdkvideodemo.views.BeautyPlasticRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.BeautyRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.FilterConfigSeekbar;
-import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.HorizontalProgressBar;
 import org.lasque.tusdkvideodemo.views.ParamsConfigView;
+import org.lasque.tusdkvideodemo.utils.Constants;
+import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
 import org.lasque.tusdkvideodemo.views.props.PropsItemMonsterPageFragment;
 import org.lasque.tusdkvideodemo.views.props.PropsItemPageFragment;
@@ -241,9 +241,9 @@ public class RecordView extends RelativeLayout
     /** 图片预留视图 **/
     private ImageView mPreViewImageView;
     /** 返回拍照按钮 **/
-    private TuSdkTextButton mBackButton;
+    private TuSdkTextButton   mBackButton;
     /** 保存按钮 **/
-    private TuSdkTextButton mSaveImageButton;
+    private TuSdkTextButton   mSaveImageButton;
 
     public RecordView(Context context)
     {
@@ -331,7 +331,7 @@ public class RecordView extends RelativeLayout
         // 录制进度条
         mRecordProgress = findViewById(R.id.lsq_record_progressbar);
         Button minTimeButton = (Button) findViewById(R.id.lsq_minTimeBtn);
-        LayoutParams minTimeLayoutParams = (LayoutParams) minTimeButton.getLayoutParams();
+        RelativeLayout.LayoutParams minTimeLayoutParams = (LayoutParams) minTimeButton.getLayoutParams();
         minTimeLayoutParams.leftMargin = (int) (((float) Constants.MIN_RECORDING_TIME * TuSdkContext.getScreenSize().width) / Constants.MAX_RECORDING_TIME)
                 - TuSdkContext.dip2px(minTimeButton.getWidth());
         // 一进入录制界面就显示最小时长标记
@@ -375,7 +375,7 @@ public class RecordView extends RelativeLayout
         mSmartBeautyTabLayout = findViewById(R.id.lsq_smart_beauty_layout);
         setBeautyLayout(false);
         mBeautyRecyclerView = findViewById(R.id.lsq_beauty_recyclerView);
-        mBeautyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+        mBeautyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
 
         // 美颜类型
         mBeautyRecyclerAdapter = new BeautyRecyclerAdapter(getContext());
@@ -626,7 +626,7 @@ public class RecordView extends RelativeLayout
     {
         if(mFilterRecyclerView == null){
             mFilterRecyclerView = findViewById(R.id.lsq_filter_list_view);
-            mFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+            mFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
             mFilterAdapter = new FilterRecyclerAdapter();
             mFilterAdapter.setItemCilckListener(mFilterItemClickListener);
             mFilterAdapter.setCurrentPosition(mCurrentPosition);
@@ -644,7 +644,7 @@ public class RecordView extends RelativeLayout
     {
         if(mComicsFilterRecyclerView == null){
             mComicsFilterRecyclerView = findViewById(R.id.lsq_comics_filter_list_view);
-            mComicsFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false));
+            mComicsFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
             mComicsFilterAdapter = new FilterRecyclerAdapter();
             mComicsFilterAdapter.isShowImageParameter(false);
             mComicsFilterAdapter.setItemCilckListener(mComicsFilterItemClickListener);
@@ -1213,7 +1213,7 @@ public class RecordView extends RelativeLayout
         if(isVisible)
         {
             setBeautyLayout(true);
-            setTextButtonDrawableTop(mBeautyButton, R.drawable.video_nav_ic_beauty_selected);
+            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty_selected);
 
             TextView lsq_beauty_tab = findViewById(R.id.lsq_beauty_tab);
             TextView lsq_beauty_shape_tab = findViewById(R.id.lsq_beauty_plastic_tab);
@@ -1229,7 +1229,7 @@ public class RecordView extends RelativeLayout
         else
         {
             setBeautyLayout(false);
-            setTextButtonDrawableTop(mBeautyButton, R.drawable.video_nav_ic_beauty);
+            setTextButtonDrawableTop(mBeautyButton,R.drawable.video_nav_ic_beauty);
         }
     }
 
@@ -1550,7 +1550,6 @@ public class RecordView extends RelativeLayout
                         if(mCamera.getRecordingFragmentSize() == 0){
                             mCamera.cancelRecording();
                         }
-
                     }
                     // 刷新按钮状态
                     setViewHideOrVisible(true);
@@ -1853,12 +1852,12 @@ public class RecordView extends RelativeLayout
         isSpeedChecked = isVisible;
         if(isVisible)
         {
-            setTextButtonDrawableTop(mSpeedButton, R.drawable.video_nav_ic_speed_selected);
+            setTextButtonDrawableTop(mSpeedButton,R.drawable.video_nav_ic_speed_selected);
             mSpeedModeBar.setVisibility(VISIBLE);
         }
         else
         {
-            setTextButtonDrawableTop(mSpeedButton, R.drawable.video_nav_ic_speed);
+            setTextButtonDrawableTop(mSpeedButton,R.drawable.video_nav_ic_speed);
             mSpeedModeBar.setVisibility(GONE);
         }
     }
@@ -1974,7 +1973,6 @@ public class RecordView extends RelativeLayout
 
         } else if (state == TuSdkRecorderVideoCamera.RecordState.Paused) // 已暂停录制
         {
-            TLog.e("record pasue ---  state Pause");
             if (mRecordProgress.getProgress() != 0) {
                 addInteruptPoint(TuSdkContext.getDisplaySize().width * mRecordProgress.getProgress());
             }
@@ -2013,7 +2011,7 @@ public class RecordView extends RelativeLayout
     private void addInteruptPoint(float margingLeft) {
         // 添加断点标记
         Button interuptBtn = new Button(mContext);
-        LayoutParams lp = new LayoutParams(2,
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(2,
                 LayoutParams.MATCH_PARENT);
 
         interuptBtn.setBackgroundColor(TuSdkContext.getColor("lsq_progress_interupt_color"));

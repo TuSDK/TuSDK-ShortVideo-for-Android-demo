@@ -1,5 +1,6 @@
 package org.lasque.tusdkvideodemo.views.editor.color;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,12 +8,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.ColorUtils;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.editor.CUtils;
 
@@ -76,6 +80,8 @@ public class ColorView extends View {
     private Paint mPaintCircleInner;
     //无色范围  图片的24 / 760
 
+    private Runnable mDrawRunable;
+
     public ColorView(Context context) {
         this(context,null);
     }
@@ -110,6 +116,12 @@ public class ColorView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        if(mDrawRunable != null){
+            mDrawRunable.run();
+            mDrawRunable = null;
+        }
+
         mRectBitmap.left = mBitmapLeft + mOutCirclePaintStrokeWidth;
         mRectBitmap.top = mBitmapTop + mOutCirclePaintStrokeWidth;
         mRectBitmap.right = getRight() - getLeft() - mOutCirclePaintStrokeWidth-mCircleRadius;
@@ -143,7 +155,7 @@ public class ColorView extends View {
                     moveX = (int) event.getX();
                 }
 
-                if (moveX <= (getRight() - mBitmapLeft - getLeft()-mCircleRadius) * ((float) 24 / 760)) {
+                if (moveX <= (getRight() - mBitmapLeft - getLeft()-mCircleRadius) * ((float) 2 / 505)) {
                     mInnerCircleColor = Color.argb(0, 0, 0, 0);
                 } else {
                     int bitmapX = (int) ((x) * ((mColorBitmap.getWidth() / mRectBitmap.width())));
@@ -214,4 +226,74 @@ public class ColorView extends View {
         void changePosition(float percent);
     }
 
+    public void reset(){
+        moveX = 0;
+        mInnerCircleColor = Color.argb(0, 0, 0, 0);
+        postInvalidate();
+    }
+
+    public void resetToEnd(){
+        mDrawRunable = new Runnable() {
+            @Override
+            public void run() {
+                moveX = getRight() - mBitmapLeft - getLeft()-mCircleRadius;
+                mInnerCircleColor = Color.argb(0, 0, 0, 0);
+                postInvalidate();
+            }
+        };
+    }
+
+    public void findColorString(String colorString){
+        int color =  Color.parseColor(colorString);
+        int move = 2;
+        Bitmap colorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
+                .edit_ic_colorbar);
+        for (int i = 2; i < colorBitmap.getWidth(); i++) {
+            int pixelBitmpa = colorBitmap.getPixel(i , 2);
+            int resA = Color.alpha(pixelBitmpa);
+            int resR = Color.red(pixelBitmpa);
+            int resG = Color.green(pixelBitmpa);
+            int resB = Color.blue(pixelBitmpa);
+            if((Math.abs(pixelBitmpa) - Math.abs(color))<5 && Math.abs(pixelBitmpa) - Math.abs(color) >= 0){
+                mInnerCircleColor =  Color.argb(resA, resR, resG, resB);
+                move = i;
+            }
+        }
+
+        final int finalMove = move;
+        mDrawRunable = new Runnable() {
+            @Override
+            public void run() {
+                moveX = (int) ((getRight() - mBitmapLeft - getLeft()-mCircleRadius) * ((float) finalMove / 505));
+                postInvalidate();
+            }
+        };
+    }
+
+    public void findColorInt(int  color){
+        int move = 2;
+        Bitmap colorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
+                .edit_ic_colorbar);
+        for (int i = 2; i < colorBitmap.getWidth(); i++) {
+            int pixelBitmpa = colorBitmap.getPixel(i , 2);
+            int resA = Color.alpha(pixelBitmpa);
+            int resR = Color.red(pixelBitmpa);
+            int resG = Color.green(pixelBitmpa);
+            int resB = Color.blue(pixelBitmpa);
+//            TLog.e("find : %s   pixel : %s  i : %s",Math.abs(color),Math.abs(pixelBitmpa),i);
+            if((Math.abs(pixelBitmpa) - Math.abs(color))<5 && Math.abs(pixelBitmpa) - Math.abs(color) >= 0){
+                mInnerCircleColor =  Color.argb(resA, resR, resG, resB);
+                move = i ;
+            }
+        }
+
+        final int finalMove = move;
+        mDrawRunable = new Runnable() {
+            @Override
+            public void run() {
+                moveX = (int) ((getRight() - mBitmapLeft - getLeft()-mCircleRadius) * ((float) finalMove / 505));
+                postInvalidate();
+            }
+        };
+    }
 }

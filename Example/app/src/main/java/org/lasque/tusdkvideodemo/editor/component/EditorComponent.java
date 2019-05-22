@@ -42,6 +42,10 @@ public abstract class EditorComponent {
         Text,
         //特效
         Effect,
+        //贴纸
+        Sticker,
+        //裁剪
+        Trim
     }
 
     // 编辑控制器

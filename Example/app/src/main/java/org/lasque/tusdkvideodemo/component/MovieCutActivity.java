@@ -329,7 +329,7 @@ public class MovieCutActivity extends ScreenAdapterActivity {
     /** 设置总时长 微秒 **/
     private void setTotalTime(float times){
         float totalTime = times/(float)1000;
-        mPlayTextView.setText(String.format(getString(R.id.lsq_movie_cut_selecttime) + "%.1fs",totalTime));
+        mPlayTextView.setText(String.format(getString(R.string.lsq_movie_cut_selecttime) + "%.1fs",totalTime));
 
     }
 

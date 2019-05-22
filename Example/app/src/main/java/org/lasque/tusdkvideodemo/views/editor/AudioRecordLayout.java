@@ -92,7 +92,7 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
 
             if(mAudioRecorder.getValidTimeUs() >=
                     mMovieEditor.getEditorPlayer().getInputTotalTimeUs()){
-                TuSdkViewHelper.toast(getContext(), R.string.lsq_max_audio_record_time);
+                TuSdkViewHelper.toast(getContext(),R.string.lsq_max_audio_record_time);
                 return;
             }
 
@@ -150,12 +150,12 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
     private void initView() {
 
         mRecordProgressBar = getRecordProgressBar();
-        LayoutParams progressLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(mRecordBarHeight));
+        RelativeLayout.LayoutParams progressLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(mRecordBarHeight));
         progressLayoutParams.addRule(ALIGN_PARENT_TOP);
         addView(mRecordProgressBar, progressLayoutParams);
 
         mRecordBottomView = new RecordBottomView();
-        LayoutParams bottomLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(170));
+        RelativeLayout.LayoutParams bottomLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, TuSdkContext.dip2px(170));
         bottomLayoutParams.addRule(ALIGN_PARENT_BOTTOM);
         addView(mRecordBottomView.mRecordBottomView, bottomLayoutParams);
 
@@ -251,7 +251,7 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
         public void onRecordError(int code) {
             switch (code){
                 case PERMISSION_ERROR:
-                    TuSdk.messageHub().showError(getContext(), R.string.lsq_record_dialog_message);
+                    TuSdk.messageHub().showError(getContext(),R.string.lsq_record_dialog_message);
                     break;
                 case PARAMETRTS_ERROR:
                     TLog.e("%s record parameter invalid ！",TAG);

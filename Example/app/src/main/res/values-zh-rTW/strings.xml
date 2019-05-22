@@ -157,6 +157,7 @@
     <string name="lsq_text_beauty">美肤</string>
     <string name="lsq_filter_text">濾鏡</string>
     <string name="lsq_magic_text">魔法</string>
+    <string name="lsq_sticker_text">貼紙</string>
     <string name="lsq_text_MV">MV</string>
     <string name="lsq_text_text_effect">文字</string>
     <string name="lsq_text_effect">特效</string>
@@ -414,8 +415,8 @@
     <string name="lsq_clear_beauty_plastic_hit_confirm">確認</string>
     <string name="lsq_clear_beauty_plastic_hit_cancel">取消</string>
 
-    <item name="lsq_movie_cut_selecttime" type="id">已選擇</item>
-    <item name="lsq_movie_cut_time" type="id">秒</item>
+    <string name="lsq_movie_cut_selecttime" type="id">已選擇</string>
+    <string name="lsq_movie_cut_time" type="id">秒</string>
     <string name="lsq_congfigview_set_size">大小</string>
 
     <string name="lsq_capture">拍照</string>
@@ -447,5 +448,27 @@
     <string name="lsq_filter_SkinPast10">过往</string>
     <string name="lsq_filter_SkinCookies10">曲奇</string>
     <string name="lsq_filter_SkinRose10">蔷薇</string>
+    <string name="lsq_trim_text">裁剪</string>
+    <string name="lsq_trim_no">无</string>
+    <string name="lsq_trim_16_9">16:9</string>
+    <string name="lsq_trim_3_2">3:2</string>
+    <string name="lsq_trim_4_3">4:3</string>
+    <string name="lsq_trim_1_1">1:1</string>
+    <string name="lsq_trim_3_4">3:4</string>
+    <string name="lsq_trim_2_3">2:3</string>
+    <string name="lsq_trim_9_16">9:16</string>
+    <string name="lsq_editor_text_add">新增</string>
+    <string name="lsq_editor_text_font">字體</string>
+    <string name="lsq_editor_text_color">顏色</string>
+    <string name="lsq_editor_text_transparency">不透明度</string>
+    <string name="lsq_editor_text_stroke">描邊</string>
+    <string name="lsq_editor_text_background">背景</string>
+    <string name="lsq_editor_text_space">間距</string>
+    <string name="lsq_editor_text_align">對齊</string>
+    <string name="lsq_editor_text_array">排列</string>
+    <string name="lsq_editor_text_style">樣式</string>
+    <string name="lsq_editor_text_size">字號</string>
+    <string name="lsq_sticker_over_limit">OMG, 同時僅允許使用 %s 張貼紙</string>
+    <string name="lsq_italic">斜體</string>
 
 </resources>

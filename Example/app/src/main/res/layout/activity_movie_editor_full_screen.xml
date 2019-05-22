@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+    android:background="@color/lsq_alpha_black_7f"
+    >
     <!-- Video Content -->
 
 
@@ -20,10 +22,12 @@
             >
         </org.lasque.tusdk.impl.components.widget.sticker.StickerView>
 
+
         <RelativeLayout
             android:id="@+id/lsq_magic_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
         </RelativeLayout>
 
         <ImageView

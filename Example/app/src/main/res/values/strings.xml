@@ -159,6 +159,7 @@
     <string name="lsq_text_beauty">美肤</string>
     <string name="lsq_filter_text">滤镜</string>
     <string name="lsq_magic_text">魔法</string>
+    <string name="lsq_sticker_text">贴纸</string>
     <string name="lsq_text_MV">MV</string>
     <string name="lsq_text_cover">封面</string>
     <string name="lsq_text_effect">特效</string>
@@ -424,8 +425,8 @@
     <string name="lsq_clear_beauty_plastic_hit_confirm">确认</string>
     <string name="lsq_clear_beauty_plastic_hit_cancel">取消</string>
 
-    <item name="lsq_movie_cut_selecttime" type="id">已选择</item>
-    <item name="lsq_movie_cut_time" type="id">秒</item>
+    <string name="lsq_movie_cut_selecttime" type="id">已选择</string>
+    <string name="lsq_movie_cut_time" type="id">秒</string>
     <string name="lsq_congfigview_set_size">大小</string>
 
     <string name="lsq_capture">拍照</string>
@@ -459,6 +460,28 @@
 
     <!-- 哈哈镜 -->
     <string name="lsq_face_monster">哈哈镜</string>
+    <string name="lsq_trim_text">裁剪</string>
+    <string name="lsq_trim_no">无</string>
+    <string name="lsq_trim_16_9">16:9</string>
+    <string name="lsq_trim_3_2">3:2</string>
+    <string name="lsq_trim_4_3">4:3</string>
+    <string name="lsq_trim_1_1">1:1</string>
+    <string name="lsq_trim_3_4">3:4</string>
+    <string name="lsq_trim_2_3">2:3</string>
+    <string name="lsq_trim_9_16">9:16</string>
+    <string name="lsq_editor_text_add">新增</string>
+    <string name="lsq_editor_text_font">字体</string>
+    <string name="lsq_editor_text_color">颜色</string>
+    <string name="lsq_editor_text_transparency">不透明度</string>
+    <string name="lsq_editor_text_stroke">描边</string>
+    <string name="lsq_editor_text_background">背景</string>
+    <string name="lsq_editor_text_space">间距</string>
+    <string name="lsq_editor_text_align">对齐</string>
+    <string name="lsq_editor_text_array">排列</string>
+    <string name="lsq_editor_text_style">样式</string>
+    <string name="lsq_editor_text_size">字号</string>
+    <string name="lsq_sticker_over_limit">OMG, 同时仅允许使用 %s 张贴纸</string>
+    <string name="lsq_italic">斜体</string>
 
 
 </resources>

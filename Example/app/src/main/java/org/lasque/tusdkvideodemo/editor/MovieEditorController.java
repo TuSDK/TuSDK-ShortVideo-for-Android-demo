@@ -1,12 +1,17 @@
 package org.lasque.tusdkvideodemo.editor;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioRenderEntry;
+import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
 import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
@@ -17,19 +22,24 @@ import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoder;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
+import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaStickerAudioEffectData;
 import org.lasque.tusdkvideodemo.R;
+import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.editor.component.EditorComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorEffectComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorFilterComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorHomeComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorMVComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorMusicComponent;
+import org.lasque.tusdkvideodemo.editor.component.EditorStickerComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorTextComponent;
+import org.lasque.tusdkvideodemo.editor.component.EditorTrimComponent;
+import org.lasque.tusdkvideodemo.editor.component.helper.EditorTextAndStickerRankHelper;
 import org.lasque.tusdkvideodemo.utils.AppManager;
 import org.lasque.tusdkvideodemo.views.MovieEditorTabBar;
 import org.lasque.tusdkvideodemo.views.VideoContent;
@@ -52,6 +62,7 @@ import at.grabner.circleprogress.CircleProgressView;
  */
 public class MovieEditorController {
     private static final String TAG = "MovieEditorController";
+    /* --------------- SDK相关 ----------------*/
     //当前的视频编辑器
     private TuSdkMovieEditor mMovieEditor;
     //主音轨音量
@@ -59,8 +70,8 @@ public class MovieEditorController {
     //音乐特效数据的备份
     private TuSdkMediaAudioEffectData mMusicEffectData;
     //MV特效数据
-    private TuSdkMediaStickerAudioEffectData mMVEffectData;
-
+    private TuSdkMediaEffectData mMVEffectData;
+    /*---------------- 视图相关 ----------------*/
     //当前Activity的引用
     private WeakReference<MovieEditorActivity> mWeakActivity;
     //视频View
@@ -89,10 +100,18 @@ public class MovieEditorController {
     private EditorTextComponent mTextComponent;
     //特效组件
     private EditorEffectComponent mEffectComponent;
+    //贴纸组件
+    private EditorStickerComponent mStickerComponent;
+    //裁剪组件
+    private EditorTrimComponent mTrimComponent;
     //缩略图集合
     private List<Bitmap> mThumbBitmapList;
     //是否正在保存
     private boolean isSaving = false;
+
+    /** 贴纸和文字备份数据帮助类 **/
+    private EditorTextAndStickerRankHelper mImageTextRankHelper;
+
 
     /** 转码回调 **/
     private TuSdkEditorTranscoder.TuSdkTranscoderProgressListener mOnTranscoderProgressListener = new TuSdkEditorTranscoder.TuSdkTranscoderProgressListener() {
@@ -194,9 +213,10 @@ public class MovieEditorController {
         }
     };
 
-    public MovieEditorController(MovieEditorActivity activity, VideoContent holderView, TuSdkMovieEditor.TuSdkMovieEditorOptions options) {
+    public MovieEditorController(MovieEditorActivity activity,VideoContent holderView,TuSdkMovieEditor.TuSdkMovieEditorOptions options) {
         mHolderView = holderView;
         mWeakActivity = new WeakReference<>(activity);
+        mImageTextRankHelper = new EditorTextAndStickerRankHelper();
         mMovieEditor = new TuSdkMovieEditorImpl(activity, holderView, options);
         //设置音效回调
         mMovieEditor.getEditorMixer().addTaskStateListener(mAudioTaskStateListener);
@@ -209,7 +229,10 @@ public class MovieEditorController {
         //之前在裁剪页面预加载过 则不用开启转码
         mMovieEditor.setEnableTranscode(false);
 
+        mMovieEditor.getEditorPlayer().setBackGround(TuSdkContext.getColor(R.color.lsq_background_editor_compoent));
+
         mMovieEditor.loadVideo();
+
         //加载缩略图
         loadVideoThumbList(options.videoDataSource.getPath());
     }
@@ -225,6 +248,9 @@ public class MovieEditorController {
         public void onShowAnimationEndListener() {
             if(mCurrentComponent == getTextComponent()){
                 getTextComponent().backUpDatas();
+            }
+            if(mCurrentComponent == getStickerComponent()){
+                getStickerComponent().backUpDatas();
             }
             mCurrentComponent.onAnimationEnd();
         }
@@ -295,6 +321,7 @@ public class MovieEditorController {
                                     getMVComponent().addCoverBitmap(videoImage.bitmap);
                                     getTextComponent().addCoverBitmap(videoImage.bitmap);
                                     getEffectComponent().addCoverBitmap(videoImage.bitmap);
+                                    getStickerComponent().addCoverBitmap(videoImage.bitmap);
                                 }
                             });
                         }
@@ -349,7 +376,7 @@ public class MovieEditorController {
      *
      * @param mediaEffectData MV特效数据
      */
-    public void setMVEffectData(TuSdkMediaStickerAudioEffectData mediaEffectData) {
+    public void setMVEffectData(TuSdkMediaEffectData mediaEffectData) {
         this.mMVEffectData = mediaEffectData;
     }
 
@@ -358,7 +385,7 @@ public class MovieEditorController {
      *
      * @return 获取备忘MV特效数据
      */
-    public TuSdkMediaStickerAudioEffectData getMVEffectData() {
+    public TuSdkMediaEffectData getMVEffectData() {
         return this.mMVEffectData;
     }
 
@@ -511,6 +538,14 @@ public class MovieEditorController {
                 //切换到特效组件(场景特效、时间特效、粒子特效)
                 mCurrentComponent = getEffectComponent();
                 break;
+            case Sticker:
+                //切换到贴纸组件
+                mCurrentComponent = getStickerComponent();
+                break;
+            case Trim:
+                //切换到裁剪组件
+                mCurrentComponent = getTrimComponent();
+                break;
             default:
                 break;
         }
@@ -614,8 +649,16 @@ public class MovieEditorController {
                     //当前已经切换为特效组件 (场景特效、时间特效、粒子特效)
                     componentEnum = EditorComponent.EditorComponentType.Effect;
                     break;
-                    default:
-                        break;
+                case Sticker:
+                    //当前切换为贴纸组件
+                    componentEnum = EditorComponent.EditorComponentType.Sticker;
+                    break;
+                case Trim:
+                    //当前切换为裁剪组件
+                    componentEnum = EditorComponent.EditorComponentType.Trim;
+                    break;
+                default:
+                    break;
             }
             if (mEditorAnimator != null) {
                 mEditorAnimator.animatorSwitchComponent(componentEnum);
@@ -715,6 +758,29 @@ public class MovieEditorController {
         return mEffectComponent;
     }
 
+    /**
+     * 获取贴纸组件
+     * @return EditorStickerComponent
+     * @since V3.3.2
+     */
+    public EditorStickerComponent getStickerComponent() {
+        if(mStickerComponent == null){
+            mStickerComponent = new EditorStickerComponent(this);
+        }
+        return mStickerComponent;
+    }
+
+    /**
+     * 获取裁剪组件
+     * @return EditorTrimComponent
+     * @since V3.3.2
+     */
+    public EditorTrimComponent getTrimComponent(){
+        if(mTrimComponent == null){
+            mTrimComponent =  new EditorTrimComponent(this);
+        }
+        return mTrimComponent;
+    }
 
 
     /* ---------------------------- 同步Activity的生命周期 --------------------- */
@@ -786,6 +852,10 @@ public class MovieEditorController {
 
     }
 
+    public EditorTextAndStickerRankHelper getImageTextRankHelper(){
+        return mImageTextRankHelper;
+    }
+
     /**
      * 组件点击返回时间的回调
      */
@@ -803,6 +873,8 @@ public class MovieEditorController {
             case Music:
             case Text:
             case Effect:
+            case Sticker:
+            case Trim:
                 if (mEditorAnimator != null) {
                     mEditorAnimator.animatorSwitchComponent(EditorComponent.EditorComponentType.Home);
                 } else {

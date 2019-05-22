@@ -63,61 +63,61 @@ public class TuSdkMovieScrollContent extends RelativeLayout {
         mSelectRange = (TuSdkRangeSelectionBar) LayoutInflater.from(getContext()).inflate(R.layout.lsq_range_selection, null);
         mColorGroupView = new TuSdkMovieColorGroupView(getContext());
         mCursorView = new ImageView(getContext());
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int width = getWidth();
-                int height = getHeight();
-                if( isAddedCoverList &&  isMeasureBarWidth && mType == 0)return;
-                if (!isAddedCoverList) {
-                    // 添加封面控件
-                    LayoutParams layoutParams0 = new LayoutParams(width, height);
-                    if (mType == 1) layoutParams0.leftMargin = TuSdkContext.dip2px(15);
-                    if (isNeedShowCursor)layoutParams0.rightMargin = TuSdkContext.dip2px(15);
-                    addView(mCoverListView, layoutParams0);
+    }
 
-                    //添加画色控件
-                    LayoutParams layoutParams2 = new LayoutParams(width, height);
-                    if (mType == 1) layoutParams2.leftMargin = TuSdkContext.dip2px(15);
-                    if (isNeedShowCursor)layoutParams2.rightMargin = TuSdkContext.dip2px(15);
-                    addView(mColorGroupView, layoutParams2);
-                    isAddedCoverList = true;
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        int width = getWidth();
+        int height = getHeight();
+        if( isAddedCoverList &&  isMeasureBarWidth && mType == 0)return;
+        if (!isAddedCoverList) {
+            // 添加封面控件
+            LayoutParams layoutParams0 = new LayoutParams(width, height);
+            if (mType == 1) layoutParams0.leftMargin = TuSdkContext.dip2px(15);
+            if (isNeedShowCursor)layoutParams0.rightMargin = TuSdkContext.dip2px(15);
+            addView(mCoverListView, layoutParams0);
 
-                    //添加选区控件
-                    if (mType == 1) {
-                        LayoutParams layoutParams1 = new LayoutParams(width , height);
-                        addView(mSelectRange, layoutParams1);
-                    }
+            //添加画色控件
+            LayoutParams layoutParams2 = new LayoutParams(width, height);
+            if (mType == 1) layoutParams2.leftMargin = TuSdkContext.dip2px(15);
+            if (isNeedShowCursor)layoutParams2.rightMargin = TuSdkContext.dip2px(15);
+            addView(mColorGroupView, layoutParams2);
+            isAddedCoverList = true;
 
-                    if(isNeedShowCursor){
-                        LayoutParams layoutParams3 = new LayoutParams(10, height);
-                        layoutParams3.leftMargin = TuSdkContext.dip2px(15);
-                        mCursorView.setBackgroundColor(getResources().getColor(R.color.lsq_color_white));
-                        addView(mCursorView,layoutParams3);
-                    }
-                }
-
-
-                /** 第一测量getBarWidth()为0 **/
-                if (mSelectRange.getBarWidth() != 0 && mType == 1 && !isMeasureBarWidth) {
-
-                    LayoutParams mCoverLayoutParams = (LayoutParams) mCoverListView.getLayoutParams();
-                    mCoverLayoutParams.leftMargin = mSelectRange.getBarWidth();
-                    mCoverListView.setLayoutParams(mCoverLayoutParams);
-
-                    LayoutParams mSelectLayoutParams = (LayoutParams) mSelectRange.getLayoutParams();
-                    mSelectLayoutParams.width = mSelectLayoutParams.width + mSelectRange.getBarWidth() * 2;
-                    mSelectRange.setLayoutParams(mSelectLayoutParams);
-
-                    LayoutParams mColorLayoutParams = (LayoutParams) mColorGroupView.getLayoutParams();
-                    mColorLayoutParams.leftMargin = mSelectRange.getBarWidth();
-                    mColorGroupView.setLayoutParams(mColorLayoutParams);
-
-                    isMeasureBarWidth = true;
-                }
-
+            //添加选区控件
+            if (mType == 1) {
+                LayoutParams layoutParams1 = new LayoutParams(width , height);
+                addView(mSelectRange, layoutParams1);
             }
-        });
+
+            if(isNeedShowCursor){
+                LayoutParams layoutParams3 = new LayoutParams(10, height);
+                layoutParams3.leftMargin = TuSdkContext.dip2px(15);
+                mCursorView.setBackgroundColor(getResources().getColor(R.color.lsq_color_white));
+                addView(mCursorView,layoutParams3);
+            }
+        }
+
+
+        /** 第一测量getBarWidth()为0 **/
+        if (mSelectRange.getBarWidth() != 0 && mType == 1 && !isMeasureBarWidth) {
+
+            LayoutParams mCoverLayoutParams = (LayoutParams) mCoverListView.getLayoutParams();
+            mCoverLayoutParams.leftMargin = mSelectRange.getBarWidth();
+            mCoverListView.setLayoutParams(mCoverLayoutParams);
+
+            LayoutParams mSelectLayoutParams = (LayoutParams) mSelectRange.getLayoutParams();
+            mSelectLayoutParams.width = mSelectLayoutParams.width + mSelectRange.getBarWidth() * 2;
+            mSelectRange.setLayoutParams(mSelectLayoutParams);
+
+            LayoutParams mColorLayoutParams = (LayoutParams) mColorGroupView.getLayoutParams();
+            mColorLayoutParams.leftMargin = mSelectRange.getBarWidth();
+            mColorGroupView.setLayoutParams(mColorLayoutParams);
+
+            isMeasureBarWidth = true;
+        }
+
     }
 
     @Override

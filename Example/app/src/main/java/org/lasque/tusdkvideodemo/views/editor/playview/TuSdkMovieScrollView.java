@@ -79,29 +79,29 @@ public class TuSdkMovieScrollView extends HorizontalScrollView implements View.O
         setScrollBarSize(0);
         setHorizontalScrollBarEnabled(false);
         setOnScrollChangeListener(this);
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if(isInit.get() <= 0) return;
+    }
 
-                if (!isSetLayoutWidth) {
-                    ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(getWidth(), getHeight());
-                    addView(mMovieScrollContentView, layoutParams1);
-                    isSetLayoutWidth = true;
-                    isInit.getAndAdd(-1);
-                }
-                if (mType == 1) {
-                    TuSdkRangeSelectionBar rangeSelectionBar = (TuSdkRangeSelectionBar) mMovieScrollContentView.getChildAt(2);
-                    int barWidth = TuSdkContext.dip2px(15);
-                    if (rangeSelectionBar != null) barWidth = rangeSelectionBar.getBarWidth();
-                    mMovieScrollContentView.setPadding(getWidth() / 2 - getPaddingLeft() - barWidth, 0, getWidth() / 2 - getPaddingRight() - barWidth, 0);
-                    isInit.getAndAdd(-1);
-                } else {
-                    mMovieScrollContentView.setPadding(getWidth() / 2 - getPaddingLeft(), 0, getWidth() / 2 - getPaddingRight(), 0);
-                    isInit.getAndAdd(-1);
-                }
-            }
-        });
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        if(isInit.get() <= 0) return ;
+
+        if (!isSetLayoutWidth) {
+            ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(getWidth(), getHeight());
+            addView(mMovieScrollContentView, layoutParams1);
+            isSetLayoutWidth = true;
+            isInit.getAndAdd(-1);
+        }
+        if (mType == 1) {
+            TuSdkRangeSelectionBar rangeSelectionBar = (TuSdkRangeSelectionBar) mMovieScrollContentView.getChildAt(2);
+            int barWidth = TuSdkContext.dip2px(15);
+            if (rangeSelectionBar != null) barWidth = rangeSelectionBar.getBarWidth();
+            mMovieScrollContentView.setPadding(getWidth() / 2 - getPaddingLeft() - barWidth, 0, getWidth() / 2 - getPaddingRight() - barWidth, 0);
+            isInit.getAndAdd(-1);
+        } else {
+            mMovieScrollContentView.setPadding(getWidth() / 2 - getPaddingLeft(), 0, getWidth() / 2 - getPaddingRight(), 0);
+            isInit.getAndAdd(-1);
+        }
     }
 
     @Override

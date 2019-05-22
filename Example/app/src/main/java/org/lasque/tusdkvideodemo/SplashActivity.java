@@ -3,10 +3,16 @@ package org.lasque.tusdkvideodemo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.TextView;
 
+import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.TuSDKVideo;
+import org.lasque.tusdkvideodemo.editor.MovieEditorActivity;
+
+import java.util.ArrayList;
 
 /**
  * 启动页
@@ -26,8 +32,16 @@ public class SplashActivity extends Activity
         ThreadHelper.postDelayed(new Runnable() {
             @Override
             public void run() {
+
+//                String path = "/storage/emulated/0/sssssssssssss.mp4";
+//                String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/sssssssssssss.mp4";
+//                Intent intent = new Intent(SplashActivity.this, MovieEditorActivity.class);
+//                intent.putExtra("isDirectEdit",false);
+//                intent.putExtra("videoPath",path);
+
                 startActivity(new Intent(SplashActivity.this,DemoEntryActivity.class));
-                overridePendingTransition(R.anim.lsq_fade_in, R.anim.lsq_fade_out);
+//                startActivity(intent);
+                overridePendingTransition(R.anim.lsq_fade_in,R.anim.lsq_fade_out);
                 finish();
             }
         },2000);

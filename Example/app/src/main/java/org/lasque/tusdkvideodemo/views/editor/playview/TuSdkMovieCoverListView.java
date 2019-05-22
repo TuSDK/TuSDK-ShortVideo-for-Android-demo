@@ -32,7 +32,7 @@ public class TuSdkMovieCoverListView extends LinearLayout {
     /** 视图的宽度 **/
     private int mViewWidth;
     private int widthTemp = 0;
-    private List<Bitmap> bitmaps = new ArrayList<>(21);
+    private List<Bitmap> bitmaps = new ArrayList<>();
 
     public TuSdkMovieCoverListView(Context context) {
         super(context);
@@ -94,7 +94,7 @@ public class TuSdkMovieCoverListView extends LinearLayout {
         mCurrentImageCount++;
         CoverImageView imageView = new CoverImageView(getContext());
         imageView.setImageBitmap(bitmap);
-        imageView.setTag(bitmap);
+        imageView.setTag(mCurrentImageCount);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         this.addView(imageView,mImageWidth,mImageHeight);
     }

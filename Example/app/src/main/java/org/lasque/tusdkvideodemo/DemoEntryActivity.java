@@ -162,6 +162,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
         @Override
         public void onFilterManagerInited(FilterManager manager)
         {
+            //使用TuProgressHub或者TuSdk.messageHub()需要tusdk_view_widget_progress_hud_view布局
             TuProgressHub.showSuccess(DemoEntryActivity.this, TuSdkContext.getString("lsq_inited"));
         }
     };
@@ -213,7 +214,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
                     Intent intent = new Intent(DemoEntryActivity.this, MovieRecordFullScreenActivity.class);
                     DemoEntryActivity.this.startActivity(intent);
                 }else if(mRequestCode == 2) {
-                    AlbumUtils.openVideoAlbum(EDITOR_CLASS, Constants.MAX_EDITOR_SELECT_MUN);
+                    AlbumUtils.openVideoAlbum(EDITOR_CLASS,Constants.MAX_EDITOR_SELECT_MUN);
                 }else{
                     Intent intent = new Intent(DemoEntryActivity.this, ComponentListActivity.class);
                     startActivity(intent);

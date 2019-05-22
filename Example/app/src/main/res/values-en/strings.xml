@@ -158,6 +158,7 @@
     <string name="lsq_text_beauty">Beauty</string>
     <string name="lsq_filter_text">Filter</string>
     <string name="lsq_magic_text">Magic</string>
+    <string name="lsq_sticker_text">Sticker</string>
     <string name="lsq_text_MV">MV</string>
     <string name="lsq_text_cover">Cover</string>
     <string name="lsq_text_effect">Effect</string>
@@ -422,8 +423,8 @@
     <string name="lsq_max_audio_record_time">The maximum recording duration has been reached</string>
     <string name="lsq_album_select_min_time">Video duration at least 3 seconds</string>
 
-    <item name="lsq_movie_cut_selecttime" type="id">select time</item>
-    <item name="lsq_movie_cut_time" type="id">s</item>
+    <string name="lsq_movie_cut_selecttime" type="id">select time</string>
+    <string name="lsq_movie_cut_time" type="id">s</string>
     <string name="lsq_congfigview_set_size">size</string>
 
     <string name="lsq_capture">Capture</string>
@@ -453,4 +454,26 @@
     <string name="lsq_filter_SkinRose10">Rose</string>
 
     <string name="lsq_record_completed">Record Completed</string>
+    <string name="lsq_trim_text">Trim</string>
+    <string name="lsq_trim_no">No</string>
+    <string name="lsq_trim_16_9">16:9</string>
+    <string name="lsq_trim_3_2">3:2</string>
+    <string name="lsq_trim_4_3">4:3</string>
+    <string name="lsq_trim_1_1">1:1</string>
+    <string name="lsq_trim_3_4">3:4</string>
+    <string name="lsq_trim_2_3">2:3</string>
+    <string name="lsq_trim_9_16">9:16</string>
+    <string name="lsq_editor_text_add">Add</string>
+    <string name="lsq_editor_text_font">Font</string>
+    <string name="lsq_editor_text_color">Color</string>
+    <string name="lsq_editor_text_transparency">Alpha</string>
+    <string name="lsq_editor_text_stroke">Stroke</string>
+    <string name="lsq_editor_text_background">BackGround</string>
+    <string name="lsq_editor_text_space">Space</string>
+    <string name="lsq_editor_text_align">Align</string>
+    <string name="lsq_editor_text_array">Array</string>
+    <string name="lsq_editor_text_style">Style</string>
+    <string name="lsq_editor_text_size">Size</string>
+    <string name="lsq_sticker_over_limit">Oops, Can’t use more than %s stickers</string>
+    <string name="lsq_italic">Italic</string>
 </resources>

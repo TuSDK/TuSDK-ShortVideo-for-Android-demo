@@ -1,40 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.lasque.tusdkvideodemo">
-
-    <!--以下为必要权限-->
-
+    <!-- 以下为必要权限 -->
     <!-- 访问网络 -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!-- 获取WIFI信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <!-- 允许应用程序写数据到外部存储设备（主要是SD卡） -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 获取WIFI信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> <!-- 允许应用程序写数据到外部存储设备（主要是SD卡） -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <!-- 请求访问使用照相设备 -->
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <!-- 开启闪光灯权限 -->
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
-    <!-- 访问麦克风 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <!-- 在sdcard中创建/删除文件的权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/> <!-- 请求访问使用照相设备 -->
+    <uses-permission android:name="android.permission.CAMERA"/> <!-- 开启闪光灯权限 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT"/> <!-- 访问麦克风 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus"/>
-    <uses-feature android:name="android.hardware.camera.flash"/>
-
-    <!--以下为非必要权限-->
-
+    <uses-feature android:name="android.hardware.camera.flash"/> <!-- 以下为非必要权限 -->
     <!-- 位置信息 -->
-    <uses-permission android:name= "android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- 允许访问GPS -->
-    <uses-permission android:name= "android.permission.ACCESS_FINE_LOCATION"/>
-    <!-- 读取本机信息 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 读取日志 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- 允许访问GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- 读取本机信息 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- 读取日志 -->
     <uses-permission android:name="android.permission.READ_LOGS"/>
 
     <application
@@ -82,14 +68,12 @@
             android:name=".editor.MovieEditorActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".editor.MovieEditorPreviewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-
-        <!-- *******************公共分组控制器******************* -->
+            android:windowSoftInputMode="stateHidden|adjustResize"/> <!-- *******************公共分组控制器******************* -->
         <activity
             android:name="org.lasque.tusdk.impl.activity.TuFragmentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -3,7 +3,6 @@ package org.lasque.tusdkvideodemo.editor.component;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
@@ -32,7 +30,6 @@ import org.lasque.tusdkvideodemo.views.CompoundConfigView;
 import org.lasque.tusdkvideodemo.views.ConfigViewParams;
 import org.lasque.tusdkvideodemo.views.ConfigViewSeekBar;
 import org.lasque.tusdkvideodemo.views.MvRecyclerAdapter;
-import org.lasque.tusdkvideodemo.views.editor.LineView;
 import org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
@@ -45,6 +42,7 @@ import java.util.Map;
 import static org.lasque.tusdk.core.TuSdkContext.getString;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeAudio;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeStickerAudio;
 
 /**
  * droid-sdk-video
@@ -379,7 +377,7 @@ public class EditorMVComponent extends EditorComponent {
 
                     mMementoEffectIndex = mSelectIndex;
                     getEditorController().setMusicEffectData(null);
-                    getEditorController().setMVEffectData((TuSdkMediaStickerAudioEffectData) mSelectEffectData);
+                    getEditorController().setMVEffectData(mSelectEffectData);
                     getEditorController().setMasterVolume(mMasterVolume);
                     mSelectIndex = -1;
                     mSelectEffectData = null;
@@ -442,8 +440,7 @@ public class EditorMVComponent extends EditorComponent {
             int groupId = (int) itemData.groupId;
             if (position == 0) {
                 mSelectEffectData = null;
-                getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
-                getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+                getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeStickerAudio);
                 getEditorController().getMovieEditor().getEditorMixer().clearAllAudioData();
             }
             if (mMusicMap != null && mMusicMap.containsKey(groupId)) {
@@ -503,22 +500,11 @@ public class EditorMVComponent extends EditorComponent {
 
         TuSdkTimeRange timeRange = TuSdkTimeRange.makeTimeUsRange(startTimeUs, endTimeUs);
 
-        // 设置音频特效播放区间
-        if (getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdkMediaEffectDataTypeAudio) != null) {
-            for (TuSdkMediaEffectData mediaEffectData : getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdkMediaEffectDataTypeAudio)) {
-                mediaEffectData.setAtTimeRange(timeRange);
-                if (mSelectEffectData != null && mSelectEffectData instanceof TuSdkMediaStickerAudioEffectData && ((TuSdkMediaStickerAudioEffectData) mSelectEffectData).getMediaAudioEffectData() == mediaEffectData) {
-                    mSelectEffectData.setAtTimeRange(timeRange);
-                }
-            }
-        }
-        // 设置贴纸特效播放区间
-        if (getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdKMediaEffectDataTypeSticker) != null) {
-            for (TuSdkMediaEffectData mediaEffectData : getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdKMediaEffectDataTypeSticker)) {
-                mediaEffectData.setAtTimeRange(timeRange);
-                if (mSelectEffectData != null && mSelectEffectData instanceof TuSdkMediaStickerAudioEffectData && ((TuSdkMediaStickerAudioEffectData) mSelectEffectData).getMediaStickerEffectData() == mediaEffectData) {
-                    mSelectEffectData.setAtTimeRange(timeRange);
-                }
+        List<TuSdkMediaStickerAudioEffectData> list = getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdkMediaEffectDataTypeStickerAudio);
+
+        if(list != null){
+            for (TuSdkMediaStickerAudioEffectData item : list) {
+                item.setAtTimeRange(timeRange);
             }
         }
     }
