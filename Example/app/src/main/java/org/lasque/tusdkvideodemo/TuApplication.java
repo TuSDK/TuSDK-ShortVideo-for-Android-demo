@@ -15,6 +15,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkApplication;
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.monitor.TuSdkMonitor;
 
 /**
  * TuApplication.java
@@ -58,7 +60,7 @@ public class TuApplication extends TuSdkApplication
 		CrashReport.initCrashReport(getApplicationContext(), "09e008786d", true);
 
 		// 设置资源类，当 Application id 与 Package Name 不相同时，必须手动调用该方法, 且在 init 之前执行。
-//		 TuSdk.setResourcePackageClazz(org.lasque.tusdkvideodemo.R.class);
+		 TuSdk.setResourcePackageClazz(org.lasque.tusdkvideodemo.R.class);
 		
 		// 自定义 .so 文件路径，在 init 之前调用
 		// NativeLibraryHelper.shared().mapLibrary(NativeLibType.LIB_CORE, "libtusdk-library.so 文件路径");
@@ -66,6 +68,15 @@ public class TuApplication extends TuSdkApplication
 
 		// 设置输出状态，建议在接入阶段开启该选项，以便定位问题。
 		this.setEnableLog(true);
+		// 设置Log输出为问题  建议在接入阶段或者测试阶段打开，用于测试问题。
+		TLog.enableLog2File(false);
+
+		// 在调试集成测试阶段，可能会出现一些很难定位的问题，
+		// 开发人员可以打开如下配置，尝试在真机运行，复现该类问题 ，
+		// 然后将 sdcard 根目录下的 log/tusdk 目录日志上报给涂图开发者，以便我们更好的定位问题。
+		TuSdkMonitor.setEnableCheckGLError(false) // 开启 GL 日志检测
+				.setEnableCheckFrameImage(false); // 开启 GL 图像帧检测
+
 		/**
 	     *  初始化SDK，应用密钥是您的应用在 TuSDK 的唯一标识符。每个应用的包名(Bundle Identifier)、密钥、资源包(滤镜、贴纸等)三者需要匹配，否则将会报错。
 	     *

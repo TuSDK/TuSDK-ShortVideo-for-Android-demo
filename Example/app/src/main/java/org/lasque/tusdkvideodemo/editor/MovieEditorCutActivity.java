@@ -18,12 +18,15 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.api.extend.TuSdkMediaPlayerListener;
 import org.lasque.tusdk.core.api.extend.TuSdkMediaProgress;
 import org.lasque.tusdk.core.common.TuSDKMediaUtils;
+import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaFormat;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
+import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaUtils;
 import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkMediaFilesCuterImpl;
 import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkMediaMutableFilePlayer;
 import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkVideoImageExtractor;
 import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkVideoImageExtractor.TuSdkVideoImageExtractorListener;
+import org.lasque.tusdk.core.media.codec.video.TuSdkVideoInfo;
 import org.lasque.tusdk.core.media.codec.video.TuSdkVideoQuality;
 import org.lasque.tusdk.core.media.suit.TuSdkMediaSuit;
 import org.lasque.tusdk.core.seles.output.SelesView;
@@ -36,6 +39,7 @@ import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.ScreenAdapterActivity;
 import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.views.editor.EditorCutView;
+import org.lasque.tusdkvideodemo.views.editor.SpeedView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollContent;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 
@@ -45,6 +49,8 @@ import java.util.List;
 
 import at.grabner.circleprogress.CircleProgressView;
 
+import static android.media.MediaCodecInfo.CodecProfileLevel.AACObjectMain;
+import static android.media.MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline;
 import static org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkMediaMutableFilePlayerImpl.TuSdkMediaPlayerStatus.Playing;
 
 /**
@@ -119,6 +125,30 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         }
     };
 
+    private float mCurrentSpeed = 1f;
+    private float mCurrentLeftPercent = 0f;
+    private float mCurrentRightPercent = 1.0f;
+
+    /**
+     * 播放速度控制器回调
+     */
+    private SpeedView.OnPlayingSpeedChangeListener mPlayingSpeedListener = new SpeedView.OnPlayingSpeedChangeListener() {
+        @Override
+        public void onChanged(float speed) {
+            mCurrentSpeed = speed;
+            mVideoPlayer.pause();
+            mVideoPlayer.seekToPercentage(0);
+            mVideoPlayer.setSpeed(speed);
+            mEditorCutView.setTotalTime((long) (mDurationTimeUs / speed));
+            mEditorCutView.setSpeedChangeRangTime(mEditorCutView.getRangTime()/speed);
+            mLeftTimeRangUs = (long) ((mCurrentLeftPercent * mVideoPlayer.durationUs()) / mCurrentSpeed);
+            mRightTimeRangUs = (long) (mCurrentRightPercent * mVideoPlayer.durationUs() / mCurrentSpeed);
+            float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
+            mEditorCutView.setRangTime(Math.max(3.0f,selectTime));
+            mVideoPlayer.resume();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -175,8 +205,10 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         mEditorCutView.setOnSelectCeoverTimeListener(new TuSdkRangeSelectionBar.OnSelectRangeChangedListener() {
             @Override
             public void onSelectRangeChanged(float leftPercent, float rightPercent, int type) {
+                mCurrentLeftPercent = leftPercent;
+                mCurrentRightPercent = rightPercent;
                 if(type == 0 ){
-                    mLeftTimeRangUs = (long) (leftPercent * mVideoPlayer.durationUs());
+                    mLeftTimeRangUs = (long) ((leftPercent * mVideoPlayer.durationUs()) / mCurrentSpeed);
                     float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
                     if(selectTime < 3.0)selectTime = 3.0f;
                     mEditorCutView.setRangTime(selectTime);
@@ -187,7 +219,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
                     mEditorCutView.setVideoPlayPercent(leftPercent);
                     mVideoPlayer.seekToPercentage(leftPercent);
                 }else if(type == 1){
-                    mRightTimeRangUs = (long) (rightPercent * mVideoPlayer.durationUs());;
+                    mRightTimeRangUs = (long) (rightPercent * mVideoPlayer.durationUs() / mCurrentSpeed);
                     float selectTime = (mRightTimeRangUs - mLeftTimeRangUs) / 1000000.0f;
                     if(selectTime < 3.0)selectTime = 3.0f;
                     mEditorCutView.setRangTime(selectTime);
@@ -201,11 +233,23 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
             }
         });
 
+        mEditorCutView.setOnPlayingSpeedChangeListener(mPlayingSpeedListener);
+
         mContent = findViewById(R.id.lsq_content);
         mContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mVideoPlayer == null)return;
+                if (mVideoPlayer.elapsedUs() == mVideoPlayer.durationUs())  {
+                    mVideoPlayer.pause();
+                    //增加延时等待seek时间
+                    ThreadHelper.postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                                mVideoPlayer.resume();
+                        }
+                    },100);
+                }
                 if (mVideoPlayer.isPause()) {
                     mVideoPlayer.resume();
                 } else {
@@ -275,6 +319,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         mEditorCutView.setRangTime(duration);
         mEditorCutView.setTotalTime(mDurationTimeUs);
 
+
         mVideoPlayer = (TuSdkMediaMutableFilePlayer) TuSdkMediaSuit.playMedia(sourceList,true,mMediaPlayerListener);
 
         if (mVideoPlayer == null) {
@@ -297,6 +342,10 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
     protected void onDestroy() {
         super.onDestroy();
         mVideoPlayer.release();
+        if (cuter != null){
+            cuter.stop();
+            cuter = null;
+        }
         JVMUtils.runGC();
     }
 
@@ -310,14 +359,20 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
 
         isCutting = true;
 
+        boolean enableAudioCheck = false;
+
         List<TuSdkMediaDataSource> sourceList = new ArrayList<>();
 
         // 遍历视频源
         for (MovieInfo movieInfo : mVideoPaths) {
             sourceList.add(TuSdkMediaDataSource.create(movieInfo.getPath()).get(0));
+            TuSDKVideoInfo videoInfo = TuSDKMediaUtils.getVideoInfo(movieInfo.getPath());
+            if(videoInfo.fps >= 55){
+                enableAudioCheck = true;
+            }
         }
         // 准备切片时间
-        TuSdkMediaTimeSlice tuSdkMediaTimeSlice = new TuSdkMediaTimeSlice(mLeftTimeRangUs,mRightTimeRangUs);
+        TuSdkMediaTimeSlice tuSdkMediaTimeSlice = new TuSdkMediaTimeSlice((long)(mLeftTimeRangUs * mCurrentSpeed),(long) (mRightTimeRangUs * mCurrentSpeed));
         tuSdkMediaTimeSlice.speed = mVideoPlayer.speed();
 
         // 准备裁剪对象
@@ -329,10 +384,11 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         // 设置文件输出路径
         cuter.setOutputFilePath(getOutputTempFilePath().getPath());
 
+        cuter.setEnableAudioCheck(enableAudioCheck);
+
         // 准备视频格式
         MediaFormat videoFormat = TuSdkMediaFormat.buildSafeVideoEncodecFormat( cuter.preferredOutputSize().width,  cuter.preferredOutputSize().height,
                 30, TuSdkVideoQuality.RECORD_MEDIUM2.getBitrate(), MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface, 0, 0);
-
 
         // 设置视频输出格式
         cuter.setOutputVideoFormat(videoFormat);

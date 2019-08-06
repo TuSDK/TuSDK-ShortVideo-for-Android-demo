@@ -3,7 +3,10 @@ package org.lasque.tusdkvideodemo.editor.component;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -36,6 +39,7 @@ import org.lasque.tusdk.core.utils.ColorUtils;
 import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
+import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.widget.TuSdkEditText;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
@@ -178,7 +182,7 @@ public class EditorTextComponent extends EditorComponent {
                 mBottomView.getLineView().setShowSelectBar(false);
             } else {
                 mBottomView.getLineView().setShowSelectBar(true);
-                float startPercent = mBottomView.mLineView.getCurrentPercent();
+                float startPercent = getEditorPlayer().isReversing() ? ((StickerTextData) stickerData).starTimeUs / (float) getEditorPlayer().getTotalTimeUs() : mBottomView.mLineView.getCurrentPercent();
                 float endPercent = ((StickerTextData) stickerData).stopTimeUs / (float) getEditorPlayer().getTotalTimeUs();
                 TuSdkMovieColorRectView rectView = mBottomView.mLineView.recoverColorRect(R.color.lsq_scence_effect_color_EdgeMagic01, startPercent, endPercent);
                 mCurrentColorRectView = rectView;
@@ -303,7 +307,7 @@ public class EditorTextComponent extends EditorComponent {
     public void detach() {
         getEditorController().getActivity().getTextStickerView().setVisibility(View.GONE);
         mBottomView.setPlayState(1);
-        getEditorPlayer().seekOutputTimeUs(0);
+        getEditorPlayer().seekTimeUs(0);
         getEditorController().getPlayBtn().setVisibility(View.VISIBLE);
         getEditorController().getVideoContentView().setClickable(true);
         mBottomView.mBottomOptions.backToOptionView();
@@ -624,7 +628,7 @@ public class EditorTextComponent extends EditorComponent {
                     stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_transparent), 0);
 
                     //生成相应的图片
-                    Bitmap textBitmap = StickerFactory.getBitmapForText(stickerItemView.getTextView()).copy(Bitmap.Config.ARGB_8888, false);
+                    Bitmap textBitmap = StickerFactory.createBitmapFromView(stickerItemView.getTextView(),5);
 
                     stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_white), 2);
                     //获取计算相应的位置
@@ -633,18 +637,17 @@ public class EditorTextComponent extends EditorComponent {
                     int pointX = locaiont[0] - mStickerView.getLeft();
                     int pointY = locaiont[1] - mStickerView.getTop();
 
-                    //设置初始化的时间
 
                     long starTimeUs = ((StickerTextData) stickerItemView.getSticker()).starTimeUs;
                     long stopTimeUs = ((StickerTextData) stickerItemView.getSticker()).stopTimeUs;
 
                     //获取StickerView的画布大小
-                    TuSdkSize stickerSize = TuSdkSize.create(mStickerView.getWidth(), mStickerView.getHeight());
+                    TuSdkSize canvasSize = TuSdkSize.create(mStickerView.getWidth(), mStickerView.getHeight());
 
                     //创建特效对象并且应用
                     TuSdkMediaTextEffectData textMediaEffectData = createTextMeidEffectData(
                             textBitmap, pointX, pointY, stickerItemView.getResult(null).degree,
-                            starTimeUs, stopTimeUs, stickerSize);
+                            starTimeUs, stopTimeUs, canvasSize);
                     getEditorEffector().addMediaEffectData(textMediaEffectData);
 
                     EditorTextBackups.TextBackupEntity backupEntity = mTextBackups.findTextBackupEntity(stickerItemView);
@@ -674,11 +677,11 @@ public class EditorTextComponent extends EditorComponent {
          * @param rotation    旋转的角度
          * @param startTimeUs 文字特效开始的时间
          * @param stopTimeUs  文字特效结束的时间
-         * @param stickerSize 当前StickerView的宽高（计算比例用）
+         * @param canvasSize 当前StickerView的宽高（计算比例用）
          * @return
          */
-        protected TuSdkMediaTextEffectData createTextMeidEffectData(Bitmap bitmap, float offsetX, float offsetY, float rotation, long startTimeUs, long stopTimeUs, TuSdkSize stickerSize) {
-            TuSdkMediaTextEffectData mediaTextEffectData = new TuSdkMediaTextEffectData(bitmap,offsetX,offsetY,rotation,TuSdkSize.create(bitmap.getWidth(), bitmap.getHeight()),stickerSize);
+        protected TuSdkMediaTextEffectData createTextMeidEffectData(Bitmap bitmap, float offsetX, float offsetY, float rotation, long startTimeUs, long stopTimeUs, TuSdkSize canvasSize) {
+            TuSdkMediaTextEffectData mediaTextEffectData = new TuSdkMediaTextEffectData(bitmap,offsetX,offsetY,rotation,TuSdkSize.create(bitmap.getWidth(), bitmap.getHeight()),canvasSize);
             mediaTextEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(startTimeUs, stopTimeUs));
             return mediaTextEffectData;
         }
@@ -828,7 +831,7 @@ public class EditorTextComponent extends EditorComponent {
             }
 
             mPlayBtn.setImageDrawable(TuSdkContext.getDrawable(state == 0 ? R.drawable.edit_ic_pause : R.drawable.edit_ic_play));
-            mBottomOptions.setOptionsEnable(state == 1 && mStickerView.stickersCount() > 0 && mStickerData != null);
+            mBottomOptions.setOptionsEnable(state == 1 && mStickerView.stickersCount() > 0 && mStickerData != null && mStickerView.getCurrentItemViewSelected() != null);
             mBottomOptions.setAddBtnEnable(state == 1);
             mBottomOptions.backToOptionView();
         }
@@ -1051,10 +1054,15 @@ public class EditorTextComponent extends EditorComponent {
 
             //时间间隔为2s
             mStickerData.starTimeUs = (long) (mBottomView.mLineView.getCurrentPercent() * getEditorPlayer().getInputTotalTimeUs());
-            if (mStickerData.starTimeUs + defaultDurationUs > getEditorPlayer().getInputTotalTimeUs()) {
+            if (mStickerData.starTimeUs + defaultDurationUs > getEditorPlayer().getInputTotalTimeUs() && !getEditorPlayer().isReversing()) {
                 mStickerData.stopTimeUs = getEditorPlayer().getOutputTotalTimeUS();
             } else {
+                if (!getEditorPlayer().isReversing())
                 mStickerData.stopTimeUs = mStickerData.starTimeUs + defaultDurationUs;
+                else{
+                    mStickerData.stopTimeUs = mStickerData.starTimeUs;
+                    mStickerData.starTimeUs = mStickerData.stopTimeUs - defaultDurationUs;
+                }
             }
 
             if (mBottomView != null && mBottomView.mLineView != null) {

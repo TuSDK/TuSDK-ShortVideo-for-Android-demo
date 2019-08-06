@@ -44,6 +44,7 @@
             app:line_size="2"
             app:text_size="13"
             app:line_width="@dimen/lsq__space_25"
+            app:default_display_counts="3"
             app:line_color="@color/lsq_widget_speedbar_button_bg"
             app:high_light_text_color="@color/lsq_widget_speedbar_button_bg"
             ></org.lasque.tusdkvideodemo.views.TabPagerIndicator>

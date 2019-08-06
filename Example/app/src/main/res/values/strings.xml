@@ -129,6 +129,21 @@
     <string name="lsq_filter_slowmotion">慢动作</string>
     <string name="lsq_filter_reverse">逆转时光</string>
 
+    <!-- v3.4.1 转场特效 -->
+    <string name="lsq_filter_FadeIn">淡入</string>
+    <string name="lsq_filter_FlashLight">黑场过度</string>
+    <string name="lsq_filter_Flip">翻转</string>
+    <string name="lsq_filter_FlyIn">飞入</string>
+    <string name="lsq_filter_FocusIn">圆形缩小</string>
+    <string name="lsq_filter_FocusOut">圆形扩大</string>
+    <string name="lsq_filter_PullInTop">上升</string>
+    <string name="lsq_filter_PullInBottom">下降</string>
+    <string name="lsq_filter_PullInLeft">左入</string>
+    <string name="lsq_filter_PullInRight">右入</string>
+    <string name="lsq_filter_SpreadIn">扩散</string>
+    <string name="lsq_filter_StackUp">叠起</string>
+    <string name="lsq_filter_Zoom">放大</string>
+
     <!-- video editor -->
     <string name="lsq_text_record">录制视频</string>
     <string name="lsq_text_import">导入视频</string>
@@ -210,7 +225,7 @@
     <string name="lsq_audio_mixed">多音轨混合</string>
     <string name="lsq_video_bgm">音视频混合</string>
     <string name="lsq_gain_thumbnail">获取缩略图</string>
-    <string name="lsq_video_mixed">多视频拼接</string>
+    <string name="lsq_video_mixed">多视频及图像合成视频</string>
     <string name="lsq_video_player">视频播放器</string>
     <string name="lsq_album_video_timecut_save">视频时间裁剪</string>
     <string name="lsq_audio_file_recorder">录制音频</string>
@@ -288,6 +303,7 @@
     <string name="lsq_cut_choose_cutrange">请先选择裁剪区域</string>
     <string name="lsq_video_selected">选择视频</string>
     <string name="lsq_select_video_hint">请您选择视频</string>
+    <string name="lsq_select_image_hint">请您选择最少3张照片</string>
     <string name="lsq_select_video_max">超过最大选择数量</string>
     <string name="lsq_obtain_permission_failed">获取权限失败</string>
     <string name="lsq_select_include_audio">不支持无音轨视频</string>
@@ -392,6 +408,7 @@
     <string name="lsq_screen">场景</string>
     <string name="lsq_time">时间</string>
     <string name="lsq_magic">魔法</string>
+    <string name="lsq_transitions">转场</string>
 
     <string name="lsq_beauty_reset">重置</string>
     <string name="lsq_beauty_eyesize">大眼</string>

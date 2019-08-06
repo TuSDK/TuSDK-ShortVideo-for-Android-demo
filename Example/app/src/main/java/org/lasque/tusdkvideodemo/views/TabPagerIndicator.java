@@ -32,7 +32,7 @@ import java.util.List;
  */
 
 public class TabPagerIndicator extends LinearLayout{
-    public static final int DEFAULT_VISIBLE_COUNTS = 3;
+    public static final int DEFAULT_VISIBLE_COUNTS = 2;
 
     /** 线画笔 */
     private Paint mLinePaint;
@@ -291,4 +291,12 @@ public class TabPagerIndicator extends LinearLayout{
         return (int) (dpValue * scale + 0.5f);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        for (int i = 0;i < getChildCount();i++){
+            View view = getChildAt(i);
+            view.setEnabled(enabled);
+        }
+    }
 }

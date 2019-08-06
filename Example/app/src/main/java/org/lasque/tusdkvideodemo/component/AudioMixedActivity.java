@@ -312,8 +312,15 @@ public class AudioMixedActivity extends ScreenAdapterActivity {
         /** AAC 音频文件编码器，可将混合的音频数据编码为AAC文件 */
         mAACFileEncoder = new TuSDKAACAudioFileEncoder();
 
+        TuSDKAudioEntry audioEntry = getAudioEntryList().get(0);
+        TuSDKAudioEncoderSetting audioEncoderSetting = TuSDKAudioEncoderSetting.defaultEncoderSetting();
+        audioEncoderSetting.mediacodecAACChannelCount = audioEntry.getRawInfo().channel;
+        audioEncoderSetting.channelConfig = audioEntry.getRawInfo().channelConfig;
+        audioEncoderSetting.audioFormat = audioEntry.getRawInfo().audioFormat;
+        audioEncoderSetting.sampleRate = audioEntry.getRawInfo().sampleRate;
+
         // 初始化音频编码器
-        mAACFileEncoder.initEncoder(TuSDKAudioEncoderSetting.defaultEncoderSetting());
+        mAACFileEncoder.initEncoder(audioEncoderSetting);
         mAACFileEncoder.setOutputFilePath(getMixedAudioPath());
         mAACFileEncoder.start();
 

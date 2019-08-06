@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaFormat;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,9 +30,11 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.common.TuSDKMediaUtils;
+import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.media.codec.video.TuSdkVideoInfo;
 import org.lasque.tusdk.core.utils.ContextUtils;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
+import org.lasque.tusdk.impl.view.widget.TuProgressHub;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.ScreenAdapterActivity;
 import org.lasque.tusdkvideodemo.editor.MovieEditorPreviewActivity;
@@ -168,9 +171,8 @@ public class MovieAlbumActivity extends ScreenAdapterActivity
         GridLayoutManager gridLayoutManager =  new GridLayoutManager(MovieAlbumActivity.this , 4);
         mRecyclerView.setLayoutManager(gridLayoutManager);
 
-        mVideoAlbumAdapter = new MovieAlbumAdapter(MovieAlbumActivity.this,getVideoList(),mSelectMax);
-        mRecyclerView.setAdapter(mVideoAlbumAdapter);
-        mVideoAlbumAdapter.setOnItemClickListener(mOnItemClickListener);
+        LoadVideoTask loadVideoTask = new LoadVideoTask();
+        loadVideoTask.execute();
     }
 
     /**
@@ -263,6 +265,12 @@ public class MovieAlbumActivity extends ScreenAdapterActivity
             {
                 videoInfo.add(new MovieInfo(path, duration));
             }
+            if(duration == 0){
+                TuSDKVideoInfo vInfo = TuSDKMediaUtils.getVideoInfo(path);
+                if( vInfo != null && vInfo.durationTimeUs > 0){
+                    videoInfo.add(new MovieInfo(path, (int) (vInfo.durationTimeUs / 1000)));
+                }
+            }
         }
         cursor.close();
         return videoInfo;
@@ -311,8 +319,9 @@ public class MovieAlbumActivity extends ScreenAdapterActivity
             MovieInfo info = (MovieInfo) data.getSerializableExtra("videoInfo");
             if(info != null && !contains(mVideoAlbumAdapter.getSelectedVideoInfo(),info))
                 mVideoAlbumAdapter.updateSelectedVideoPosition(mCurrentPos);
-            else if(info == null && contains(mVideoAlbumAdapter.getSelectedVideoInfo(),mVideoAlbumAdapter.getVideoInfoList().get(mCurrentPos)))
+            else if(info == null && mVideoAlbumAdapter.getVideoInfoList().size() > 0 && mCurrentPos != -1)
                 // 取消选中
+                if(contains(mVideoAlbumAdapter.getSelectedVideoInfo(),mVideoAlbumAdapter.getVideoInfoList().get(mCurrentPos)))
                 mVideoAlbumAdapter.updateSelectedVideoPosition(mCurrentPos);
         }
     }
@@ -324,5 +333,30 @@ public class MovieAlbumActivity extends ScreenAdapterActivity
             }
         }
         return false;
+    }
+
+    /**
+     * 相册加载
+     */
+    class LoadVideoTask extends AsyncTask<Void,Integer,List<MovieInfo>>{
+
+        @Override
+        protected List<MovieInfo> doInBackground(Void... voids) {
+            return getVideoList();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            TuProgressHub.showToast(MovieAlbumActivity.this,"数据加载中...");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(List<MovieInfo> movieInfos) {
+            TuProgressHub.dismiss();
+            mVideoAlbumAdapter = new MovieAlbumAdapter(MovieAlbumActivity.this, movieInfos,mSelectMax);
+            mRecyclerView.setAdapter(mVideoAlbumAdapter);
+            mVideoAlbumAdapter.setOnItemClickListener(mOnItemClickListener);
+        }
     }
 }

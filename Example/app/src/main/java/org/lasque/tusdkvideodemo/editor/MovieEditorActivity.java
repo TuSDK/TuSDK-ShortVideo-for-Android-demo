@@ -9,9 +9,12 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
+import org.lasque.tusdk.core.common.TuSDKMediaUtils;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;

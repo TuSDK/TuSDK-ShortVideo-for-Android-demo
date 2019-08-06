@@ -95,7 +95,7 @@ public class AudioRecordLayout extends RelativeLayout implements View.OnClickLis
                 TuSdkViewHelper.toast(getContext(),R.string.lsq_max_audio_record_time);
                 return;
             }
-
+            mAudioRecorder.setSoundPitchType(mSoundTypes[mCurrentPos]);
             // 如果是未开启的状态  开启录音
             if (!mAudioRecorder.isStart()) {
                 mAudioRecorder.start();

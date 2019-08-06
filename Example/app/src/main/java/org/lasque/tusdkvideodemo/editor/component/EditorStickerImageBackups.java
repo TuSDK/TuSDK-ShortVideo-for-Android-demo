@@ -59,7 +59,9 @@ public class EditorStickerImageBackups {
                 StickerImageBackupEntity item = (StickerImageBackupEntity) entity;
                 mRankHelper.getBackupLinkedList().add(item);
                 if (item.stickerImageItemView != null) {
-                    item.stickerImageItemView.setVisibility(View.VISIBLE);
+                    if (item.stickerImageMediaEffectData.getAtTimeRange().getStartTime() == 0){
+                        item.stickerImageItemView.setVisibility(View.VISIBLE);
+                    }
                     item.stickerImageItemView.setStickerViewType(StickerView.StickerType.Image);
                     item.stickerImageItemView.setStickerType(StickerView.StickerType.Image);
                     mStickerView.addView(item.stickerImageItemView, -1);
@@ -74,7 +76,9 @@ public class EditorStickerImageBackups {
                 EditorTextBackups.TextBackupEntity item = (EditorTextBackups.TextBackupEntity) entity;
                 mRankHelper.getBackupLinkedList().add(item);
                 if (item.textItemView != null) {
-                    item.textItemView.setVisibility(View.VISIBLE);
+                    if (item.textMediaEffectData.getAtTimeRange().getStartTime() == 0){
+                        item.textItemView.setVisibility(View.VISIBLE);
+                    }
                     if(item.textItemView.getParent() != null){
                         ((ViewGroup)item.textItemView.getParent()).removeAllViews();
                     }
@@ -90,7 +94,7 @@ public class EditorStickerImageBackups {
                     item.textItemView.setTextStrokeWidth((int) item.strokeWidth);
                     item.textItemView.setTextStrokeColor(item.strokeColor);
                     item.textItemView.onSelectedColorChanged(0, item.color);
-                    item.textItemView.setStickerViewType(StickerView.StickerType.Text);
+                    item.textItemView.setStickerViewType(StickerView.StickerType.Image);
                     item.textItemView.setStickerType(StickerView.StickerType.Text);
 
                     //背景颜色

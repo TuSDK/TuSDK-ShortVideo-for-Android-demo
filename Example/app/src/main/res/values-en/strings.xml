@@ -209,7 +209,7 @@
     <string name="lsq_audio_mixed">Multiple Audio Mixed</string>
     <string name="lsq_video_bgm">Audio and Video Mixing</string>
     <string name="lsq_gain_thumbnail">Gain Thumb</string>
-    <string name="lsq_video_mixed">Contact Two Video</string>
+    <string name="lsq_video_mixed">Contact Two Video Or Image</string>
     <string name="lsq_album_video_timecut_save">Cut Video</string>
     <string name="lsq_audio_file_recorder">Record Audio</string>
     <string name="lsq_audio_engine_pitch">Audio Pitch</string>
@@ -236,7 +236,7 @@
     <string name="lsq_audioRecording_cancelrecording">Cancel the recording?</string>
     <string name="lsq_audioRecording_next">confirm</string>
     <string name="lsq_audioRecording_cancel">cancel</string>
-    
+
     <!-- API Example -->
     <string name="lsq_cut">Cut</string>
     <string name="lsq_movie_thumb">Gain Thumb</string>
@@ -476,4 +476,21 @@
     <string name="lsq_editor_text_size">Size</string>
     <string name="lsq_sticker_over_limit">Oops, Can’t use more than %s stickers</string>
     <string name="lsq_italic">Italic</string>
+    <string name="lsq_filter_FlyIn">FlyIn</string>
+    <string name="lsq_filter_FocusIn">FocusIn</string>
+    <string name="lsq_filter_FocusOut">FocusOut</string>
+    <string name="lsq_filter_FlashLight">FlashLight</string>
+    <string name="lsq_filter_Flip">Flip</string>
+    <string name="lsq_filter_PullInBottom">PullInBottom</string>
+    <string name="lsq_filter_PullInLeft">PullInLeft</string>
+    <string name="lsq_filter_PullInRight">PullInRight</string>
+    <string name="lsq_filter_PullInTop">PullInTop</string>
+    <string name="lsq_filter_SpreadIn">SpreadIn</string>
+    <string name="lsq_filter_StackUp">StackUp</string>
+    <string name="lsq_filter_Zoom">Zoom</string>
+    <string name="lsq_transitions">Transitions</string>
+    <string name="lsq_filter_FadeIn">FadeIn</string>
+    <string name="lsq_filter_None">None</string>
+    <string name="lsq_not_file">Not File</string>
+    <string name="lsq_select_image_hint">Please select over 3 images</string>
 </resources>

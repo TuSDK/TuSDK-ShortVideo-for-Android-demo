@@ -7,11 +7,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieGrayView;
@@ -70,7 +67,7 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
 
     /** 触摸选择控件 **/
     public static interface OnTouchSelectBarListener {
-        void onTouchBar(float leftPercent, float rightPerchent,int type);
+        void onTouchBar(float leftPercent, float rightPerchent, int type);
     }
 
     /**
@@ -336,8 +333,10 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
 
         float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
         float stopX = mCenterFrame.getX() + mLastCenterFrameWidth - mRightGrayView.getBarWidth();
-        float startPercent = starX / mTotalWidth;
+        DecimalFormat floatFormat = new DecimalFormat(".00");
+        float startPercent = Float.valueOf(floatFormat.format(starX / mTotalWidth));
         float endPercent = stopX / mTotalWidth;
+        if (endPercent > 0.99) endPercent = 1;
 
         if (mSelectRangeChangedListener != null)
             mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 1);
@@ -357,8 +356,10 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
         mLastCenterFrameWidth = -1;
         float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
         float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
-        float startPercent = starX / mTotalWidth;
+        DecimalFormat floatFormat = new DecimalFormat(".00");
+        float startPercent = Float.valueOf(floatFormat.format(starX / mTotalWidth));
         float endPercent = stopX / mTotalWidth;
+        if (endPercent > 0.99) endPercent = 1;
         if (mSelectRangeChangedListener != null && isNotifyChanged)
             mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 1);
 
@@ -391,8 +392,10 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
 
         float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
         float stopX = mCenterFrame.getX() + mLastCenterFrameWidth - mRightGrayView.getBarWidth();
-        float startPercent = starX / mTotalWidth;
+        DecimalFormat floatFormat = new DecimalFormat(".00");
+        float startPercent = Float.valueOf(floatFormat.format(starX / mTotalWidth));
         float endPercent = stopX / mTotalWidth;
+        if (endPercent > 0.99) endPercent = 1;
         if (mSelectRangeChangedListener != null)
             mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 0);
 
@@ -412,8 +415,10 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
         mLastCenterFrameWidth = -1;
         float starX = mCenterFrame.getX() - mLeftGrayView.getBarWidth();
         float stopX = mCenterFrame.getX() + mCenterFrame.getWidth() - mRightGrayView.getBarWidth();
-        float startPercent = starX / mTotalWidth;
+        DecimalFormat floatFormat = new DecimalFormat(".00");
+        float startPercent = Float.valueOf(floatFormat.format(starX / mTotalWidth));
         float endPercent = stopX / mTotalWidth;
+        if (endPercent > 0.99) endPercent = 1;
         if (mSelectRangeChangedListener != null && isNotifyChanged)
             mSelectRangeChangedListener.onSelectRangeChanged(getFormatPerchent(startPercent), getFormatPerchent(endPercent), 0);
 

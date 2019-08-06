@@ -30,6 +30,8 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
     /** 裁剪Tab **/
     protected TuSdkTextButton mTrimTabBtn;
 
+    protected TuSdkTextButton mTrEffectTabBtn;
+
     //是否启用
     private boolean mEnable = true;
 
@@ -51,7 +53,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
         //贴纸
         Sticker,
         //裁剪
-        Trim
+        Trim,
+        //转场特效
+        TransitionsEffect
     }
 
     public interface MovieEditorTabBarDelegate {
@@ -100,6 +104,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
         mTrimTabBtn = findViewById(R.id.lsq_tab_trim_btn);
         mTrimTabBtn.setOnClickListener(this);
+
+        mTrEffectTabBtn = findViewById(R.id.lsq_tab_tr_effect_btn);
+        mTrEffectTabBtn.setOnClickListener(this);
     }
 
 
@@ -131,6 +138,8 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
             case R.id.lsq_tab_trim_btn:
                 mSelectedTabType = TabType.Trim;
                 break;
+            case R.id.lsq_tab_tr_effect_btn:
+                mSelectedTabType = TabType.TransitionsEffect;
         }
 
         mDelegate.onSelectedTabType(mSelectedTabType);

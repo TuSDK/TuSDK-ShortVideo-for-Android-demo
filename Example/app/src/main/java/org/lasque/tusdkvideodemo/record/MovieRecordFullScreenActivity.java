@@ -101,7 +101,7 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
         // 编码配置
         TuSdkRecorderVideoEncoderSetting encoderSetting = TuSdkRecorderVideoEncoderSetting.getDefaultRecordSetting();
         // 输出全屏尺寸
-        encoderSetting.videoSize = TuSdkSize.create( 0,0);
+        encoderSetting.videoSize = TuSdkSize.create( 1080,1920);
         // 这里可以修改帧率和码率; RECORD_MEDIUM2第一个参数代表帧率，第二参数代表码率;选择VideoQuality参数尽量选用RECORD开头(专门为视频录制设计)
         encoderSetting.videoQuality = TuSdkVideoQuality.RECORD_HIGH3;
 

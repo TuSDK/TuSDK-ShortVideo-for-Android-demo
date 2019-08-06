@@ -31,7 +31,7 @@ import java.util.List;
 public class PropsItemStickerCategory extends PropsItemCategory<PropsItemSticker>{
 
     public PropsItemStickerCategory(List<PropsItemSticker> stickerPropsItems) {
-        super(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker,stickerPropsItems);
+        super(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSticker,stickerPropsItems);
     }
 
     /**

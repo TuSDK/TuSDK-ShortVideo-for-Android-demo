@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.AVAssetFile;
@@ -90,12 +92,12 @@ public class MovieAlbumAdapter extends RecyclerView.Adapter<MovieAlbumAdapter.Vi
         String path = mVideoInfoList.get(position).getPath();
 
         if (!TextUtils.isEmpty(path))
-            Glide.with(mContext).load(path).into(holder.mImageView);
+            Glide.with(mContext).asBitmap().load(path).into(holder.mImageView);
 
         int drawableId = selectMovieInfos.contains(mVideoInfoList.get(position)) ? R.drawable.edit_heckbox_sel : R.drawable.edit_heckbox_unsel;
         holder.mSelectorView.setBackground(mContext.getResources().getDrawable(drawableId));
         holder.mSelectorView.setText(selectMovieInfos.indexOf(mVideoInfoList.get(position)) >= 0 ? String.valueOf(selectMovieInfos.indexOf(mVideoInfoList.get(position)) + 1) : "");
-        holder.mTimeView.setText(String.format("%02d:%02d",mVideoInfoList.get(position).getDuration() / 1000 / 60,mVideoInfoList.get(position).getDuration() / 1000 - mVideoInfoList.get(position).getDuration() / 1000 / 60));
+        holder.mTimeView.setText(String.format("%02d:%02d",mVideoInfoList.get(position).getDuration() / 1000 / 60,mVideoInfoList.get(position).getDuration() / 1000 % 60));
 
         holder.mSelectorViewLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +216,12 @@ public class MovieAlbumAdapter extends RecyclerView.Adapter<MovieAlbumAdapter.Vi
 
     public List<MovieInfo> getVideoInfoList(){
         return mVideoInfoList;
+    }
+
+    public void setVideoInfoList(List<MovieInfo> videoInfoList){
+        this.mVideoInfoList = videoInfoList;
+        selectMovieInfos.clear();
+        notifyDataSetChanged();
     }
 
 }

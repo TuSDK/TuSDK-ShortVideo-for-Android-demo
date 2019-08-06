@@ -211,6 +211,7 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
 		if (mVideoCamera != null)
 		{
 			mVideoCamera.destroy();
+			mVideoCamera = null;
 		}
     }
 }

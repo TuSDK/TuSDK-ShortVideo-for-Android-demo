@@ -1,17 +1,13 @@
 package org.lasque.tusdkvideodemo.editor;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import org.lasque.tusdk.api.audio.preproc.mixer.TuSDKAudioRenderEntry;
-import org.lasque.tusdk.api.video.retriever.TuSDKVideoImageExtractor;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.common.TuSDKMediaDataSource;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
@@ -22,14 +18,12 @@ import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoder;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
-import org.lasque.tusdk.core.struct.TuSdkSize;
+import org.lasque.tusdk.core.utils.FileHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
-import org.lasque.tusdk.video.editor.TuSdkMediaStickerAudioEffectData;
 import org.lasque.tusdkvideodemo.R;
-import org.lasque.tusdkvideodemo.album.MovieInfo;
 import org.lasque.tusdkvideodemo.editor.component.EditorComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorEffectComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorFilterComponent;
@@ -39,12 +33,14 @@ import org.lasque.tusdkvideodemo.editor.component.EditorMusicComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorStickerComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorTextComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorTrimComponent;
+import org.lasque.tusdkvideodemo.editor.component.EditorEffectTransitionsComponent;
 import org.lasque.tusdkvideodemo.editor.component.helper.EditorTextAndStickerRankHelper;
 import org.lasque.tusdkvideodemo.utils.AppManager;
 import org.lasque.tusdkvideodemo.views.MovieEditorTabBar;
 import org.lasque.tusdkvideodemo.views.VideoContent;
 import org.lasque.tusdkvideodemo.views.editor.EditorAnimator;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +100,8 @@ public class MovieEditorController {
     private EditorStickerComponent mStickerComponent;
     //裁剪组件
     private EditorTrimComponent mTrimComponent;
+    //转场特效组件
+    private EditorEffectTransitionsComponent mTransitionsComponent;
     //缩略图集合
     private List<Bitmap> mThumbBitmapList;
     //是否正在保存
@@ -151,7 +149,11 @@ public class MovieEditorController {
 
         @Override
         public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
-
+            TLog.d("[debug] current editor player playbackTimeUs = " + playbackTimeUs + " totalTimeUs = " + totalTimeUs);
+            if (playbackTimeUs >= totalTimeUs){
+//                getMovieEditor().getEditorPlayer().pausePreview();
+//                getMovieEditor().getEditorPlayer().seekTimeUs(0);
+            }
         }
     };
 
@@ -207,6 +209,7 @@ public class MovieEditorController {
         public void onStateChanged(TuSDKAudioDecoderTaskManager.State state) {
             if (state == TuSDKAudioDecoderTaskManager.State.Complete) {
                 TuSdk.messageHub().dismissRightNow();
+                /**  这里不调用 会导致添加背景音效失败 */
                 mMovieEditor.getEditorMixer().notifyLoadCompleted();
             }
 
@@ -218,7 +221,7 @@ public class MovieEditorController {
         mWeakActivity = new WeakReference<>(activity);
         mImageTextRankHelper = new EditorTextAndStickerRankHelper();
         mMovieEditor = new TuSdkMovieEditorImpl(activity, holderView, options);
-        //设置音效回调
+        //设置音效回调 不设置会导致添加背景音效失败
         mMovieEditor.getEditorMixer().addTaskStateListener(mAudioTaskStateListener);
         //设置转码回调
         mMovieEditor.getEditorTransCoder().addTransCoderProgressListener(mOnTranscoderProgressListener);
@@ -322,6 +325,7 @@ public class MovieEditorController {
                                     getTextComponent().addCoverBitmap(videoImage.bitmap);
                                     getEffectComponent().addCoverBitmap(videoImage.bitmap);
                                     getStickerComponent().addCoverBitmap(videoImage.bitmap);
+                                    getTransitionsComponent().addCoverBitmap(videoImage.bitmap);
                                 }
                             });
                         }
@@ -546,6 +550,10 @@ public class MovieEditorController {
                 //切换到裁剪组件
                 mCurrentComponent = getTrimComponent();
                 break;
+            case TransitionsEffect:
+                //切换到转场特效
+                mCurrentComponent = getTransitionsComponent();
+                break;
             default:
                 break;
         }
@@ -657,6 +665,8 @@ public class MovieEditorController {
                     //当前切换为裁剪组件
                     componentEnum = EditorComponent.EditorComponentType.Trim;
                     break;
+                case TransitionsEffect:
+                    componentEnum = EditorComponent.EditorComponentType.TransitionsEffect;
                 default:
                     break;
             }
@@ -782,6 +792,16 @@ public class MovieEditorController {
         return mTrimComponent;
     }
 
+    /**
+     * @return
+     */
+    public EditorEffectTransitionsComponent getTransitionsComponent(){
+        if (mTransitionsComponent == null){
+            mTransitionsComponent = new EditorEffectTransitionsComponent(this);
+        }
+        return mTransitionsComponent;
+    }
+
 
     /* ---------------------------- 同步Activity的生命周期 --------------------- */
 
@@ -875,6 +895,7 @@ public class MovieEditorController {
             case Effect:
             case Sticker:
             case Trim:
+            case TransitionsEffect:
                 if (mEditorAnimator != null) {
                     mEditorAnimator.animatorSwitchComponent(EditorComponent.EditorComponentType.Home);
                 } else {

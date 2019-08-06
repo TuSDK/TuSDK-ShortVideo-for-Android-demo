@@ -38,10 +38,12 @@ public class EditorCutView {
     //刻度
     private RulerView mRulerView;
     private TextView mTimeRangView;
+    private SpeedView mPlayingSpeedView;
     //最小裁剪时间
     private long mMinCutTimeUs =  3 * 1000000;
     private boolean isEnable = true;
     private MovieEditorCutActivity mActivity;
+    private float mCurrentRangTime = 0f;
 
 
     public EditorCutView(MovieEditorCutActivity activity) {
@@ -64,6 +66,7 @@ public class EditorCutView {
         mRangeView.setNeedShowCursor(true);
         mRulerView = mActivity.findViewById(R.id.lsq_rule_view);
         mTimeRangView = mActivity.findViewById(R.id.lsq_range_time);
+        mPlayingSpeedView = mActivity.findViewById(R.id.lsq_playing_speed_bar);
     }
 
     private int mTwoBarsDistance = 0;
@@ -81,8 +84,18 @@ public class EditorCutView {
      * @param times
      */
     public void setRangTime(float times){
+        mCurrentRangTime = times;
         String rangeTime = String.format("%s %.1f %s",mActivity.getResources().getString(R.string.lsq_movie_cut_selecttime),times,"s");
         mTimeRangView.setText(rangeTime);
+    }
+
+    public void setSpeedChangeRangTime(float times){
+        String rangeTime = String.format("%s %.1f %s",mActivity.getResources().getString(R.string.lsq_movie_cut_selecttime),times,"s");
+        mTimeRangView.setText(rangeTime);
+    }
+
+    public float getRangTime(){
+        return mCurrentRangTime;
     }
 
     /**
@@ -142,7 +155,7 @@ public class EditorCutView {
      * @param percent 播放进度的百分比
      */
     public void setVideoPlayPercent(float percent){
-        if(mRangeView == null) return;;
+        if(mRangeView == null) return;
         if(percent < 0){
             TLog.e("setSelectCoverTimeListener is null !!!");
             return;
@@ -162,6 +175,11 @@ public class EditorCutView {
     public void setEnable(boolean isEnable){
         this.isEnable = isEnable;
         mRangeView.setEnable(isEnable);
+    }
+
+    public void setOnPlayingSpeedChangeListener(SpeedView.OnPlayingSpeedChangeListener listener){
+        if (mPlayingSpeedView == null) return;
+        mPlayingSpeedView.setPlayingSpeedChangeListener(listener);
     }
 
 

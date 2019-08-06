@@ -45,7 +45,9 @@ public abstract class EditorComponent {
         //贴纸
         Sticker,
         //裁剪
-        Trim
+        Trim,
+        //转场特效
+        TransitionsEffect
     }
 
     // 编辑控制器

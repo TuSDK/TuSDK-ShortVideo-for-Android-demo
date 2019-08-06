@@ -13,6 +13,7 @@ import org.lasque.tusdk.core.audio.TuSdkAudioRecordCuter;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
@@ -33,7 +34,7 @@ import java.util.Arrays;
 import static android.view.View.VISIBLE;
 import static org.lasque.tusdk.core.TuSdkContext.getPackageName;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeAudio;
-import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSticker;
 
 /**
  * droid-sdk-video
@@ -122,8 +123,14 @@ public class EditorMusicComponent extends EditorComponent {
 
         @Override
         public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
-            if(percentage == 1 && getAudioRecordView().getVisibility() == View.GONE){
-                getEditorController().getPlayBtn().setVisibility(VISIBLE);
+            if (!getEditorPlayer().isReversing()){
+                if(percentage == 1 && getAudioRecordView().getVisibility() == View.GONE){
+                    getEditorController().getPlayBtn().setVisibility(VISIBLE);
+                }
+            } else{
+                if (percentage == 0 && getAudioRecordView().getVisibility() == View.GONE){
+                    getEditorController().getPlayBtn().setVisibility(VISIBLE);
+                }
             }
         }
     };
@@ -188,7 +195,7 @@ public class EditorMusicComponent extends EditorComponent {
         getEditorPlayer().removeProgressListener(mPlayProgress);
         getEditorController().getVideoContentView().setClickable(true);
         getEditorController().getPlayBtn().setClickable(false);
-
+        getAudioRecordView().gone();
     }
 
     @Override
@@ -305,7 +312,7 @@ public class EditorMusicComponent extends EditorComponent {
         mSelectIndex = position;
         if (position == 0) {
             // 取消所有音特效
-            getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+            getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeSticker);
             getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
             getEditorAudioMixer().clearAllAudioData();
             mSelectEffectData = null;
@@ -385,5 +392,11 @@ public class EditorMusicComponent extends EditorComponent {
     private void startPreview(){
         getEditorPlayer().startPreview();
         getEditorController().getPlayBtn().setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getAudioRecordView().gone();
     }
 }

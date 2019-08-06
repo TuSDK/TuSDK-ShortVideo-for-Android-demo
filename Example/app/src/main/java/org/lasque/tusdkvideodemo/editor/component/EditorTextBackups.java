@@ -66,7 +66,9 @@ public class EditorTextBackups {
                 TextBackupEntity entity = (TextBackupEntity) item;
                 mRankHelper.getBackupLinkedList().add(entity.clone());
                 if (entity.textItemView != null) {
-                    entity.textItemView.setVisibility(View.VISIBLE);
+                    if (entity.textMediaEffectData.getAtTimeRange().getStartTime() == 0){
+                        entity.textItemView.setVisibility(View.VISIBLE);
+                    }
                     if(entity.textItemView.getParent() != null){
                         ((ViewGroup)entity.textItemView.getParent()).removeAllViews();
                     }
@@ -110,7 +112,9 @@ public class EditorTextBackups {
                 EditorStickerImageBackups.StickerImageBackupEntity entit = (EditorStickerImageBackups.StickerImageBackupEntity) item;
                 mRankHelper.getBackupLinkedList().add(entit);
                 if (entit.stickerImageItemView != null) {
-                    entit.stickerImageItemView.setVisibility(View.VISIBLE);
+                    if (entit.stickerImageMediaEffectData.getAtTimeRange().getStartTime() == 0){
+                        entit.stickerImageItemView.setVisibility(View.VISIBLE);
+                    }
                     entit.stickerImageItemView.setStickerViewType(StickerView.StickerType.Text);
                     entit.stickerImageItemView.setStickerType(StickerView.StickerType.Image);
                     mStickerView.addView(entit.stickerImageItemView, -1);

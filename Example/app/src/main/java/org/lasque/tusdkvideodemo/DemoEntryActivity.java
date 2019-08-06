@@ -109,7 +109,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
 
         if (PermissionUtils.hasRequiredPermissions(this, getRequiredPermissions()))
         {
-            AlbumUtils.openVideoAlbum(EDITOR_CLASS, Constants.MAX_EDITOR_SELECT_MUN);
+            AlbumUtils.openMediaAlbum(EDITOR_CLASS, Constants.MAX_EDITOR_SELECT_MUN);
         }
         else
         {
@@ -214,7 +214,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
                     Intent intent = new Intent(DemoEntryActivity.this, MovieRecordFullScreenActivity.class);
                     DemoEntryActivity.this.startActivity(intent);
                 }else if(mRequestCode == 2) {
-                    AlbumUtils.openVideoAlbum(EDITOR_CLASS,Constants.MAX_EDITOR_SELECT_MUN);
+                    AlbumUtils.openMediaAlbum(EDITOR_CLASS,Constants.MAX_EDITOR_SELECT_MUN);
                 }else{
                     Intent intent = new Intent(DemoEntryActivity.this, ComponentListActivity.class);
                     startActivity(intent);

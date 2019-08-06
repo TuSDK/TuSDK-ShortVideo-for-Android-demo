@@ -37,6 +37,34 @@
                 android:padding="@dimen/lsq__space_8"
                 android:layout_centerHorizontal="true"
                 android:textSize="@dimen/lsq_font_size_26"
+                android:text="@string/lsq_filter_text"
+                android:id="@+id/lsq_filter_tab"
+                android:textColor="@color/lsq_alpha_white_66"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/lsq_filter_tab_line"
+                android:background="@color/lsq_alpha_white_66"
+                android:layout_alignLeft="@+id/lsq_filter_tab"
+                android:layout_alignRight="@+id/lsq_filter_tab"
+                android:layout_below="@+id/lsq_filter_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_marginLeft="@dimen/lsq__space_10"
+                android:layout_marginRight="@dimen/lsq__space_10"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:padding="@dimen/lsq__space_8"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/lsq_font_size_26"
                 android:text="@string/lsq_text_comics"
                 android:id="@+id/lsq_comics_tab"
                 android:textColor="@color/lsq_color_white"
@@ -56,33 +84,7 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
 
-            <TextView
-                android:padding="@dimen/lsq__space_8"
-                android:layout_centerHorizontal="true"
-                android:textSize="@dimen/lsq_font_size_26"
-                android:text="@string/lsq_filter_text"
-                android:id="@+id/lsq_filter_tab"
-                android:textColor="@color/lsq_alpha_white_66"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/lsq_filter_tab_line"
-                android:background="@color/lsq_alpha_white_66"
-                android:layout_alignLeft="@+id/lsq_filter_tab"
-                android:layout_alignRight="@+id/lsq_filter_tab"
-                android:layout_below="@+id/lsq_filter_tab"
-                android:layout_width="wrap_content"
-                android:layout_height="2dp"
-                android:layout_marginLeft="@dimen/lsq__space_10"
-                android:layout_marginRight="@dimen/lsq__space_10"/>
-
-        </RelativeLayout>
     </LinearLayout>
 
     <FrameLayout

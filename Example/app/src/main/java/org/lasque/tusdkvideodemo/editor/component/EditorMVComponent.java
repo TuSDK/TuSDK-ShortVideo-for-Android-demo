@@ -16,6 +16,7 @@ import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
@@ -41,7 +42,7 @@ import java.util.Map;
 
 import static org.lasque.tusdk.core.TuSdkContext.getString;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeAudio;
-import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdKMediaEffectDataTypeSticker;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSticker;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeStickerAudio;
 
 /**
@@ -54,29 +55,49 @@ import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffec
  * MV组件
  */
 public class EditorMVComponent extends EditorComponent {
-    /** 主音轨音量 **/
+    /**
+     * 主音轨音量
+     **/
     private float mMasterVolume;
-    /** 其他音轨音量 **/
+    /**
+     * 其他音轨音量
+     **/
     private float mOtherVolume;
 
-    /** BottomView */
+    /**
+     * BottomView
+     */
     private View mBottomView;
-    /** Mv */
+    /**
+     * Mv
+     */
     private RecyclerView mMvRecyclerView;
-    /** Mv适配器 */
+    /**
+     * Mv适配器
+     */
     private MvRecyclerAdapter mMvRecyclerAdapter;
-    /** 时间轴 */
+    /**
+     * 时间轴
+     */
 //    private LineView mTimeLineView;
     private TuSdkMovieScrollPlayLineView mPlayLineView;
-    /** 播放暂停按钮 */
+    /**
+     * 播放暂停按钮
+     */
     private ImageView ivMvPlayBtn;
 
-    /** MV音效资源 */
+    /**
+     * MV音效资源
+     */
     @SuppressLint("UseSparseArrays")
     private Map<Integer, Integer> mMusicMap = new HashMap<Integer, Integer>();
-    /** 声音强度调节栏 */
+    /**
+     * 声音强度调节栏
+     */
     private CompoundConfigView mVoiceVolumeConfigView;
-    /** MV最短选择时间 **/
+    /**
+     * MV最短选择时间
+     **/
     private final int mMinSelectTimeUs = 1 * 1000000;
     private boolean isSelect = false;
 
@@ -122,22 +143,22 @@ public class EditorMVComponent extends EditorComponent {
         isSelect = true;
         // 应用备份数据
         if (getEditorController().getMVEffectData() != null) {
-            float leftPercent = getEditorController().getMVEffectData().getAtTimeRange().getStartTimeUS() / getMovieEditor().getEditorPlayer().getTotalTimeUs();
+            float leftPercent = Float.valueOf(getEditorController().getMVEffectData().getAtTimeRange().getStartTimeUS()) / Float.valueOf(getMovieEditor().getEditorPlayer().getTotalTimeUs());
             mPlayLineView.setLeftBarPosition(leftPercent);
 
-            float rightPercent = getEditorController().getMVEffectData().getAtTimeRange().getEndTimeUS() / getMovieEditor().getEditorPlayer().getTotalTimeUs();
+            float rightPercent = Float.valueOf(getEditorController().getMVEffectData().getAtTimeRange().getEndTimeUS()) / Float.valueOf(getMovieEditor().getEditorPlayer().getTotalTimeUs());
             mPlayLineView.setRightBarPosition(rightPercent);
 
             mSelectEffectData = getEditorController().getMVEffectData();
             mMvRecyclerAdapter.setCurrentPosition(mMementoEffectIndex);
-        }else{
+        } else {
             mMvRecyclerAdapter.setCurrentPosition(0);
         }
 
         mMasterVolume = getEditorController().getMasterVolume();
         mOtherVolume = mMementoOtherVolume;
-        setSeekBarProgress(0,mMasterVolume);
-        setSeekBarProgress(1,mOtherVolume);
+        setSeekBarProgress(0, mMasterVolume);
+        setSeekBarProgress(1, mOtherVolume);
     }
 
     @Override
@@ -145,9 +166,9 @@ public class EditorMVComponent extends EditorComponent {
         super.onAnimationEnd();
         // seek放到起始位置
         getEditorPlayer().seekOutputTimeUs(0);
-        if(getEditorPlayer().isReversing()) {
+        if (getEditorPlayer().isReversing()) {
             mPlayLineView.seekTo(1f);
-        }else {
+        } else {
             mPlayLineView.seekTo(0f);
         }
     }
@@ -213,32 +234,32 @@ public class EditorMVComponent extends EditorComponent {
      * 初始化时间轴
      */
     private void initTimeLineView() {
-        if(mPlayLineView == null) {
+        if (mPlayLineView == null) {
             mPlayLineView = mBottomView.findViewById(R.id.lsq_mv_lineView);
             mPlayLineView.setType(1);
-            if(getEditorPlayer().getOutputTotalTimeUS() > 0) {
-                float minPercent = mMinSelectTimeUs / (float)getEditorPlayer().getOutputTotalTimeUS();
+            if (getEditorPlayer().getOutputTotalTimeUS() > 0) {
+                float minPercent = mMinSelectTimeUs / (float) getEditorPlayer().getOutputTotalTimeUS();
                 mPlayLineView.setMinWidth(minPercent);
             }
             mPlayLineView.setSelectRangeChangedListener(new TuSdkRangeSelectionBar.OnSelectRangeChangedListener() {
                 @Override
                 public void onSelectRangeChanged(float leftPercent, float rightPerchent, int type) {
                     updateMediaEffectsTimeRange();
-                    getEditorPlayer().seekOutputTimeUs((long) (type == 0?leftPercent:rightPerchent * getEditorPlayer().getInputTotalTimeUs()));
+                    getEditorPlayer().seekInputTimeUs((long) ((type == 0 ? leftPercent : rightPerchent) * getEditorPlayer().getInputTotalTimeUs()));
                 }
             });
 
             mPlayLineView.setOnProgressChangedListener(new TuSdkMovieScrollView.OnProgressChangedListener() {
                 @Override
                 public void onProgressChanged(float progress, boolean isTouching) {
-                    if(!isTouching)return;
-                    if(isTouching){
+                    if (!isTouching) return;
+                    if (isTouching) {
                         getEditorPlayer().pausePreview();
                     }
 
                     if (getEditorPlayer().isPause()) {
                         long seekUs = (long) (getEditorPlayer().getInputTotalTimeUs() * progress);
-                        getEditorPlayer().seekOutputTimeUs(seekUs);
+                        getEditorPlayer().seekInputTimeUs(seekUs);
                     }
                 }
 
@@ -307,7 +328,9 @@ public class EditorMVComponent extends EditorComponent {
         return groups;
     }
 
-    /** 原音配音调节栏委托事件 */
+    /**
+     * 原音配音调节栏委托事件
+     */
     private ConfigViewSeekBar.ConfigSeekbarDelegate mMvVolumeConfigSeekbarDelegate = new ConfigViewSeekBar.ConfigSeekbarDelegate() {
 
         @Override
@@ -322,7 +345,9 @@ public class EditorMVComponent extends EditorComponent {
         }
     };
 
-    /** MV列表Item点击 */
+    /**
+     * MV列表Item点击
+     */
     private MvRecyclerAdapter.ItemClickListener mvItemClickListener = new MvRecyclerAdapter.ItemClickListener() {
         @Override
         public void onItemClick(final int position) {
@@ -340,7 +365,9 @@ public class EditorMVComponent extends EditorComponent {
         }
     };
 
-    /** 点击事件 */
+    /**
+     * 点击事件
+     */
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -349,17 +376,17 @@ public class EditorMVComponent extends EditorComponent {
                 case R.id.lsq_mv_close:
                     if (mSelectEffectData != null) {
                         getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
-                        getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+                        getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeSticker);
                         mMvRecyclerAdapter.setCurrentPosition(0);
                         if (getEditorController().getMediaEffectData() != null) {
-                           getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
+                            getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
                         } else {
                             mPlayLineView.setShowSelectBar(false);
                         }
-                    }else{
-                        if(getEditorController().getMediaEffectData() != null) {
+                    } else {
+                        if (getEditorController().getMediaEffectData() != null) {
                             getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeAudio);
-                            getEditorEffector().removeMediaEffectsWithType(TuSdKMediaEffectDataTypeSticker);
+                            getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeSticker);
                             getEditorEffector().addMediaEffectData(getEditorController().getMediaEffectData());
                         }
                     }
@@ -371,7 +398,7 @@ public class EditorMVComponent extends EditorComponent {
                 case R.id.lsq_mv_sure:
                     if (mSelectEffectData != null) {
                         mMementoOtherVolume = mOtherVolume;
-                    }else {
+                    } else {
                         mMementoOtherVolume = 0.5f;
                     }
 
@@ -400,7 +427,9 @@ public class EditorMVComponent extends EditorComponent {
         }
     };
 
-    /** 播放器进度回调 */
+    /**
+     * 播放器进度回调
+     */
     private TuSdkEditorPlayer.TuSdkProgressListener mPlayerProgressListener = new TuSdkEditorPlayer.TuSdkProgressListener() {
         /**
          *
@@ -419,7 +448,7 @@ public class EditorMVComponent extends EditorComponent {
          */
         @Override
         public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
-            if(isSelect) return;
+            if (isSelect) return;
             mPlayLineView.seekTo(percentage);
         }
     };
@@ -496,15 +525,19 @@ public class EditorMVComponent extends EditorComponent {
         long startTimeUs = (long) (mPlayLineView.getLeftBarPercent() * videoInfo.durationTimeUs);
         long endTimeUs = (long) (mPlayLineView.getRightBarPercent() * videoInfo.durationTimeUs);
 
-        if(endTimeUs <= startTimeUs)return;
+        if (endTimeUs <= startTimeUs) return;
 
         TuSdkTimeRange timeRange = TuSdkTimeRange.makeTimeUsRange(startTimeUs, endTimeUs);
+        if (mSelectEffectData != null && mSelectEffectData.getMediaEffectType().equals(TuSdkMediaEffectDataTypeStickerAudio)){
+            mSelectEffectData.setAtTimeRange(timeRange);
+            getEditorController().setMVEffectData(mSelectEffectData);
+        }
+        /** Mv与普通贴纸冲突 共享同一个类型 */
+        List<TuSdkMediaEffectData> list = getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdkMediaEffectDataTypeSticker);
 
-        List<TuSdkMediaStickerAudioEffectData> list = getEditorController().getMovieEditor().getEditorEffector().mediaEffectsWithType(TuSdkMediaEffectDataTypeStickerAudio);
-
-        if(list != null){
-            for (TuSdkMediaStickerAudioEffectData item : list) {
-                item.setAtTimeRange(timeRange);
+        if (list != null) {
+            for (TuSdkMediaEffectData item : list) {
+                    item.setAtTimeRange(timeRange);
             }
         }
     }

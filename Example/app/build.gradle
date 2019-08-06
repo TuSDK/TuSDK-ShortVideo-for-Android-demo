@@ -8,8 +8,9 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
-        versionName "3.3.1"
+        versionName "3.4.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -41,5 +42,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 	compile 'com.makeramen:roundedimageview:2.3.0'
+
+    //multidex支持依赖
+    compile 'com.android.support:multidex:1.0.3'
 
 }

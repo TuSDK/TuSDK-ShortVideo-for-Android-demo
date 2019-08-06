@@ -24,6 +24,7 @@ import org.lasque.tusdkvideodemo.component.MovieCutActivity;
 import org.lasque.tusdkvideodemo.component.MovieMixerActivity;
 import org.lasque.tusdkvideodemo.component.MovieSplicerActivity;
 import org.lasque.tusdkvideodemo.component.MovieThumbActivity;
+import org.lasque.tusdkvideodemo.editor.MovieEditorCutActivity;
 
 /**
  * 功能列表界面 Adapter
@@ -40,7 +41,7 @@ public class SamplesListAdapter extends ArrayAdapter {
             SampleItem.VIDEO_MIXED,
             SampleItem.ALBUM_VIDEO_TIMECUT_SAVE,
             SampleItem.AUDIO_FILE_RECORDER,
-            SampleItem.AUDIO_ENGINE_PITCH
+            SampleItem.AUDIO_ENGINE_PITCH,
     };
 
     public SamplesListAdapter(@NonNull Context context) {
@@ -81,7 +82,7 @@ public class SamplesListAdapter extends ArrayAdapter {
         AUDIO_MIXED(R.string.lsq_audio_mixed, AudioMixedActivity.class.getName(), 0, false),
         VIDEO_BGM(R.string.lsq_video_bgm, MovieMixerActivity.class.getName(), 0, false),
         GAIN_THUMBNAIL(R.string.lsq_gain_thumbnail, MovieThumbActivity.class.getName(), 0, false),
-        VIDEO_MIXED(R.string.lsq_video_mixed, MovieSplicerActivity.class.getName(), 2, false),
+        VIDEO_MIXED(R.string.lsq_video_mixed, MovieEditorCutActivity.class.getName(), 9, false),
         ALBUM_VIDEO_TIMECUT_SAVE(R.string.lsq_album_video_timecut_save, MovieCutActivity.class.getName(), 1, false),
         AUDIO_FILE_RECORDER(R.string.lsq_audio_file_recorder, AudioRecordActivity.class.getName(), 0, false),
         AUDIO_ENGINE_PITCH(R.string.lsq_audio_engine_pitch, AudioPitchEngineActivity .class.getName(), 0, false);

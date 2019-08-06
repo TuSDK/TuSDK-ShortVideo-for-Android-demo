@@ -208,7 +208,7 @@
     <string name="lsq_audio_mixed">多音軌混合</string>
     <string name="lsq_video_bgm">音視頻混合</string>
     <string name="lsq_gain_thumbnail">獲取縮略圖</string>
-    <string name="lsq_video_mixed">多視頻拼接</string>
+    <string name="lsq_video_mixed">多視頻及圖像合成視頻</string>
     <string name="lsq_album_video_timecut_save">視頻時間裁剪</string>
     <string name="lsq_audio_file_recorder">錄製音頻</string>
     <string name="lsq_audio_engine_pitch">音頻变声</string>
@@ -470,5 +470,20 @@
     <string name="lsq_editor_text_size">字號</string>
     <string name="lsq_sticker_over_limit">OMG, 同時僅允許使用 %s 張貼紙</string>
     <string name="lsq_italic">斜體</string>
+    <string name="lsq_filter_FlashLight">黑場過度</string>
+    <string name="lsq_filter_Flip">翻轉</string>
+    <string name="lsq_filter_FlyIn">飛入</string>
+    <string name="lsq_filter_FocusIn">圓形縮小</string>
+    <string name="lsq_filter_FocusOut">圓形擴大</string>
+    <string name="lsq_filter_PullInBottom">下降</string>
+    <string name="lsq_filter_PullInLeft">左入</string>
+    <string name="lsq_filter_PullInRight">右入</string>
+    <string name="lsq_filter_PullInTop">上升</string>
+    <string name="lsq_filter_SpreadIn">擴散</string>
+    <string name="lsq_filter_StackUp">疊起</string>
+    <string name="lsq_filter_Zoom">放大</string>
+    <string name="lsq_filter_FadeIn">淡入</string>
+    <string name="lsq_select_image_hint">請您選擇最少3張照片</string>
+    <string name="lsq_transitions">轉場</string>
 
 </resources>

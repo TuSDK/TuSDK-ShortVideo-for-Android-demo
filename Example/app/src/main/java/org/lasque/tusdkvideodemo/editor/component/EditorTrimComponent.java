@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 
+import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.editor.MovieEditorController;
 import org.lasque.tusdkvideodemo.views.TrimRecyclerAdapter;
@@ -36,6 +37,22 @@ public class EditorTrimComponent extends EditorComponent {
     /** 当前下标 **/
     private int mCurrentIndex = 0;
 
+    private TuSdkEditorPlayer.TuSdkProgressListener mTrimProgressListener = new TuSdkEditorPlayer.TuSdkProgressListener() {
+        @Override
+        public void onStateChanged(int state) {
+
+        }
+
+        @Override
+        public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
+            if (playbackTimeUs == totalTimeUs){
+                getEditorPlayer().pausePreview();
+                getEditorPlayer().seekTimeUs(0);
+                getEditorPlayer().startPreview();
+            }
+        }
+    };
+
 
 
     /**
@@ -54,13 +71,15 @@ public class EditorTrimComponent extends EditorComponent {
         getEditorController().getVideoContentView().setClickable(false);
         getEditorController().getPlayBtn().setClickable(true);
         getEditorController().getPlayBtn().setOnClickListener(mOnClickListener);
+        getEditorPlayer().addProgressListener(mTrimProgressListener);
 
         if(mTrimAdapter != null)mTrimAdapter.setSelectItem(mBackupIndex);
     }
 
     @Override
     public void detach() {
-
+        getEditorPlayer().removeProgressListener(mTrimProgressListener);
+        getEditorController().getVideoContentView().setClickable(true);
     }
 
     @Override
@@ -96,6 +115,7 @@ public class EditorTrimComponent extends EditorComponent {
                     getEditorController().getPlayBtn().setVisibility(View.VISIBLE);
                     getEditorPlayer().seekOutputTimeUs(getEditorPlayer().getCurrentOutputTimeUs());
                     getEditorPlayer().setOutputRatio(ratio,false);
+
                 }
             });
             mTrimRecycle.setAdapter(mTrimAdapter);

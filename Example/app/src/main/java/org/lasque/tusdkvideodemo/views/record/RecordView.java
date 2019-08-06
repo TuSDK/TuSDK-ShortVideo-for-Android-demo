@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.opengl.GLES10Ext;
+import android.opengl.GLES11Ext;
+import android.opengl.GLES20;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -87,7 +91,6 @@ import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffec
 
 public class RecordView extends RelativeLayout
 {
-
     /**
      * 录制类型状态
      */
@@ -694,7 +697,7 @@ public class RecordView extends RelativeLayout
 
         // 第一次显示设为漫画滤镜
         if(lsq_comics_tab.getTag() ==  null){
-            isComicsFilterChecked = true;
+            isComicsFilterChecked = false;
         }
 
         lsq_comics_tab.setTag(0);
@@ -758,6 +761,7 @@ public class RecordView extends RelativeLayout
             mFilterConfigView.setVisibility((position == 0)? INVISIBLE :
                     ((mCurrentPosition == position) ? (mFilterConfigView.getVisibility() == VISIBLE ? INVISIBLE :VISIBLE)
                             :INVISIBLE));
+            if (mCurrentPosition == position) return;
             mCurrentPosition = position;
             changeVideoFilterCode(mFilterAdapter.getFilterList().get(position));
         }
@@ -1019,7 +1023,7 @@ public class RecordView extends RelativeLayout
                 PropsItemCategory category = mPropsItemCategories.get(pageIndex);
 
                 switch (category.getMediaEffectType()) {
-                    case TuSdKMediaEffectDataTypeSticker: {
+                    case TuSdkMediaEffectDataTypeSticker: {
                         StickerPropsItemPageFragment fragment = new StickerPropsItemPageFragment(pageIndex, mPropsItemCategories.get(pageIndex).getItems());
                         fragment.setItemDelegate(mStickerPropsItemDelegate);
                         return fragment;
@@ -1067,7 +1071,7 @@ public class RecordView extends RelativeLayout
     private HashMap<String, Float> mDefaultBeautyPercentParams = new HashMap<String, Float>() {
         {
             put("eyeSize", 0.3f); // 大眼
-            put("chinSize", 0.2f); // 瘦脸
+            put("chinSize", 0.5f); // 瘦脸
             put("noseSize", 0.2f); // 廋鼻
             put("mouthWidth", 0.5f); // 嘴型
             put("archEyebrow", 0.5f); // 眉型
@@ -1316,7 +1320,7 @@ public class RecordView extends RelativeLayout
                     arg.setMaxValueFactor(0.85f);// 最大值限制
                 }
                 if (arg.equalsKey("chinSize")) {// 瘦脸
-                    arg.setMaxValueFactor(0.8f);// 最大值限制
+                    arg.setMaxValueFactor(0.9f);// 最大值限制
                 }
                 if (arg.equalsKey("noseSize")) {// 瘦鼻
                     arg.setMaxValueFactor(0.6f);// 最大值限制
@@ -1449,6 +1453,9 @@ public class RecordView extends RelativeLayout
                     mCamera.rotateCamera();
                     mLightingOpen.setTextColor(getResources().getColor(R.color.lsq_color_white));
                     mLightingClose.setTextColor(getResources().getColor(R.color.lsq_widget_speedbar_button_bg));
+                    if (mCamera.isFrontFacingCameraPresent()){
+                        mCamera.setFocusMode(CameraConfigs.CameraAutoFocus.Auto,new PointF(0.5f, 0.5f));
+                    }
                     break;
                 // 美颜按钮显示美颜布局
                 case R.id.lsq_beautyButton:
