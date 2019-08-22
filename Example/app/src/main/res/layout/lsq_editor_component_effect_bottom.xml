@@ -6,12 +6,12 @@
               android:background="@color/lsq_color_black"
               android:orientation="vertical">
     <!--特效控制content-->
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/lsq_editor_effect_content"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         >
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
     <View
         android:layout_width="match_parent"

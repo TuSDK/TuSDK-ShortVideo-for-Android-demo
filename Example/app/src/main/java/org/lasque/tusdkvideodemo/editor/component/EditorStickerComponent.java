@@ -2,8 +2,8 @@ package org.lasque.tusdkvideodemo.editor.component;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,8 +11,6 @@ import android.widget.ImageView;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
-import org.lasque.tusdk.core.seles.tusdk.textSticker.Image2DStickerData;
-import org.lasque.tusdk.core.seles.tusdk.textSticker.TuSdkImage2DSticker;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
@@ -20,13 +18,11 @@ import org.lasque.tusdk.impl.components.widget.sticker.StickerImageItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerData;
-import org.lasque.tusdk.modules.view.widget.sticker.StickerFactory;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerImageData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerItemViewInterface;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerTextData;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaStickerImageEffectData;
-import org.lasque.tusdk.video.editor.TuSdkMediaTextEffectData;
 import org.lasque.tusdk.video.editor.TuSdkTimeRange;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.editor.MovieEditorController;
@@ -37,7 +33,7 @@ import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorGroupView;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorRectView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import static android.view.View.GONE;
 
@@ -50,7 +46,7 @@ import static android.view.View.GONE;
  * <p>
  * 裁剪组件
  */
-public class EditorStickerComponent extends EditorComponent {
+public class  EditorStickerComponent extends EditorComponent {
     /** 底部视图 **/
     private View mBottomView;
     /** 贴纸父容器视图 **/
@@ -476,10 +472,13 @@ public class EditorStickerComponent extends EditorComponent {
                 stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_white), 2);
                 //获取计算相应的位置
                 int[] locaiont = new int[2];
-                stickerItemView.getImageView().getLocationOnScreen(locaiont);
+                /** 当SDKVersion >= 27 需要使用 getLocationInWindow() 方法 不然会产生极大的误差 小于27时 getLocationInWindow() 与 getLocationOnScreen()方法返回值相同*/
+                stickerItemView.getImageView().getLocationInWindow(locaiont);
                 int pointX = locaiont[0] - getEditorController().getActivity().getImageStickerView().getLeft();
-                int pointY = locaiont[1] - getEditorController().getActivity().getImageStickerView().getTop();
-
+//                int pointX = locaiont[0] - mStickerView.getLeft();
+                int pointY = (int) (locaiont[1] - getEditorController().getActivity().getImageStickerView().getY());
+//                int pointY = (int) (locaiont[1] - mStickerView.getTop());
+                TLog.d("[Debug] LocationOnScreen = " + Arrays.toString(locaiont) + " pointX = " + pointX + " pointY = " + pointY);
                 //设置初始化的时间
 
                 long starTimeUs = ((StickerImageData) stickerItemView.getSticker()).starTimeUs;

@@ -13,7 +13,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -21,16 +20,10 @@ import android.widget.RelativeLayout;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.ContextUtils;
-import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption.WaterMarkPosition;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs.CameraAntibanding;
-import org.lasque.tusdk.core.utils.hardware.TuSDKRecordVideoCamera;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderCameraSetting;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCameraImpl;
-import org.lasque.tusdk.core.utils.image.BitmapHelper;
-import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting;
-import org.lasque.tusdk.core.video.TuSDKVideoCaptureSetting.AVCodecType;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
-import org.lasque.tusdk.impl.TuSpecialScreenHelper;
 
 /**
  * 相机界面父类
@@ -78,8 +71,8 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
 //         mVideoCamera.setDetectScale(0.1f);
 
 		// 设置水印，默认为空
-		mVideoCamera.setWaterMarkImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark));
-		mVideoCamera.setWaterMarkPosition(WaterMarkPosition.BottomRight);
+//		mVideoCamera.setWaterMarkImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark));
+//		mVideoCamera.setWaterMarkPosition(WaterMarkPosition.BottomRight);
 		
     }
     

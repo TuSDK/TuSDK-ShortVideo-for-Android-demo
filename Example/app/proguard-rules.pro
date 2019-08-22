@@ -76,6 +76,7 @@
 -dontwarn org.apache.commons.**
 -dontwarn com.nostra13.**
 -dontwarn org.lasque.**
+-dontwarn androidx.**
 
 -keep class org.apache.commons.**{ *; }
 -keep class org.lasque.tusdk.**{public *; protected *; }

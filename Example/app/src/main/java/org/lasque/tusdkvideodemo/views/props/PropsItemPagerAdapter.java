@@ -1,10 +1,8 @@
 package org.lasque.tusdkvideodemo.views.props;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 /******************************************************************
  * droid-sdk-video 

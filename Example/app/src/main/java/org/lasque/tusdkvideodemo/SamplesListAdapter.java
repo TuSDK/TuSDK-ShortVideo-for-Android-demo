@@ -9,8 +9,8 @@
 package org.lasque.tusdkvideodemo;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,6 @@ import org.lasque.tusdkvideodemo.component.AudioPitchEngineActivity;
 import org.lasque.tusdkvideodemo.component.AudioRecordActivity;
 import org.lasque.tusdkvideodemo.component.MovieCutActivity;
 import org.lasque.tusdkvideodemo.component.MovieMixerActivity;
-import org.lasque.tusdkvideodemo.component.MovieSplicerActivity;
 import org.lasque.tusdkvideodemo.component.MovieThumbActivity;
 import org.lasque.tusdkvideodemo.editor.MovieEditorCutActivity;
 

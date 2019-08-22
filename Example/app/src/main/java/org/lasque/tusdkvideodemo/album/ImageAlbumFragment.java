@@ -12,19 +12,15 @@ package org.lasque.tusdkvideodemo.album;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.api.extend.TuSdkMediaProgress;
@@ -32,7 +28,6 @@ import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaFormat;
 import org.lasque.tusdk.core.media.codec.video.TuSdkVideoQuality;
 import org.lasque.tusdk.core.seles.tusdk.TuSDKMediaTransitionWrap;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
-import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.sqllite.ImageSqlHelper;
 import org.lasque.tusdk.core.utils.sqllite.ImageSqlInfo;
@@ -46,7 +41,6 @@ import org.lasque.tusdkvideodemo.editor.MovieEditorActivity;
 import org.lasque.tusdkvideodemo.views.ScrollGridLayoutManager;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

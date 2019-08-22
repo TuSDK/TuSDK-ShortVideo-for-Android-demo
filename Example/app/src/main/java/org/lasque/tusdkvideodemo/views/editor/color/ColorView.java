@@ -1,6 +1,5 @@
 package org.lasque.tusdkvideodemo.views.editor.color;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,15 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.os.Build;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import org.lasque.tusdk.core.TuSdkContext;
-import org.lasque.tusdk.core.utils.ColorUtils;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.editor.CUtils;
 

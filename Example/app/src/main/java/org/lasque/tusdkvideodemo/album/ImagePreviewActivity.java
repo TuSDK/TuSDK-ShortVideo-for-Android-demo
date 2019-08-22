@@ -2,7 +2,7 @@ package org.lasque.tusdkvideodemo.album;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -26,10 +26,8 @@ import org.lasque.tusdk.video.editor.TuSdkTimeRange;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.ScreenAdapterActivity;
 import org.lasque.tusdkvideodemo.editor.MovieEditorActivity;
-import org.lasque.tusdkvideodemo.editor.MovieEditorPreviewActivity;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
