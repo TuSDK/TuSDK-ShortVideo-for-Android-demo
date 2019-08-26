@@ -29,12 +29,12 @@
     </LinearLayout>
 
     <!--文字控制content-->
-    <androidx.recyclerview.widget.RecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/lsq_editor_effect_scene_list"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginLeft="@dimen/lsq__space_10"
         android:layout_marginTop="@dimen/lsq__space_25">
-    </androidx.recyclerview.widget.RecyclerView>
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

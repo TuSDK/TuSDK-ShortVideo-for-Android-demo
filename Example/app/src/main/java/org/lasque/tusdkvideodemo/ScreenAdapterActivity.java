@@ -1,11 +1,15 @@
 package org.lasque.tusdkvideodemo;
 
+import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 
 import org.lasque.tusdk.impl.TuSpecialScreenHelper;
 import org.lasque.tusdkvideodemo.utils.AppManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xujie

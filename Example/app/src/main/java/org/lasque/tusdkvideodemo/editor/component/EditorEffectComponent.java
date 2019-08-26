@@ -6,12 +6,13 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,6 +53,7 @@ import org.lasque.tusdkvideodemo.views.MagicRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.SceneRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
 import org.lasque.tusdkvideodemo.views.TimeRecyclerAdapter;
+import org.lasque.tusdkvideodemo.views.TransitionsRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView;
 import org.lasque.tusdkvideodemo.views.editor.color.ColorView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollView;
@@ -62,8 +64,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeScene;
 import static org.lasque.tusdkvideodemo.utils.Constants.EDITORFILTERS;
-import static org.lasque.tusdkvideodemo.utils.Constants.PARTICLE_CODES;
 
 /**
  * droid-sdk-video
@@ -914,14 +916,14 @@ public class EditorEffectComponent extends EditorComponent {
 
                     if (!getEditorPlayer().isPause()) getEditorPlayer().pausePreview();
                     if (position == 0) {
-                        mLineView.setTimeEffectType(0);
+                        mLineView.setTimeEffectType(1);
                         mLineView.setShowSelectBar(false);
                         mMovieEditor.getEditorPlayer().clearTimeEffect();
                         mMovieEditor.getEditorPlayer().setTimeEffect(null);
                         mCurrentEffectData = null;
                     } else if (position == 1) {
                         //反复
-                        mLineView.setTimeEffectType(0);
+                        mLineView.setTimeEffectType(1);
                         mLineView.setShowSelectBar(true);
                         TuSdkMediaRepeatTimeEffect repeatTimeEffect = new TuSdkMediaRepeatTimeEffect();
                         TuSdkTimeRange applyTime = getApplyTimeRang();
@@ -932,7 +934,7 @@ public class EditorEffectComponent extends EditorComponent {
                         getEditorPlayer().seekOutputTimeUs(0);
                     } else if (position == 2) {
                         //慢动作
-                        mLineView.setTimeEffectType(0);
+                        mLineView.setTimeEffectType(1);
                         mLineView.setShowSelectBar(true);
                         TuSdkMediaSlowTimeEffect slowTimeEffect = new TuSdkMediaSlowTimeEffect();
                         TuSdkTimeRange applyTime = getApplyTimeRang();
@@ -951,6 +953,7 @@ public class EditorEffectComponent extends EditorComponent {
                         mLineView.setShowSelectBar(false);
                         mCurrentEffectData = reversalTimeEffect;
                     }
+
                     setPlayState(1);
                 }
             });
@@ -1056,9 +1059,8 @@ public class EditorEffectComponent extends EditorComponent {
                         isOnSelect = false;
                         if (mMovieEditor.getEditorPlayer().isPause()) {
                             if (isTimeChanged) {
-                                if (mCurrentEffectData != null){
+                                if (mCurrentEffectData != null)
                                     mMovieEditor.getEditorPlayer().setTimeEffect(mCurrentEffectData);
-                                }
                                 isTimeChanged = false;
                             }
                             mMovieEditor.getEditorPlayer().startPreview();
@@ -1115,7 +1117,6 @@ public class EditorEffectComponent extends EditorComponent {
                 mLineView.seekTo(mMovieEditor.getEditorPlayer().isReversing() ? 1 : 0);
             if (mTimeAdapter != null)
                 mTimeAdapter.setCurrentPosition(mMementoIndex);
-            mCurrentEffectData = mMementoEffectData;
         }
 
         @Override
@@ -1140,7 +1141,6 @@ public class EditorEffectComponent extends EditorComponent {
             if (mMementoEffectData == null) {
                 mLineView.setTimeEffectType(0);
                 mMovieEditor.getEditorPlayer().clearTimeEffect();
-                mMovieEditor.getEditorPlayer().setTimeEffect(null);
                 mLineView.setShowSelectBar(false);
             } else {
                 mMovieEditor.getEditorPlayer().setTimeEffect(mMementoEffectData);
@@ -1149,7 +1149,6 @@ public class EditorEffectComponent extends EditorComponent {
                 mLineView.setLeftBarPosition(mMementoEffectData.getTimeRange().getStartTimeUS() / (float) getEditorPlayer().getTotalTimeUs());
                 mLineView.setRightBarPosition(mMementoEffectData.getTimeRange().getEndTimeUS() / (float) getEditorPlayer().getTotalTimeUs());
             }
-            mCurrentEffectData = null;
             getEditorPlayer().seekTimeUs(0);
         }
 
@@ -1159,7 +1158,6 @@ public class EditorEffectComponent extends EditorComponent {
             mMementoEffectData = mCurrentEffectData;
             mMementoIndex = mCurrentIndex;
             getEditorPlayer().setTimeEffect(mCurrentEffectData);
-            mCurrentEffectData = null;
             getEditorPlayer().seekTimeUs(0);
         }
 
@@ -1285,7 +1283,7 @@ public class EditorEffectComponent extends EditorComponent {
             mParticleView = inflater.inflate(R.layout.lsq_editor_component_effect_bottom_particle, null);
             mParticleRecycle = mParticleView.findViewById(R.id.lsq_editor_effect_time_list);
             mParticleRecycle.setLayoutManager(new TuSdkLinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-            mParticleAdapter.setMagicList(Arrays.asList(PARTICLE_CODES));
+            mParticleAdapter.setMagicList(Arrays.asList(Constants.PARTICLE_CODES));
             mParticleRecycle.setAdapter(mParticleAdapter);
             mParticleAdapter.setItemCilckListener(new MagicRecyclerAdapter.ItemClickListener() {
                 @Override
@@ -1300,7 +1298,6 @@ public class EditorEffectComponent extends EditorComponent {
                         getEditorPlayer().pausePreview();
                         TuSdkMediaParticleEffectData effectData = mDataList.removeLast();
                         getEditorEffector().removeMediaEffectData(effectData);
-//                        getEditorPlayer().seekOutputTimeUs(effectData.getAtTimeRange().getStartTimeUS());
                         if (mMovieEditor.getEditorPlayer().isReversing()) {
                             mMovieEditor.getEditorPlayer().seekInputTimeUs(effectData.getAtTimeRange().getEndTimeUS());
                             mLineView.seekTo(effectData.getAtTimeRange().getEndTimeUS() / (float) getEditorPlayer().getTotalTimeUs());
@@ -1316,12 +1313,10 @@ public class EditorEffectComponent extends EditorComponent {
                     }
                     if (mCurrentIndex == position && !mParticleConfig.isVisible()) {
                         mParticleConfig.setVisible(true);
-                    } else if (mCurrentIndex == position && mParticleConfig.isVisible()){
-                        mParticleConfig.setVisible(false);
                     }
 
                     mCurrentIndex = position;
-                    mCurrentParticleCode = PARTICLE_CODES[position];
+                    mCurrentParticleCode = Constants.PARTICLE_CODES[position];
                     mParticleAdapter.setCurrentPosition(mCurrentIndex);
                     if (position != 0 || mDataList.size() == 0) return;
                     TuSdkMediaParticleEffectData effectData = mDataList.removeLast();
@@ -1521,7 +1516,7 @@ public class EditorEffectComponent extends EditorComponent {
                 String particleCode = mCurrentParticleCode;
                 TuSdkMediaParticleEffectData currentEffectModel = mCurrentParticleEffectModel;
 
-                if (particleCode == null || particleCode.equals(PARTICLE_CODES[0])) return false;
+                if (particleCode == null || particleCode.equals(EDITORFILTERS[0])) return false;
 
                 /** 开始播放视频并预览已设置的特效 */
                 if (getEditorPlayer().getCurrentOutputTimeUs() >= getEditorPlayer().getOutputTotalTimeUS() && getEditorPlayer().getOutputTotalTimeUS() > 0) {
@@ -1532,7 +1527,8 @@ public class EditorEffectComponent extends EditorComponent {
                 if (getEditorPlayer().isReversing() && (0 == currentPercent)) {
                     return false;
                 }
-                if (mLineView.getCurrentPercent() == 1 && !getEditorPlayer().isReversing() || getEditorPlayer().getCurrentTimeUs() == getEditorPlayer().getTotalTimeUs() && !getEditorPlayer().isReversing()) {
+
+                if (mLineView.getCurrentPercent() == 1 || getEditorPlayer().getCurrentTimeUs() == getEditorPlayer().getTotalTimeUs() && !getEditorPlayer().isReversing()) {
                     return false;
                 }
 
@@ -1566,15 +1562,14 @@ public class EditorEffectComponent extends EditorComponent {
                             mParticleAdapter.setCanDeleted(true);
                             mParticleAdapter.notifyItemChanged(0);
                         }
+
                         long totalUs = getEditorPlayer().getTotalTimeUs();
                         float percent = mLineView.getCurrentPercent();
-                        getEditorPlayer().startPreview();
                         mStartTimeUs = (long) (totalUs * percent);
+                        getEditorPlayer().startPreview();
                         if (getEditorPlayer().isReversing()) {
-                            TLog.d("setAtTimeRange mStartTimeUs = " + mStartTimeUs + " isReversing totalUs = " + totalUs + " percent = " + percent + "inputTotalTimeUs = " + getEditorPlayer().getInputTotalTimeUs() + " outputTotalTimeUs = " + getEditorPlayer().getOutputTotalTimeUS());
                             currentEffectModel.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(0, mStartTimeUs));
                         } else {
-                            TLog.d("setAtTimeRange mStartTimeUs = " + mStartTimeUs + " notReversing");
                             currentEffectModel.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(mStartTimeUs, Long.MAX_VALUE));
                         }
                         mDrawColorState = true;
@@ -1604,7 +1599,7 @@ public class EditorEffectComponent extends EditorComponent {
                         if (getEditorPlayer().isReversing() && (0 == mLineView.getCurrentPercent())) {
                             presscancel();
                         }
-                        if ((mLineView.getCurrentPercent() == 1f && !getEditorPlayer().isReversing() || getEditorPlayer().getCurrentTimeUs() == getEditorPlayer().getTotalTimeUs() || getEditorPlayer().isPause()) && !getEditorPlayer().isReversing() ) {
+                        if ((mLineView.getCurrentPercent() == 1f || getEditorPlayer().getCurrentTimeUs() == getEditorPlayer().getTotalTimeUs() || getEditorPlayer().isPause()) && !getEditorPlayer().isReversing() ) {
                             presscancel();
                         }
                         break;

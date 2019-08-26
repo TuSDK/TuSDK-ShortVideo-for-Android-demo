@@ -89,7 +89,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/lsq_beauty_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="90dp"
@@ -98,7 +98,7 @@
             android:layout_marginRight="@dimen/lsq__space_15"
             android:layout_gravity="center">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
 </LinearLayout>

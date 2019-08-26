@@ -1,7 +1,7 @@
 package org.lasque.tusdkvideodemo.views;
 
 import android.graphics.drawable.Drawable;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
 import org.lasque.tusdkvideodemo.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * droid-sdk-video

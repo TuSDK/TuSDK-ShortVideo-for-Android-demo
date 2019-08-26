@@ -1,9 +1,10 @@
 package org.lasque.tusdkvideodemo.views;
 
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import org.lasque.tusdk.core.view.TuSdkImageView;
 import org.lasque.tusdkvideodemo.R;

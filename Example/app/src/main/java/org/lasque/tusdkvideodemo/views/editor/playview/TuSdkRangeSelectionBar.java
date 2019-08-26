@@ -2,13 +2,12 @@ package org.lasque.tusdkvideodemo.views.editor.playview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-
 
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdkvideodemo.R;
@@ -68,7 +67,7 @@ public class TuSdkRangeSelectionBar extends RelativeLayout {
 
     /** 触摸选择控件 **/
     public static interface OnTouchSelectBarListener {
-        void onTouchBar(float leftPercent, float rightPerchent,int type);
+        void onTouchBar(float leftPercent, float rightPerchent, int type);
     }
 
     /**

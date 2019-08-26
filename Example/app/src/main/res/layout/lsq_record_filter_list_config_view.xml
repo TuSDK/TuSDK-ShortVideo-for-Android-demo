@@ -93,7 +93,7 @@
         android:layout_height="95dp"
         android:layout_below="@id/lsq_tab_layout">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/lsq_comics_filter_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -102,9 +102,9 @@
             android:paddingRight="@dimen/lsq__space_10"
             android:layout_gravity="center_vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/lsq_filter_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
             android:paddingRight="@dimen/lsq__space_10"
             android:layout_gravity="center_vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
 
     </FrameLayout>
 

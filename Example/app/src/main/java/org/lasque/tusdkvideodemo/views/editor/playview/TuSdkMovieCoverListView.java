@@ -3,7 +3,7 @@ package org.lasque.tusdkvideodemo.views.editor.playview;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import androidx.annotation.Nullable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

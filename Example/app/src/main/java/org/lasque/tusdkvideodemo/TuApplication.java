@@ -31,6 +31,7 @@ public class TuApplication extends TuSdkApplication
 	public void onCreate()
 	{
 		super.onCreate();
+
 		/**
 		 ************************* TuSDK 集成三部曲 *************************
 		 * 

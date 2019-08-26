@@ -34,12 +34,12 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/lsq_mv_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <View

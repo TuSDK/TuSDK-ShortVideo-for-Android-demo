@@ -1,7 +1,7 @@
 package org.lasque.tusdkvideodemo.views;
 
 import android.content.Context;
-import androidx.recyclerview.widget.GridLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 
 /**
  * TuSDK

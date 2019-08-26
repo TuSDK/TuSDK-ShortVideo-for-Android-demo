@@ -1,19 +1,26 @@
 package org.lasque.tusdkvideodemo.editor.component;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-
-import androidx.annotation.IdRes;
-import androidx.annotation.StringRes;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.os.Build;
+import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
@@ -25,10 +32,14 @@ import android.widget.TextView;
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
+import org.lasque.tusdk.core.seles.tusdk.textSticker.Image2DStickerData;
+import org.lasque.tusdk.core.seles.tusdk.textSticker.TuSdkImage2DSticker;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.ColorUtils;
+import org.lasque.tusdk.core.utils.StringHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
+import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.widget.TuSdkEditText;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
@@ -58,7 +69,7 @@ import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieCol
 
 import java.util.ArrayList;
 
-import static androidx.recyclerview.widget.RecyclerView.HORIZONTAL;
+import static android.support.v7.widget.RecyclerView.HORIZONTAL;
 import static android.view.View.GONE;
 
 /**
@@ -101,8 +112,6 @@ public class EditorTextComponent extends EditorComponent {
     private EditorTextBackups.TextBackupEntity mBackupEntity;
     /** View **/
     private View mDisplayView;
-
-    private boolean isFirstCallSoftInput = true;
 
     /**
      * 显示区域改变回调
@@ -147,16 +156,9 @@ public class EditorTextComponent extends EditorComponent {
 
         @Override
         public void onStickerItemViewReleased() {
-            if (isFirstCallSoftInput){
-                TuSdkViewHelper.showViewIn(getEditTextView(),true);
-                isFirstCallSoftInput = false;
-            } else {
-                showSoftInput();
-                TuSdkViewHelper.showViewIn(getEditTextView(),true);
-                getEditTextView().requestFocus();
-            }
-
-//            getEditTextView().requestFocus();
+            getEditTextView().setVisibility(View.VISIBLE);
+            getEditTextView().requestFocus();
+            showSoftInput();
         }
 
         @Override
@@ -390,9 +392,9 @@ public class EditorTextComponent extends EditorComponent {
                     getEditTextView().setVisibility(View.INVISIBLE);
                 }
                 // 键盘时显示状态,则显示输入框
-                else if (isKeyboardShown(rootView)) {
-                    getEditTextView().setVisibility(View.VISIBLE);
-                }
+//                else if (isKeyboardShown(rootView)) {
+//                    getEditTextView().setVisibility(View.VISIBLE);
+//                }
             }
         });
     }
@@ -631,8 +633,7 @@ public class EditorTextComponent extends EditorComponent {
                     stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_white), 2);
                     //获取计算相应的位置
                     int[] locaiont = new int[2];
-                    /** 当SDKVersion >= 27 需要使用 getLocationInWindow() 方法 不然会产生极大的误差 小于27时 getLocationInWindow() 与 getLocationOnScreen()方法返回值相同*/
-                    stickerItemView.getTextView().getLocationInWindow(locaiont);
+                    stickerItemView.getTextView().getLocationOnScreen(locaiont);
                     int pointX = locaiont[0] - mStickerView.getLeft();
                     int pointY = locaiont[1] - mStickerView.getTop();
 

@@ -271,34 +271,5 @@
     <include layout="@layout/lsq_record_filter_list_config_view"/>
 
     <include layout="@layout/record_sticker_layout" />
-    
-    
-    <LinearLayout
-        android:layout_marginRight="14dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:src="@drawable/lsq_ic_light"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
-        <org.lasque.tusdkvideodemo.views.VerticalSeekBar
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:maxHeight="2dp"
-            android:thumb="@drawable/lsq_model_seekbar_thumb"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/lsq_exposure_compensation_seek"
-            android:min="0"
-            android:progress="12"
-            android:max="24"
-            android:progressDrawable="@drawable/progress_vertical"
-            android:layout_width="18dp"
-            android:layout_height="160dp" />
-    </LinearLayout>
 
 </RelativeLayout>

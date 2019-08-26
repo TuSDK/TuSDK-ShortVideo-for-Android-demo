@@ -9,14 +9,15 @@ package org.lasque.tusdkvideodemo.views.props;
  * @Copyright (c) 2018 tutucloud.com. All rights reserved.
  ******************************************************************/
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import org.lasque.tusdk.core.utils.TLog;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  *  Page 适配器基础类

@@ -11,7 +11,7 @@
         android:layout_height="110dp"
         android:orientation="horizontal">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/lsq_filter_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
             android:layout_marginLeft="@dimen/lsq__space_10"
             android:layout_marginRight="@dimen/lsq__space_10">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 

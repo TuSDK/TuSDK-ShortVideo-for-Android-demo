@@ -2,8 +2,8 @@ package org.lasque.tusdkvideodemo.editor.component;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,6 +13,7 @@ import org.lasque.tusdk.core.audio.TuSdkAudioRecordCuter;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;

@@ -3,10 +3,11 @@ package org.lasque.tusdkvideodemo.views.editor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdkvideodemo.views.editor.ruler.HorizontalPlayViewOne;
 import org.lasque.tusdkvideodemo.views.editor.ruler.PlayLineView;
 import org.lasque.tusdkvideodemo.views.editor.ruler.RangeSelectionBar;

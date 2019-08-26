@@ -1,9 +1,16 @@
 package org.lasque.tusdkvideodemo.views.editor;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.lasque.tusdk.core.utils.TLog;
@@ -13,6 +20,7 @@ import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollContent;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 import org.lasque.tusdkvideodemo.views.editor.ruler.RulerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,6 +1,6 @@
 package org.lasque.tusdkvideodemo.views;
 
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +15,9 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.view.TuSdkImageView;
+import org.lasque.tusdk.impl.view.widget.TuGifView;
 import org.lasque.tusdkvideodemo.R;
 
 import java.util.ArrayList;
