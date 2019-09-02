@@ -2,6 +2,7 @@ package org.lasque.tusdkvideodemo.record;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
@@ -54,6 +55,7 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
     protected void onResume()
     {
         super.onResume();
+        mRecordView.onResume();
     }
 
     @Override

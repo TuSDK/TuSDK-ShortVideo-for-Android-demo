@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -82,10 +82,9 @@ public class DemoEntryActivity extends TuFragmentActivity {
     /**
      * 点击事件监听
      */
-    private View.OnClickListener mClickListener = new View.OnClickListener()
-    {
+    private View.OnClickListener mClickListener = new TuSdkViewHelper.OnSafeClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onSafeClick(View v) {
             switch (v.getId()){
                 case R.id.lsq_app_menu:
                     handleComponentButton();

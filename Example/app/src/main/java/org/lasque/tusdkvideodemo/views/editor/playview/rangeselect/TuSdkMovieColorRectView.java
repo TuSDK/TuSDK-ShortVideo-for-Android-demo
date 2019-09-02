@@ -1,8 +1,8 @@
 package org.lasque.tusdkvideodemo.views.editor.playview.rangeselect;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.ColorRes;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;

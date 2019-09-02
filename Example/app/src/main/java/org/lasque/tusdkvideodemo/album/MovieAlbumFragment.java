@@ -15,10 +15,10 @@ import android.media.MediaFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +36,7 @@ import org.lasque.tusdkvideodemo.editor.MovieEditorPreviewActivity;
 import org.lasque.tusdkvideodemo.utils.MD5Util;
 
 import java.io.Serializable;
-import java.security.Security;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -48,8 +46,8 @@ public class MovieAlbumFragment extends Fragment {
     private static int MIN_VIDEO_DURATION = 3000;
     /* 最大视频时长(单位：ms) */
     private static int MAX_VIDEO_DURATION = 60000 * 3;
-    /** 最大边长限制 因Android不同机型限制 2048为最优数值**/
-    private static final int MAX_SIZE = 2048;
+    /** 最大边长限制 **/
+    private static final int MAX_SIZE = 4096;
 
     /* 确定按钮 */
     protected TextView mConfirmButton;
@@ -165,7 +163,8 @@ public class MovieAlbumFragment extends Fragment {
         MovieInfo info = mVideoAlbumAdapter.getVideoInfoList().get(position);
         MediaFormat mediaFormat = TuSDKMediaUtils.getVideoFormat(new TuSDKMediaDataSource(info.getPath()));
         TuSdkVideoInfo videoInfo = new TuSdkVideoInfo(mediaFormat);
-        if (videoInfo.size.maxSide() >= MAX_SIZE) {
+
+        if (!TuSDKMediaUtils.isVideoSizeSupported(videoInfo.size,mediaFormat.getString(MediaFormat.KEY_MIME)) || videoInfo.size.maxSide() > MAX_SIZE) {
             TuSdkViewHelper.toast(getActivity(), R.string.lsq_loadvideo_failed);
             return true;
         }

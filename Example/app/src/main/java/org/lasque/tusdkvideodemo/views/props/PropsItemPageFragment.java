@@ -1,21 +1,18 @@
 package org.lasque.tusdkvideodemo.views.props;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdkvideodemo.views.props.model.PropsItem;
-
-import java.util.Collection;
 
 /******************************************************************
  * droid-sdk-video 

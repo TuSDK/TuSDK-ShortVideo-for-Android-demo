@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">涂图短视频</string>
+    <!--<string name="app_name">涂图短视频(贴纸测试)</string>-->
 
     <!-- SDK -->
     <string name="lsq_sdk_name">TuSDK 涂图</string>
@@ -22,6 +23,7 @@
     <string name="lsq_filter_set_whitening">白皙</string>
     <string name="lsq_filter_set_mixied">效果</string>
     <string name="lsq_filter_set_vignette">暗角</string>
+    <string name="lsq_filter_set_saturation">饱和</string>
 
     <string name="beauty_on">美颜已开启</string>
     <string name="beauty_off">美颜已关闭</string>
@@ -44,6 +46,7 @@
     <string name="lsq_filter_Missing01">想你色</string>
     <string name="lsq_filter_Grapefruit01">西柚色</string>
     <string name="lsq_filter_BabyPink001">粉色</string>
+    <string name="lsq_filter_gaosi_01">高斯</string>
 
     <string name="live_camera_sample">直播相机示例</string>
     <string name="record_camera_sample">"视频录制示例</string>

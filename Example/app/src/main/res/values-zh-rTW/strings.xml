@@ -44,7 +44,8 @@
     <string name="lsq_filter_Year1950">1想你色</string>
     <string name="lsq_filter_Grapefruit01">西柚色</string>
     <string name="lsq_filter_BabyPink001">粉色</string>
-    
+    <string name="lsq_filter_gaosi_01">高斯</string>
+
     <string name="live_camera_sample">直播相機示例</string>
     <string name="record_camera_sample">視頻錄製示例</string>
     <string name="edit_camera_sample">視頻編輯示例</string>
@@ -485,5 +486,6 @@
     <string name="lsq_filter_FadeIn">淡入</string>
     <string name="lsq_select_image_hint">請您選擇最少3張照片</string>
     <string name="lsq_transitions">轉場</string>
+    <string name="lsq_filter_set_saturation">飽和</string>
 
 </resources>

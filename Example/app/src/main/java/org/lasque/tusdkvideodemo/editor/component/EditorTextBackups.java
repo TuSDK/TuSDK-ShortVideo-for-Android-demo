@@ -2,26 +2,19 @@ package org.lasque.tusdkvideodemo.editor.component;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorEffector;
 import org.lasque.tusdk.core.utils.ColorUtils;
-import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerData;
-import org.lasque.tusdk.modules.view.widget.sticker.StickerTextData;
 import org.lasque.tusdk.video.editor.TuSdkMediaTextEffectData;
-import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.editor.component.helper.EditorTextAndStickerRankHelper;
 import org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorRectView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * droid-sdk-video
@@ -94,7 +87,8 @@ public class EditorTextBackups {
                     //字间距
                     entity.textItemView.setLetterSpacing(0.07f * entity.wordWidth);
                     //行间距
-                    entity.textItemView.setLineSpacing(0, 0.5f + entity.rowWidth);
+                    if (entity.rowWidth != 0)
+                    entity.textItemView.setLineSpacing(0, entity.rowWidth);
 
                     int style = entity.isBold ? Typeface.BOLD : Typeface.NORMAL;
                     if (entity.isBold && entity.isItalics) style = Typeface.BOLD_ITALIC;
@@ -256,6 +250,7 @@ public class EditorTextBackups {
         entity.stickerData = stickerData;
         entity.textItemView = textItemView;
         entity.colorRectView = colorRectView;
+        entity.rowWidth = textItemView.getTextView().getLineSpacingMultiplier();
         return entity;
     }
 

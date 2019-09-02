@@ -45,7 +45,8 @@
     <string name="lsq_filter_Missing01">Missing</string>
     <string name="lsq_filter_Grapefruit01">Grapefruit</string>
     <string name="lsq_filter_BabyPink001">BabyPink</string>
-    
+    <string name="lsq_filter_gaosi_01">Gaussian</string>
+
     <string name="live_camera_sample">Live camera sample</string>
     <string name="record_camera_sample">Record Camera Sample</string>
     <string name="edit_camera_sample">Movie editor sample</string>
@@ -493,4 +494,5 @@
     <string name="lsq_filter_None">None</string>
     <string name="lsq_not_file">Not File</string>
     <string name="lsq_select_image_hint">Please select over 3 images</string>
+    <string name="lsq_filter_set_saturation">Saturation</string>
 </resources>

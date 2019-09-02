@@ -37,9 +37,9 @@ public class Constants {
     /**
      * 滤镜 filterCode 列表
      */
-    public static String[] VIDEOFILTERS = {"None", "SkinNature10","SkinPink10", "SkinJelly10", "SkinNoir10", "SkinRuddy10",
+    public static String[] VIDEOFILTERS = {"None","SkinNature10","SkinPink10", "SkinJelly10", "SkinNoir10", "SkinRuddy10",
             "SkinSugar10", "SkinPowder10", "SkinWheat10","SkinSoft10","SkinPure10","SkinMoving10","SkinPast10","SkinCookies10",
-            "SkinRose10"};
+            "SkinRose10","gaosi_01"};
 
     /** -----------注意事项：视频录制使用人像美颜滤镜(带有磨皮、大眼、瘦脸)，编辑组件尽量不要使用人像美颜滤镜，会造成视频处理过度，效果更不好，建议使用纯色偏滤镜 ----------------*/
     /**
