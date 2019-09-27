@@ -155,8 +155,6 @@ public class EditorTextComponent extends EditorComponent {
                 TuSdkViewHelper.showViewIn(getEditTextView(),true);
                 getEditTextView().requestFocus();
             }
-
-//            getEditTextView().requestFocus();
         }
 
         @Override
@@ -1803,7 +1801,8 @@ public class EditorTextComponent extends EditorComponent {
                         int style = isBold?Typeface.BOLD:Typeface.NORMAL;
                         if(isBold && isItalics) style = Typeface.BOLD_ITALIC;
                         else if(!isBold && isItalics) style = Typeface.ITALIC;
-                        ((StickerTextItemView) mStickerView.getCurrentItemViewSelected()).getTextView().setTypeface(Typeface.defaultFromStyle(style));
+                        Typeface typeface = Typeface.create(((StickerTextItemView) mStickerView.getCurrentItemViewSelected()).getTextView().getTypeface(),style);
+                        ((StickerTextItemView) mStickerView.getCurrentItemViewSelected()).getTextView().setTypeface(typeface);
                         setIsCheck(isBold,BOLD,mBoldButton);
                         break;
                     case R.id.lsq_editor_text_underline:
@@ -1820,7 +1819,8 @@ public class EditorTextComponent extends EditorComponent {
                         int italicStyle = isItalics?Typeface.ITALIC:Typeface.NORMAL;
                         if(isItalics && isBold) italicStyle = Typeface.BOLD_ITALIC;
                         else if (!isItalics && isBold) italicStyle = Typeface.BOLD;
-                        ((StickerTextItemView) mStickerView.getCurrentItemViewSelected()).getTextView().setTypeface(Typeface.defaultFromStyle(italicStyle));
+                        Typeface italicTypeface = Typeface.create(((StickerTextItemView) mStickerView.getCurrentItemViewSelected()).getTextView().getTypeface(),italicStyle);
+                        ((StickerTextItemView) mStickerView.getCurrentItemViewSelected()).getTextView().setTypeface(italicTypeface);
                         setIsCheck(isItalics,ITALIC,mItalicsButton);
                         break;
                     default:

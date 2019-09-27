@@ -610,7 +610,7 @@ public class RecordView extends RelativeLayout
 
     /******************************** 滤镜 ********************************************/
     /** 默认选中滤镜 */
-    private static final int DEFAULT_POSITION = 2;
+    private static final int DEFAULT_POSITION = 1;
     /** 滤镜视图 */
     private RelativeLayout mFilterContent;
     /** 参数调节视图 */
@@ -770,8 +770,9 @@ public class RecordView extends RelativeLayout
 
         @Override
         public void onVideoCameraStateChanged(TuSdkStillCameraAdapter.CameraState newState) {
-            ThreadHelper.postDelayed(new Runnable() {
+            if (newState.equals(TuSdkStillCameraAdapter.CameraState.StateUnknow)) return;
 
+            ThreadHelper.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (!isBeautyClose)
@@ -840,6 +841,7 @@ public class RecordView extends RelativeLayout
      */
     protected void changeVideoFilterCode(final String code)
     {
+        if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter) != null && mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter).size() > 0 && mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter).get(0).getFilterWrap().getCode().equals(code)) return;
         TuSdkMediaFilterEffectData filterEffectData = new TuSdkMediaFilterEffectData(code);
         SelesParameters.FilterArg filterArg = filterEffectData.getFilterArg("mixied");// 效果
         if(filterArg != null) filterArg.setMaxValueFactor(0.7f);// 设置最大值限制
@@ -924,6 +926,7 @@ public class RecordView extends RelativeLayout
                 setTextButtonDrawableTop(mMoreButton, R.drawable.video_nav_ic_more);
                 mPropsItemViewPager.getAdapter().notifyDataSetChanged();
                 TLog.e("[Debug] curent ex = " + mCamera.getCurrentExposureCompensation());
+                mCamera.getFocusTouchView().isShowFoucusView(true);
             }
         }
     };
@@ -1527,6 +1530,7 @@ public class RecordView extends RelativeLayout
                     setBeautyViewVisible(mSmartBeautyTabLayout.getVisibility() == GONE);
                     setStickerVisible(false);
                     setSpeedViewVisible(false);
+                    mCamera.getFocusTouchView().isShowFoucusView(false);
                     break;
                 // 速度
                 case R.id.lsq_speedButton:
@@ -1578,6 +1582,7 @@ public class RecordView extends RelativeLayout
                     setSpeedViewVisible(false);
                     setStickerVisible(false);
                     showFilterLayout();
+                    mCamera.getFocusTouchView().isShowFoucusView(false);
                     break;
                 // 漫画滤镜
                 case R.id.lsq_comics_tab:
@@ -1594,6 +1599,7 @@ public class RecordView extends RelativeLayout
                     setSpeedViewVisible(false);
                     setBottomViewVisible(false);
                     showStickerLayout();
+                    mCamera.getFocusTouchView().isShowFoucusView(false);
                     break;
                 // 比例
                 case R.id.lsq_radio_1_1:

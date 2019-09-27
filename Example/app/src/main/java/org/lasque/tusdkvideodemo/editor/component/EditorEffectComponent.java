@@ -57,6 +57,7 @@ import org.lasque.tusdkvideodemo.views.editor.color.ColorView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkMovieScrollView;
 import org.lasque.tusdkvideodemo.views.editor.playview.TuSdkRangeSelectionBar;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -1514,6 +1515,10 @@ public class EditorEffectComponent extends EditorComponent {
             }
         };
 
+        private long mPreTimeUs = 0l;
+
+        private int mOutCurrentFrameCount = 0;
+
         private View.OnTouchListener mOnParticleTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1539,6 +1544,18 @@ public class EditorEffectComponent extends EditorComponent {
                 if (getEditorPlayer().getCurrentTimeUs() >= getEditorPlayer().getTotalTimeUs() && !getEditorPlayer().isReversing()) {
                     return false;
                 }
+                TLog.d("Current Time Us %s preTimeUs %s Current Percent %s",getEditorPlayer().getCurrentTimeUs(),mPreTimeUs,mLineView.getCurrentPercent());
+                if (mPreTimeUs == getEditorPlayer().getCurrentTimeUs() && mPreTimeUs != 0){
+                    mOutCurrentFrameCount++;
+                    DecimalFormat decimalFormat = new DecimalFormat(".00");
+                    float currentPercent = Float.valueOf(decimalFormat.format(mLineView.getCurrentPercent()));
+                    if (mOutCurrentFrameCount >4 || currentPercent >= 0.99){
+                        return false;
+                    }
+                } else {
+                    mOutCurrentFrameCount = 0;
+                }
+                mPreTimeUs = getEditorPlayer().getCurrentTimeUs();
 
 
                 final PointF pointF = getConvertedPoint(event.getX(), event.getY());

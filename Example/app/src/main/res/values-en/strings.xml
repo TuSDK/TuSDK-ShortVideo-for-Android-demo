@@ -439,21 +439,6 @@
     <string name="lsq_filter_monochrome_video">Monochrome_Video</string>
     <string name="lsq_filter_jpcomics_video">JPComics_Video</string>
 
-    <string name="lsq_filter_SkinNature10">Nature</string>
-    <string name="lsq_filter_SkinPink10">Pink</string>
-    <string name="lsq_filter_SkinJelly10">Jelly</string>
-    <string name="lsq_filter_SkinNoir10">Noir</string>
-    <string name="lsq_filter_SkinRuddy10">Ruddy</string>
-    <string name="lsq_filter_SkinSugar10">Sugar</string>
-    <string name="lsq_filter_SkinPowder10">Powder</string>
-    <string name="lsq_filter_SkinWheat10">Wheat</string>
-    <string name="lsq_filter_SkinSoft10">Soft</string>
-    <string name="lsq_filter_SkinPure10">Pure</string>
-    <string name="lsq_filter_SkinMoving10">Moving</string>
-    <string name="lsq_filter_SkinPast10">Past</string>
-    <string name="lsq_filter_SkinCookies10">Cookies</string>
-    <string name="lsq_filter_SkinRose10">Rose</string>
-
     <string name="lsq_record_completed">Record Completed</string>
     <string name="lsq_trim_text">Trim</string>
     <string name="lsq_trim_no">No</string>
@@ -495,4 +480,24 @@
     <string name="lsq_not_file">Not File</string>
     <string name="lsq_select_image_hint">Please select over 3 images</string>
     <string name="lsq_filter_set_saturation">Saturation</string>
+    <string name="lsq_filter_SkinBeckoning_1">Beckoning</string>
+    <string name="lsq_filter_SkinButter_1">Butter</string>
+    <string name="lsq_filter_SkinClear_1">Clear</string>
+    <string name="lsq_filter_SkinConfession_1">Confession</string>
+    <string name="lsq_filter_SkinDawn_1">Dawn</string>
+    <string name="lsq_filter_SkinDusk_1">Dusk</string>
+    <string name="lsq_filter_SkinExtraordinary_1">Extraordinary</string>
+    <string name="lsq_filter_SkinFair_1">Fair</string>
+    <string name="lsq_filter_SkinHoney_1">Honey</string>
+    <string name="lsq_filter_SkinJapanese_1">Japanese</string>
+    <string name="lsq_filter_SkinLeisurely_1">Leisurely</string>
+    <string name="lsq_filter_SkinLotus_1">Lotus</string>
+    <string name="lsq_filter_SkinNatural_1">Natural</string>
+    <string name="lsq_filter_SkinNostalgia_1">Nostalgia</string>
+    <string name="lsq_filter_SkinPlain_1">Plain</string>
+    <string name="lsq_filter_SkinRose_1">Rose</string>
+    <string name="lsq_filter_SkinSummer_1">Summer</string>
+    <string name="lsq_filter_SkinSweet_1">Sweet</string>
+    <string name="lsq_filter_SkinTender_1">Tender</string>
+    <string name="lsq_filter_SkinWarm_1">Warm</string>
 </resources>

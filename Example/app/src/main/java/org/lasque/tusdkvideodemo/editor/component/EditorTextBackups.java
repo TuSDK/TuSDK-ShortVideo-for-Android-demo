@@ -246,11 +246,16 @@ public class EditorTextBackups {
 
     /** 创建备份实体类 **/
     public static TextBackupEntity createBackUpEntity(StickerData stickerData, StickerTextItemView textItemView, TuSdkMovieColorRectView colorRectView) {
+        return createBackUpEntity(stickerData, textItemView, colorRectView,1);
+    }
+
+    public static TextBackupEntity createBackUpEntity(StickerData stickerData, StickerTextItemView textItemView, TuSdkMovieColorRectView colorRectView,int textFontIndex){
         TextBackupEntity entity = new TextBackupEntity();
         entity.stickerData = stickerData;
         entity.textItemView = textItemView;
         entity.colorRectView = colorRectView;
-        entity.rowWidth = textItemView.getTextView().getLineSpacingMultiplier();
+//        entity.rowWidth = textItemView.getTextView().getLineSpacingMultiplier();
+        entity.mTextFont = textFontIndex;
         return entity;
     }
 

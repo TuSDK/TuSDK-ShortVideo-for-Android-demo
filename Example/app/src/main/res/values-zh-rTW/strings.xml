@@ -435,20 +435,7 @@
     <string name="lsq_filter_monochrome_video">單色</string>
     <string name="lsq_filter_jpcomics_video">日漫</string>
 
-    <string name="lsq_filter_SkinNature10">自然</string>
-    <string name="lsq_filter_SkinPink10">粉嫩</string>
-    <string name="lsq_filter_SkinJelly10">果冻</string>
-    <string name="lsq_filter_SkinNoir10">深黑</string>
-    <string name="lsq_filter_SkinRuddy10">红润</string>
-    <string name="lsq_filter_SkinSugar10">糖水</string>
-    <string name="lsq_filter_SkinPowder10">蜜粉</string>
-    <string name="lsq_filter_SkinWheat10">原麦</string>
-    <string name="lsq_filter_SkinSoft10">柔和</string>
-    <string name="lsq_filter_SkinPure10">清纯</string>
-    <string name="lsq_filter_SkinMoving10">动人</string>
-    <string name="lsq_filter_SkinPast10">过往</string>
-    <string name="lsq_filter_SkinCookies10">曲奇</string>
-    <string name="lsq_filter_SkinRose10">蔷薇</string>
+
     <string name="lsq_trim_text">裁剪</string>
     <string name="lsq_trim_no">无</string>
     <string name="lsq_trim_16_9">16:9</string>
@@ -487,5 +474,25 @@
     <string name="lsq_select_image_hint">請您選擇最少3張照片</string>
     <string name="lsq_transitions">轉場</string>
     <string name="lsq_filter_set_saturation">飽和</string>
+    <string name="lsq_filter_SkinBeckoning_1">心動</string>
+    <string name="lsq_filter_SkinButter_1">淡奶</string>
+    <string name="lsq_filter_SkinClear_1">清晰</string>
+    <string name="lsq_filter_SkinConfession_1">告白</string>
+    <string name="lsq_filter_SkinDawn_1">曙光</string>
+    <string name="lsq_filter_SkinDusk_1">黃昏</string>
+    <string name="lsq_filter_SkinExtraordinary_1">非凡</string>
+    <string name="lsq_filter_SkinFair_1">白皙</string>
+    <string name="lsq_filter_SkinHoney_1">蜜糖</string>
+    <string name="lsq_filter_SkinJapanese_1">日系</string>
+    <string name="lsq_filter_SkinLeisurely_1">清逸</string>
+    <string name="lsq_filter_SkinLotus_1">蓮花</string>
+    <string name="lsq_filter_SkinNatural_1">自然</string>
+    <string name="lsq_filter_SkinNostalgia_1">懷舊</string>
+    <string name="lsq_filter_SkinPlain_1">素淨</string>
+    <string name="lsq_filter_SkinRose_1">玫瑰</string>
+    <string name="lsq_filter_SkinSummer_1">初夏</string>
+    <string name="lsq_filter_SkinSweet_1">甜蜜</string>
+    <string name="lsq_filter_SkinTender_1">粉嫩</string>
+    <string name="lsq_filter_SkinWarm_1">溫暖</string>
 
 </resources>

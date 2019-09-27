@@ -491,7 +491,7 @@ public class  EditorStickerComponent extends EditorComponent {
                 TuSdkMediaStickerImageEffectData stickerImageEffectData = createTileEffectData(
                         textBitmap,sclaSize, pointX, pointY, stickerItemView.getResult(null).degree,
                         starTimeUs, stopTimeUs,stickerSize);
-                getEditorEffector().addMediaEffectData(stickerImageEffectData);
+                    getEditorEffector().addMediaEffectData(stickerImageEffectData);
 
                 EditorStickerImageBackups.StickerImageBackupEntity backupEntity = mStickerImageBackups.findTextBackupEntityByMemo(stickerItemView);
                 if (backupEntity != null)

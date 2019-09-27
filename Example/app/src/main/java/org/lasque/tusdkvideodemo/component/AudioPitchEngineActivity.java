@@ -286,6 +286,7 @@ public class AudioPitchEngineActivity extends ScreenAdapterActivity {
                     }
 
                     mMicRecord.stop();
+                    mAudioPitchEngine.flush();
 
                     disableBtns(Arrays.asList(mStartRecordButton,mStopRecordButton));
 
