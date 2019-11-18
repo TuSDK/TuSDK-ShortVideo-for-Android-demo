@@ -1,4 +1,4 @@
-# TuSDK-ShortVideo Release Notes for 3.4.2
+# TuSDK-ShortVideo Release Notes for 3.4.4
 
 ## 简介
 

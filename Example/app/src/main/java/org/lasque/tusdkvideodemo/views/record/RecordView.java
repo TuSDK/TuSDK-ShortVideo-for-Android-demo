@@ -1133,14 +1133,17 @@ public class RecordView extends RelativeLayout
     /** 微整形默认值  Float 为进度值 */
     private HashMap<String, Float> mDefaultBeautyPercentParams = new HashMap<String, Float>() {
         {
-            put("eyeSize", 0.3f); // 大眼
-            put("chinSize", 0.5f); // 瘦脸
-            put("noseSize", 0.2f); // 廋鼻
-            put("mouthWidth", 0.5f); // 嘴型
-            put("archEyebrow", 0.5f); // 眉型
-            put("jawSize", 0.5f); // 下巴
-            put("eyeAngle", 0.5f); // 眼角
-            put("eyeDis", 0.5f); // 眼距
+            put("forehead",0.5f);
+            put("chinSize",0.5f);
+            put("browPosition",0.5f);
+            put("archEyebrow",0.5f);
+            put("eyeSize",0.5f);
+            put("eyeAngle",0.5f);
+            put("eyeDis",0.5f);
+            put("noseSize",0.5f);
+            put("mouthWidth",0.5f);
+            put("lips",0.5f);
+            put("jawSize",0.5f);
         }
     };
 
@@ -1152,10 +1155,13 @@ public class RecordView extends RelativeLayout
             add("chinSize");
             add("noseSize");
             add("mouthWidth");
+            add("lips");
             add("archEyebrow");
+            add("browPosition");
             add("jawSize");
             add("eyeAngle");
             add("eyeDis");
+            add("forehead");
         }
     };
 

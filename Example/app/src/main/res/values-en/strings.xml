@@ -500,4 +500,7 @@
     <string name="lsq_filter_SkinSweet_1">Sweet</string>
     <string name="lsq_filter_SkinTender_1">Tender</string>
     <string name="lsq_filter_SkinWarm_1">Warm</string>
+    <string name="lsq_beauty_forehead">Fordhead</string>
+    <string name="lsq_beauty_lips">Lips</string>
+    <string name="lsq_beauty_browposition">BrowPosition</string>
 </resources>

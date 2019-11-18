@@ -389,7 +389,7 @@
     <string name="lsq_beauty_eyesize">大眼</string>
     <string name="lsq_beauty_jawsize">下巴</string>
     <string name="lsq_beauty_eyedis">眼距</string>
-    <string name="lsq_beauty_archeyebrow">眉型</string>
+    <string name="lsq_beauty_archeyebrow">細眉</string>
     <string name="lsq_beauty_eyeangle">眼角</string>
     <string name="lsq_beauty_chinsize">瘦臉</string>
     <string name="lsq_beauty_mouthwidth">嘴型</string>
@@ -494,5 +494,8 @@
     <string name="lsq_filter_SkinSweet_1">甜蜜</string>
     <string name="lsq_filter_SkinTender_1">粉嫩</string>
     <string name="lsq_filter_SkinWarm_1">溫暖</string>
+    <string name="lsq_beauty_browposition">眉高</string>
+    <string name="lsq_beauty_forehead">髮際線</string>
+    <string name="lsq_beauty_lips">唇厚</string>
 
 </resources>
