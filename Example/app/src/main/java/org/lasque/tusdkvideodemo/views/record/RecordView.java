@@ -776,8 +776,8 @@ public class RecordView extends RelativeLayout
                 @Override
                 public void run() {
                     if (!isBeautyClose)
-                    // 调用精准美颜
-                    switchConfigSkin(true);
+                    // 调用极致美颜
+                    switchConfigSkin(false);
                 }
             },500);
             // 滤镜切换需要做延时

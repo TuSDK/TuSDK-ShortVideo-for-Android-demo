@@ -23,7 +23,7 @@ public class BeautyRecyclerAdapter extends RecyclerView.Adapter<BeautyRecyclerAd
 
     private Context mContext;
     private List<String> mBeautyParams = Arrays.asList("skin");
-    private boolean useSkinNatural = false;
+    private boolean useSkinNatural = true;
 
     public OnBeautyItemClickListener listener;
 
