@@ -414,7 +414,6 @@ public class RecordView extends RelativeLayout
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (mCamera== null) return;
                 mCurrentCameraEV = progress - mCameraMaxEV;
-                TLog.d("[debug] maxEv = " + mCameraMaxEV + " minEv = " + mCameraMinEV + " Current Ev = " + mCurrentCameraEV);
                 mCamera.setExposureCompensation(mCurrentCameraEV);
             }
 
@@ -780,6 +779,33 @@ public class RecordView extends RelativeLayout
                     switchConfigSkin(false);
                 }
             },500);
+            ThreadHelper.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace).size() == 0)
+                    {
+                        // 添加一个默认微整形特效
+                        TuSdkMediaPlasticFaceEffect plasticFaceEffect = new TuSdkMediaPlasticFaceEffect();
+                        mCamera.addMediaEffectData(plasticFaceEffect);
+                        for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
+                            if (arg.equalsKey("eyeSize")) {// 大眼
+                                arg.setMaxValueFactor(0.85f);// 最大值限制
+                            }
+                            if (arg.equalsKey("chinSize")) {// 瘦脸
+                                arg.setMaxValueFactor(0.9f);// 最大值限制
+                            }
+                            if (arg.equalsKey("noseSize")) {// 瘦鼻
+                                arg.setMaxValueFactor(0.6f);// 最大值限制
+                            }
+                        }
+                        for (String key : mDefaultBeautyPercentParams.keySet()) {
+                            TLog.e("key -- %s",mDefaultBeautyPercentParams.get(key));
+                            submitPlasticFaceParamter(key,mDefaultBeautyPercentParams.get(key));
+                        }
+
+                    }
+                }
+            },700);
             // 滤镜切换需要做延时
             ThreadHelper.postDelayed(new Runnable() {
                 @Override
@@ -793,7 +819,6 @@ public class RecordView extends RelativeLayout
                     public void run() {
                         mCameraMaxEV = mCamera.getMaxExposureCompensation();
                         mCameraMinEV = mCamera.getMinExposureCompensation();
-                        TLog.e("[Debug] mCameraMaxEV = " + mCameraMaxEV + " mCameraMinEV = " + mCameraMinEV);
                         mExposureSeekbar.setMax(mCameraMaxEV + Math.abs(mCameraMinEV));
                         mExposureSeekbar.setProgress(mCameraMaxEV);
                     }
@@ -844,7 +869,9 @@ public class RecordView extends RelativeLayout
         if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter) != null && mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter).size() > 0 && mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter).get(0).getFilterWrap().getCode().equals(code)) return;
         TuSdkMediaFilterEffectData filterEffectData = new TuSdkMediaFilterEffectData(code);
         SelesParameters.FilterArg filterArg = filterEffectData.getFilterArg("mixied");// 效果
-        if(filterArg != null) filterArg.setMaxValueFactor(0.7f);// 设置最大值限制
+        if(filterArg != null){
+            filterArg.setMaxValueFactor(0.7f);// 设置最大值限制
+        }
         mCamera.addMediaEffectData(filterEffectData);
 
         mFilterAdapter.setCurrentPosition(mCurrentPosition);
@@ -1338,9 +1365,11 @@ public class RecordView extends RelativeLayout
         if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace) == null ||
                 mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).size() == 0) {
 
-            whiteningArgs.setPrecentValue(0.5f);//设置默认显示
+            whiteningArgs.setPrecentValue(0.3f);//设置默认显示
 
-            smoothingArgs.setPrecentValue(0.5f);//设置默认显示
+            smoothingArgs.setPrecentValue(0.7f);//设置默认显示
+
+            ruddyArgs.setPrecentValue(0.2f);
             mCamera.addMediaEffectData(skinFaceEffect);
         }else{
             TuSdkMediaSkinFaceEffect oldSkinFaceEffect = (TuSdkMediaSkinFaceEffect) mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).get(0);

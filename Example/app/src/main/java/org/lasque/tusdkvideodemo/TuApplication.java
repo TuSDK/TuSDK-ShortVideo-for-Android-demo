@@ -83,12 +83,11 @@ public class TuApplication extends TuSdkApplication
 	     */
 		this.initPreLoader(this.getApplicationContext(), "1724c60dc2fd4a86-04-ewdjn1");
 
-
 		/**
 	     *  指定开发模式,需要与lsq_tusdk_configs.json中masters.key匹配， 如果找不到devType将默认读取master字段
 	     *  如果一个应用对应多个包名，则可以使用这种方式来进行集成调试。
 	     */
-		// this.initPreLoader(this.getApplicationContext(), "12aa4847a3a9ce68-04-ewdjn1", "debug");
+		// this.initPreLoader(this.getApplicationContext(), "c863a73a6e0294bc-04-ewdjn1", "debug");
 
 		// 如果不想继承TuSdkApplication，直接在自定义Application.onCreate()方法中调用以下方法
 		// 初始化全局变量

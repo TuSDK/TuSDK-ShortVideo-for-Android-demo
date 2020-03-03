@@ -49,7 +49,6 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
         // 设置录制界面背景为透明色
 //        hideNavigationBar();
         TuSdk.messageHub().applyToViewWithNavigationBarHidden(true);
-
     }
 
     @Override

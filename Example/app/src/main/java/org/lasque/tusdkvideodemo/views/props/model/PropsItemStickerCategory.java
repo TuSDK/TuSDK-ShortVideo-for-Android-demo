@@ -76,7 +76,7 @@ public class PropsItemStickerCategory extends PropsItemCategory<PropsItemSticker
 
 
                 //  将下载后的贴纸加入 TuSDKPFStickerLocalPackage
-                boolean result = StickerLocalPackage.shared().addStickerGroupFile(stickerFile,Long.parseLong(groupId),master);
+                boolean result = StickerLocalPackage.shared().addStickerGroupFile(stickerFile, Long.parseLong(groupId),master);
 
                 TLog.e("result" + result);
             }

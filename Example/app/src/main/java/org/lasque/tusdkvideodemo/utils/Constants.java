@@ -37,7 +37,7 @@ public class Constants {
     /**
      * 滤镜 filterCode 列表
      */
-    public static String[] VIDEOFILTERS = {"None","SkinNatural_1","SkinFair_1", "SkinLotus_1", "SkinBeckoning_1", "SkinTender_1",
+    public static String[] VIDEOFILTERS = {"None","SkinLotus_1","SkinNatural_1","SkinFair_1",  "SkinBeckoning_1", "SkinTender_1",
             "SkinLeisurely_1", "SkinRose_1", "SkinWarm_1","SkinClear_1","SkinConfession_1","SkinJapanese_1","SkinExtraordinary_1","SkinHoney_1",
             "SkinButter_1","SkinDawn_1","SkinSummer_1","SkinSweet_1","SkinPlain_1","SkinDusk_1","SkinNostalgia_1","gaosi_01"};
 
