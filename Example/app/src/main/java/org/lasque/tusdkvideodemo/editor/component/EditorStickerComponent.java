@@ -18,6 +18,7 @@ import org.lasque.tusdk.impl.components.widget.sticker.StickerImageItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerData;
+import org.lasque.tusdk.modules.view.widget.sticker.StickerDynamicData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerImageData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerItemViewInterface;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerTextData;
@@ -102,6 +103,11 @@ public class  EditorStickerComponent extends EditorComponent {
         }
 
         @Override
+        public boolean canAppendSticker(StickerView stickerView, StickerDynamicData stickerDynamicData) {
+            return false;
+        }
+
+        @Override
         public void onStickerItemViewSelected(StickerData stickerData, String text, boolean needReverse) {
             if (stickerData != null && stickerData instanceof StickerImageData) {
                 mLineView.setShowSelectBar(true);
@@ -110,6 +116,11 @@ public class  EditorStickerComponent extends EditorComponent {
                 mLineView.setRightBarPosition(((StickerImageData) stickerData).stopTimeUs/(float)getEditorPlayer().getTotalTimeUs());
                 mCurrentColorRectView = mStickerImageBackups.findColorRect(stickerData);
             }
+        }
+
+        @Override
+        public void onStickerItemViewSelected(StickerDynamicData stickerDynamicData, String s, boolean b) {
+
         }
 
         @Override
@@ -137,6 +148,11 @@ public class  EditorStickerComponent extends EditorComponent {
                 mCurrentColorRectView = rectView;
                 mStickerImageBackups.addBackupEntity(EditorStickerImageBackups.createBackUpEntity(stickerData, (StickerImageItemView) stickerItemViewInterface,rectView));
             }
+        }
+
+        @Override
+        public void onStickerCountChanged(StickerDynamicData stickerDynamicData, StickerItemViewInterface stickerItemViewInterface, int i, int i1) {
+
         }
     };
 

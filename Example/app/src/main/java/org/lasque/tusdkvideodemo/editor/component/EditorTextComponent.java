@@ -37,6 +37,7 @@ import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerData;
+import org.lasque.tusdk.modules.view.widget.sticker.StickerDynamicData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerFactory;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerImageData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerItemViewInterface;
@@ -131,6 +132,11 @@ public class EditorTextComponent extends EditorComponent {
         }
 
         @Override
+        public boolean canAppendSticker(StickerView stickerView, StickerDynamicData stickerDynamicData) {
+            return false;
+        }
+
+        @Override
         public void onStickerItemViewSelected(StickerData stickerData, String text, boolean needReverse) {
             if (stickerData != null && stickerData instanceof StickerTextData) {
                 mBottomView.mLineView.setShowSelectBar(true);
@@ -140,9 +146,21 @@ public class EditorTextComponent extends EditorComponent {
                 mCurrentColorRectView = mTextBackups.findColorRect(stickerData);
                 mBottomView.mBottomOptions.setOptionsEnable(true);
                 mBackupEntity = mTextBackups.findTextBackupEntity(stickerData);
-                if(mBackupEntity != null)
-                applyBackupEntity(mBackupEntity);
+                if(mBackupEntity != null){
+                    applyBackupEntity(mBackupEntity);
+                    String content = mBackupEntity.textItemView.getTextViewText(mBackupEntity.textItemView.getTextView());
+                    if (!content.equals("请输入文字")){
+                        getEditTextView().setText(content);
+                    } else {
+                        getEditTextView().setText("");
+                    }
+                }
             }
+        }
+
+        @Override
+        public void onStickerItemViewSelected(StickerDynamicData stickerDynamicData, String s, boolean b) {
+
         }
 
         @Override
@@ -185,6 +203,11 @@ public class EditorTextComponent extends EditorComponent {
                 mBackupEntity = EditorTextBackups.createBackUpEntity(stickerData, (StickerTextItemView) stickerItemViewInterface, rectView);
                 mTextBackups.addBackupEntity(mBackupEntity);
             }
+        }
+
+        @Override
+        public void onStickerCountChanged(StickerDynamicData stickerDynamicData, StickerItemViewInterface stickerItemViewInterface, int i, int i1) {
+
         }
     };
 
@@ -419,7 +442,7 @@ public class EditorTextComponent extends EditorComponent {
 
             if (mBottomView.mBottomOptions.mStyleOptions == null) return;
             boolean isReverse = mBottomView.mBottomOptions.mArrayOptions.mNeedReverse;
-            if (isReverse) text = reverseString(text.toString());
+//            if (isReverse) text = reverseString(text.toString());
             updateText(text.toString(), isReverse);
         }
 

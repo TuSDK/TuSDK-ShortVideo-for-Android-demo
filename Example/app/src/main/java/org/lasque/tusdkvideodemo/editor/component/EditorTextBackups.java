@@ -88,7 +88,7 @@ public class EditorTextBackups {
                     entity.textItemView.setLetterSpacing(0.07f * entity.wordWidth);
                     //行间距
                     if (entity.rowWidth != 0)
-                    entity.textItemView.setLineSpacing(0, entity.rowWidth);
+                    entity.textItemView.setLineSpacing(0, 0.5f + entity.rowWidth);
 
                     int style = entity.isBold ? Typeface.BOLD : Typeface.NORMAL;
                     if (entity.isBold && entity.isItalics) style = Typeface.BOLD_ITALIC;

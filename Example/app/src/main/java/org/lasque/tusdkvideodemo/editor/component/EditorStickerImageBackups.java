@@ -6,20 +6,16 @@ import android.view.ViewGroup;
 
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorEffector;
 import org.lasque.tusdk.core.utils.ColorUtils;
-import org.lasque.tusdk.core.utils.TLog;
-import org.lasque.tusdk.core.utils.ThreadHelper;
+import org.lasque.tusdk.impl.components.widget.sticker.StickerDynamicItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerImageItemView;
-import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerData;
+import org.lasque.tusdk.modules.view.widget.sticker.StickerDynamicData;
+import org.lasque.tusdk.video.editor.TuSdkMediaLiveStickerEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaStickerImageEffectData;
-import org.lasque.tusdk.video.editor.TuSdkMediaTextEffectData;
 import org.lasque.tusdkvideodemo.editor.component.helper.EditorTextAndStickerRankHelper;
 import org.lasque.tusdkvideodemo.views.editor.TuSdkMovieScrollPlayLineView;
 import org.lasque.tusdkvideodemo.views.editor.playview.rangeselect.TuSdkMovieColorRectView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * droid-sdk-video
@@ -40,7 +36,7 @@ public class EditorStickerImageBackups {
     private EditorTextAndStickerRankHelper mRankHelper;
 
 
-    public EditorStickerImageBackups(StickerView mStickerView,TuSdkEditorEffector editorEffector,EditorTextAndStickerRankHelper rankHelper) {
+    public EditorStickerImageBackups(StickerView mStickerView, TuSdkEditorEffector editorEffector, EditorTextAndStickerRankHelper rankHelper) {
         this.mStickerView = mStickerView;
         this.mEditorEffector = editorEffector;
         this.mRankHelper = rankHelper;
@@ -72,7 +68,25 @@ public class EditorStickerImageBackups {
                 if (item.colorRectView != null && mLineView != null) {
                     item.colorRectView.setVisibility(View.VISIBLE);
                 }
-            }else if(entity instanceof EditorTextBackups.TextBackupEntity){
+            } else if(entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = ((DynamicStickerBackupEntity) entity);
+                mRankHelper.getBackupLinkedList().add(item);
+                if (item.stickerDynamicItemView != null){
+                    if (item.effectData.getAtTimeRange().getStartTime() == 0){
+                        item.stickerDynamicItemView.setVisibility(View.VISIBLE);
+                    }
+                    item.stickerDynamicItemView.setStickerViewType(StickerView.StickerType.Image);
+                    item.stickerDynamicItemView.setStickerType(StickerView.StickerType.Dynamic);
+                    mStickerView.addView(item.stickerDynamicItemView,-1);
+                    mStickerView.addSticker(item.stickerDynamicItemView);
+                    item.stickerDynamicItemView.setTranslation(item.stickerDynamicItemView.getTranslation().x,item.stickerDynamicItemView.getTranslation().y);
+                    item.stickerDynamicItemView.restoreRotation();
+                }
+                if (item.colorRectView != null && mLineView != null){
+                    item.colorRectView.setVisibility(View.VISIBLE);
+                }
+            }
+            else if(entity instanceof EditorTextBackups.TextBackupEntity){
                 EditorTextBackups.TextBackupEntity item = (EditorTextBackups.TextBackupEntity) entity;
                 mRankHelper.getBackupLinkedList().add(item);
                 if (item.textItemView != null) {
@@ -95,6 +109,94 @@ public class EditorStickerImageBackups {
                     item.textItemView.setTextStrokeColor(item.strokeColor);
                     item.textItemView.onSelectedColorChanged(0, item.color);
                     item.textItemView.setStickerViewType(StickerView.StickerType.Image);
+                    item.textItemView.setStickerType(StickerView.StickerType.Text);
+
+                    //背景颜色
+                    item.textItemView.onSelectedColorChanged(1, ColorUtils.alphaEvaluator(item.bgAlpha, item.bgColor));
+
+                    //字间距
+                    item.textItemView.setLetterSpacing(0.07f * item.wordWidth);
+                    //行间距
+                    if (item.rowWidth != 0)
+                    item.textItemView.setLineSpacing(0, 0.5f + item.rowWidth);
+
+                    int style = item.isBold ? Typeface.BOLD : Typeface.NORMAL;
+                    if (item.isBold && item.isItalics) style = Typeface.BOLD_ITALIC;
+                    else if (!item.isBold && item.isItalics) style = Typeface.ITALIC;
+                    item.textItemView.getTextView().setTypeface(Typeface.defaultFromStyle(style));
+                    item.textItemView.getTextView().setUnderlineText(item.isUnderline);
+                    item.textItemView.getTextView().setAlpha(item.alpha);
+
+                }
+
+                if (item.colorRectView != null && mLineView != null) {
+                    item.colorRectView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+    public void onDynamicComponentAttach() {
+        mRankHelper.getBackupLinkedList().clear();
+        for (Object entity : mRankHelper.getMemeoBackupLinkedList()) {
+            if(entity instanceof StickerImageBackupEntity) {
+                StickerImageBackupEntity item = (StickerImageBackupEntity) entity;
+                mRankHelper.getBackupLinkedList().add(item);
+                if (item.stickerImageItemView != null) {
+                    if (item.stickerImageMediaEffectData.getAtTimeRange().getStartTime() == 0){
+                        item.stickerImageItemView.setVisibility(View.VISIBLE);
+                    }
+                    item.stickerImageItemView.setStickerViewType(StickerView.StickerType.Dynamic);
+                    item.stickerImageItemView.setStickerType(StickerView.StickerType.Image);
+                    mStickerView.addView(item.stickerImageItemView, -1);
+                    mStickerView.addSticker(item.stickerImageItemView);
+                    item.stickerImageItemView.setTranslation(item.stickerImageItemView.getTranslation().x, item.stickerImageItemView.getTranslation().y);
+                }
+
+                if (item.colorRectView != null && mLineView != null) {
+                    item.colorRectView.setVisibility(View.VISIBLE);
+                }
+            } else if(entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = ((DynamicStickerBackupEntity) entity);
+                mRankHelper.getBackupLinkedList().add(item);
+                if (item.stickerDynamicItemView != null){
+                    if (item.effectData == null) continue;
+                    if (item.effectData.getAtTimeRange().getStartTime() == 0){
+                        item.stickerDynamicItemView.setVisibility(View.VISIBLE);
+                    }
+                    item.stickerDynamicItemView.setStickerViewType(StickerView.StickerType.Dynamic);
+                    item.stickerDynamicItemView.setStickerType(StickerView.StickerType.Dynamic);
+                    mStickerView.addView(item.stickerDynamicItemView,-1);
+                    mStickerView.addSticker(item.stickerDynamicItemView);
+                    item.stickerDynamicItemView.setTranslation(item.stickerDynamicItemView.getTranslation().x,item.stickerDynamicItemView.getTranslation().y);
+                    item.stickerDynamicItemView.restoreRotation();
+                }
+                if (item.colorRectView != null && mLineView != null){
+                    item.colorRectView.setVisibility(View.VISIBLE);
+                }
+            }
+            else if(entity instanceof EditorTextBackups.TextBackupEntity){
+                EditorTextBackups.TextBackupEntity item = (EditorTextBackups.TextBackupEntity) entity;
+                mRankHelper.getBackupLinkedList().add(item);
+                if (item.textItemView != null) {
+                    if (item.textMediaEffectData.getAtTimeRange().getStartTime() == 0){
+                        item.textItemView.setVisibility(View.VISIBLE);
+                    }
+                    if(item.textItemView.getParent() != null){
+                        ((ViewGroup)item.textItemView.getParent()).removeAllViews();
+                    }
+                    mStickerView.addView(item.textItemView);
+                    mStickerView.addSticker(item.textItemView);
+                    item.textItemView.reRotate();
+                    item.textItemView.setTranslation(item.textItemView.getTranslation().x, item.textItemView.getTranslation().y);
+
+                    Typeface typeface = Typeface.DEFAULT;
+                    if (item.mTextFont == 2) typeface = Typeface.SERIF;
+                    item.textItemView.setTextFont(typeface);
+
+                    item.textItemView.setTextStrokeWidth((int) item.strokeWidth);
+                    item.textItemView.setTextStrokeColor(item.strokeColor);
+                    item.textItemView.onSelectedColorChanged(0, item.color);
+                    item.textItemView.setStickerViewType(StickerView.StickerType.Dynamic);
                     item.textItemView.setStickerType(StickerView.StickerType.Text);
 
                     //背景颜色
@@ -132,6 +234,11 @@ public class EditorStickerImageBackups {
         mRankHelper.getBackupLinkedList().addLast(entity);
     }
 
+    public void addBackupEntity(DynamicStickerBackupEntity entity){
+        if(mRankHelper.getBackupLinkedList().contains(entity))return;
+        mRankHelper.getBackupLinkedList().addLast(entity);
+    }
+
     public StickerImageBackupEntity findTextBackupEntity( StickerImageItemView stickerItemView){
         for (Object entity : mRankHelper.getBackupLinkedList()) {
             if (entity instanceof StickerImageBackupEntity) {
@@ -144,11 +251,35 @@ public class EditorStickerImageBackups {
         return null;
     }
 
+    public DynamicStickerBackupEntity findStickerBackupEntity(StickerDynamicItemView itemView){
+        for (Object entity : mRankHelper.getBackupLinkedList()){
+            if (entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = ((DynamicStickerBackupEntity) entity);
+                if (item.stickerDynamicItemView == itemView){
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
     public StickerImageBackupEntity findTextBackupEntityByMemo( StickerImageItemView stickerItemView){
         for (Object entity : mRankHelper.getMemeoBackupLinkedList()) {
             if (entity instanceof StickerImageBackupEntity) {
                 StickerImageBackupEntity item = (StickerImageBackupEntity) entity;
                 if (item.stickerImageItemView == stickerItemView) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    public DynamicStickerBackupEntity findDynamicStickerBackupEntityByMemo(StickerDynamicItemView itemView){
+        for (Object entity : mRankHelper.getMemeoBackupLinkedList()) {
+            if (entity instanceof DynamicStickerBackupEntity) {
+                DynamicStickerBackupEntity item = (DynamicStickerBackupEntity) entity;
+                if (item.stickerDynamicItemView == itemView) {
                     return item;
                 }
             }
@@ -174,6 +305,27 @@ public class EditorStickerImageBackups {
         if(entity.stickerImageItemView != null) mStickerView.removeView(entity.stickerImageItemView);
         if(entity.colorRectView != null && mLineView != null)mLineView.deletedColorRect(entity.colorRectView);
         if(entity.stickerImageMediaEffectData != null && mEditorEffector != null) mEditorEffector.removeMediaEffectData(entity.stickerImageMediaEffectData);
+
+        mRankHelper.getBackupLinkedList().remove(index);
+    }
+
+    public void removeBackupEntityWithSticker(StickerDynamicItemView itemView){
+        if (itemView == null) return;
+        int index = -1;
+        for (int i = 0;i<mRankHelper.getBackupLinkedList().size();i++){
+            if (mRankHelper.getBackupLinkedList().get(i) instanceof  DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = (DynamicStickerBackupEntity) mRankHelper.getBackupLinkedList().get(i);
+                if (itemView.equals(item.stickerDynamicItemView)){
+                    index = i;
+                }
+            }
+        }
+        if (index == -1) return;
+
+        DynamicStickerBackupEntity entity = (DynamicStickerBackupEntity) mRankHelper.getBackupLinkedList().get(index);
+        if (entity.stickerDynamicItemView != null) mStickerView.removeView(entity.stickerDynamicItemView);
+        if (entity.colorRectView != null && mLineView != null) mLineView.deletedColorRect(entity.colorRectView);
+        if (entity.effectData != null && mEditorEffector != null) mEditorEffector.removeMediaEffectData(entity.effectData);
 
         mRankHelper.getBackupLinkedList().remove(index);
     }
@@ -207,6 +359,11 @@ public class EditorStickerImageBackups {
                 if(item.colorRectView != null){
                     item.colorRectView.setVisibility(View.GONE);
                 }
+            } else if (entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = ((DynamicStickerBackupEntity) entity);
+                if (item.colorRectView != null){
+                    item.colorRectView.setVisibility(View.GONE);
+                }
             }
         }
         mRankHelper.getBackupLinkedList().clear();
@@ -222,6 +379,10 @@ public class EditorStickerImageBackups {
                     EditorTextBackups.TextBackupEntity textBackupEntity = (EditorTextBackups.TextBackupEntity) entity;
                     if (textBackupEntity.textMediaEffectData != null)
                         mEditorEffector.addMediaEffectData(textBackupEntity.textMediaEffectData);
+                } else if (entity instanceof DynamicStickerBackupEntity){
+                    DynamicStickerBackupEntity item = (DynamicStickerBackupEntity) entity;
+                    if (item.effectData != null)
+                        mEditorEffector.addMediaEffectData(item.effectData);
                 }
             }
         }
@@ -236,6 +397,14 @@ public class EditorStickerImageBackups {
         return entity;
     }
 
+    public static DynamicStickerBackupEntity createBackUpEntity(StickerDynamicData stickerData, StickerDynamicItemView stickerDynamicItemView, TuSdkMovieColorRectView colorRectView){
+        DynamicStickerBackupEntity entity = new DynamicStickerBackupEntity();
+        entity.stickerGroup = stickerData;
+        entity.stickerDynamicItemView = stickerDynamicItemView;
+        entity.colorRectView = colorRectView;
+        return entity;
+    }
+
     /** 寻找颜色区间 **/
     public TuSdkMovieColorRectView findColorRect(StickerData stickerData) {
         if(mRankHelper.getBackupLinkedList().size() == 0 || stickerData == null)return null;
@@ -243,6 +412,19 @@ public class EditorStickerImageBackups {
             if(entity instanceof StickerImageBackupEntity) {
                 StickerImageBackupEntity item = (StickerImageBackupEntity) entity;
                 if (stickerData.equals(item.stickerData)) {
+                    return item.colorRectView;
+                }
+            }
+        }
+        return null;
+    }
+
+    public TuSdkMovieColorRectView findColorRect(StickerDynamicData stickerData){
+        if (mRankHelper.getBackupLinkedList().size() == 0 || stickerData == null) return null;
+        for (Object entity : mRankHelper.getBackupLinkedList()){
+            if (entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = ((DynamicStickerBackupEntity) entity);
+                if (stickerData.equals(item.stickerGroup)){
                     return item.colorRectView;
                 }
             }
@@ -264,6 +446,19 @@ public class EditorStickerImageBackups {
         return null;
     }
 
+    public StickerDynamicData findStickerGroup(TuSdkMovieColorRectView rectView){
+        if (mRankHelper.getBackupLinkedList().size() == 0|| rectView == null) return null;
+        for (Object entity: mRankHelper.getBackupLinkedList()){
+            if (entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = (DynamicStickerBackupEntity) entity;
+                if (rectView.equals(item.colorRectView)){
+                    return item.stickerGroup;
+                }
+            }
+        }
+        return null;
+    }
+
     /** 寻找贴纸视图 **/
     public StickerImageItemView findStickerItem(TuSdkMovieColorRectView rectView) {
         if(mRankHelper.getBackupLinkedList().size() == 0 || rectView == null)return null;
@@ -278,12 +473,32 @@ public class EditorStickerImageBackups {
         return null;
     }
 
+    public StickerDynamicItemView findDynamicStickerItem(TuSdkMovieColorRectView rectView){
+        if (mRankHelper.getBackupLinkedList().size() == 0 || rectView == null) return null;
+        for (Object entity : mRankHelper.getBackupLinkedList()){
+            if (entity instanceof DynamicStickerBackupEntity){
+                DynamicStickerBackupEntity item = ((DynamicStickerBackupEntity) entity);
+                if (rectView.equals(item.colorRectView)){
+                    return item.stickerDynamicItemView;
+                }
+            }
+        }
+        return null;
+    }
+
     /** 实体备份包装类 **/
     public static class StickerImageBackupEntity{
         StickerData stickerData;
         StickerImageItemView stickerImageItemView;
         TuSdkMovieColorRectView colorRectView;
         TuSdkMediaStickerImageEffectData stickerImageMediaEffectData;
+    }
+
+    public static class DynamicStickerBackupEntity{
+        StickerDynamicData stickerGroup;
+        StickerDynamicItemView stickerDynamicItemView;
+        TuSdkMovieColorRectView colorRectView;
+        TuSdkMediaLiveStickerEffectData effectData;
     }
 
 }
