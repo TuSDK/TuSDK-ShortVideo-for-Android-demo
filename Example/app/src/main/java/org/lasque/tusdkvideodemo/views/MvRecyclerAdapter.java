@@ -26,6 +26,7 @@ public class MvRecyclerAdapter extends RecyclerView.Adapter<MvRecyclerAdapter.Mv
 
     private List<StickerGroup> mMvStickerGroups;
     private int mCurrentPosition = -1;
+    private boolean isMV = true;
 
     public interface ItemClickListener{
         void onItemClick(int position);
@@ -36,8 +37,13 @@ public class MvRecyclerAdapter extends RecyclerView.Adapter<MvRecyclerAdapter.Mv
         this.listener = listener;
     }
 
-    public MvRecyclerAdapter() {
+    public MvRecyclerAdapter(){
+        this(true);
+    }
+
+    public MvRecyclerAdapter(boolean isMV) {
         super();
+        this.isMV = isMV;
         mMvStickerGroups = new ArrayList<>();
     }
 
@@ -71,7 +77,7 @@ public class MvRecyclerAdapter extends RecyclerView.Adapter<MvRecyclerAdapter.Mv
     public void onBindViewHolder(MvViewHolder mvViewHolder, final int position) {
         StickerGroup stickerGroup = mMvStickerGroups.get(position);
         mvViewHolder.mImageLayout.setVisibility(View.VISIBLE);
-        if(position == 0){
+        if(position == 0 && isMV){
             mvViewHolder.mNoneLayout.setVisibility(View.VISIBLE);
             mvViewHolder.mTitleView.setVisibility(View.GONE);
             mvViewHolder.mSelectLayout.setVisibility(View.GONE);

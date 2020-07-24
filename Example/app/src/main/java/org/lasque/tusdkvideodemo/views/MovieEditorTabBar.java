@@ -55,7 +55,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
         //裁剪
         Trim,
         //转场特效
-        TransitionsEffect
+        TransitionsEffect,
+
+        DynamicStickers
     }
 
     public interface MovieEditorTabBarDelegate {
@@ -140,6 +142,7 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
                 break;
             case R.id.lsq_tab_tr_effect_btn:
                 mSelectedTabType = TabType.TransitionsEffect;
+                break;
         }
 
         mDelegate.onSelectedTabType(mSelectedTabType);

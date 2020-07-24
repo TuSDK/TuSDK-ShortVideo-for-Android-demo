@@ -9,9 +9,12 @@ package org.lasque.tusdkvideodemo.views.props;
  * @Copyright (c) 2018 tutucloud.com. All rights reserved.
  ******************************************************************/
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 
 import org.lasque.tusdk.core.utils.TLog;
 
@@ -21,7 +24,25 @@ import java.util.HashMap;
 /**
  *  Page 适配器基础类
  */
-public class BaseFragmentPagerAdapter<F extends Fragment> extends FragmentPagerAdapter {
+public class BaseFragmentPagerAdapter<F extends Fragment> extends FragmentStateAdapter {
+
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        TLog.i("getItem "+position);
+        if (mDataSource != null) {
+            F f = mDataSource.frament(position);
+            mPageFramentMap.put(position,f);
+            return f;
+        }
+        return null;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mDataSource != null) return mDataSource.pageCount();
+        return 0;
+    }
 
     /* 数据源委托对象 */
     public static interface DataSource <F> {
@@ -37,31 +58,13 @@ public class BaseFragmentPagerAdapter<F extends Fragment> extends FragmentPagerA
     private HashMap<Integer,F> mPageFramentMap  = new HashMap<>();
 
 
-    public BaseFragmentPagerAdapter(FragmentManager fm, DataSource<F> dataSource) {
-        super(fm);
+    public BaseFragmentPagerAdapter(FragmentManager fm, Lifecycle lifecycle, DataSource<F> dataSource) {
+        super(fm,lifecycle);
         this.mDataSource = dataSource;
     }
 
     public Collection<F> allPages() {
         return mPageFramentMap.values();
-    }
-
-    @Override
-    public F getItem(int i) {
-        TLog.i("getItem "+i);
-        if (mDataSource != null) {
-            F f = mDataSource.frament(i);
-            mPageFramentMap.put(i,f);
-            return f;
-        }
-
-        return null;
-    }
-
-    @Override
-    public int getCount() {
-        if (mDataSource != null) return mDataSource.pageCount();
-        return 0;
     }
 }
 

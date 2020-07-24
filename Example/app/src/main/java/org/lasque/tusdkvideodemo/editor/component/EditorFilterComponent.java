@@ -1,16 +1,24 @@
 package org.lasque.tusdkvideodemo.editor.component;
 
 import android.graphics.Bitmap;
+
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import org.lasque.tusdk.core.seles.SelesParameters;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorEffector;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
+import org.lasque.tusdk.core.seles.tusdk.FilterGroup;
 import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaFilterEffectData;
@@ -20,8 +28,15 @@ import org.lasque.tusdkvideodemo.utils.Constants;
 import org.lasque.tusdkvideodemo.views.FilterConfigSeekbar;
 import org.lasque.tusdkvideodemo.views.FilterConfigView;
 import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
+import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
+import org.lasque.tusdkvideodemo.views.newFilterUI.FilterFragment;
+import org.lasque.tusdkvideodemo.views.newFilterUI.FilterViewPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeFilter;
 
 /**
  * droid-sdk-video
@@ -36,14 +51,26 @@ public class EditorFilterComponent extends EditorComponent {
 
     /** BottomView */
     private View mBottomView;
-    /** 滤镜列表 */
-    private RecyclerView mFilterRecyclerView;
-    /** 滤镜适配器 */
-    private FilterRecyclerAdapter mFilterRecyclerAdapter;
-    /** 滤镜调节 */
-    private FilterConfigView mConfigView;
     /** 编辑器 */
     private TuSdkMovieEditor mMovieEditor;
+
+    private ViewPager2 mFilterViewPager;
+    private TabPagerIndicator mFilterTabIndicator;
+    private FilterViewPagerAdapter mFilterViewPagerAdapter;
+    private ImageView mFilterReset;
+
+    private List<FilterFragment> mFilterFragments;
+
+    private List<FilterGroup> mFilterGroups;
+
+    private FilterConfigView mFilterConfigView;
+
+    private String mCurrentFilterCode = "";
+
+    private int mPreviewFragmentIndex = -1;
+
+
+
 
     /** 播放进度回调 **/
     private TuSdkEditorPlayer.TuSdkProgressListener mPlayProgressListener = new TuSdkEditorPlayer.TuSdkProgressListener() {
@@ -54,10 +81,13 @@ public class EditorFilterComponent extends EditorComponent {
         @Override
         public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
             if (percentage >= 1) {
-                getEditorController().getPlayBtn().setVisibility(View.VISIBLE);
+//                getEditorController().getPlayBtn().setVisibility(View.VISIBLE);
+
+                startPreView();
             }
         }
     };
+
 
     /**
      * 创建当前组件
@@ -85,10 +115,17 @@ public class EditorFilterComponent extends EditorComponent {
 
         mSelectIndex = mMementoEffectIndex;
         mSelectEffectData = mMementoEffectData;
+        if (mPreviewFragmentIndex != -1){
+            mFilterViewPager.setCurrentItem(mPreviewFragmentIndex);
+            mFilterFragments.get(mPreviewFragmentIndex).setCurrentPosition(mSelectIndex);
+            mFilterConfigView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
     public void detach() {
+        mPreviewFragmentIndex = mFilterTabIndicator.getCurrentPosition();
         mMovieEditor.getEditorPlayer().removeProgressListener(mPlayProgressListener);
         getEditorController().getVideoContentView().setClickable(true);
         getEditorController().getPlayBtn().setClickable(false);
@@ -126,32 +163,58 @@ public class EditorFilterComponent extends EditorComponent {
             ibFilterBack.setOnClickListener(onClickListener);
             ibFilterSure.setOnClickListener(onClickListener);
             mBottomView = bottomView;
-            initFilterLayout();
+            initFilterGroupsViews(bottomView,getEditorController().getActivity().getSupportFragmentManager(),getEditorController().getActivity().getLifecycle(),Constants.getCameraFilters(false));
         }
         return mBottomView;
     }
 
-    private void initFilterLayout() {
-        getFilterListView();
+    public void initFilterGroupsViews(View view,FragmentManager fragmentManager, Lifecycle lifecycle, List<FilterGroup> filterGroups) {
+        mFilterGroups = filterGroups;
+        mFilterReset = view.findViewById(R.id.lsq_filter_reset);
+        mFilterReset.setOnClickListener(new TuSdkViewHelper.OnSafeClickListener() {
+            @Override
+            public void onSafeClick(View view) {
+                mCurrentFilterCode = "";
+                mFilterFragments.get(mFilterTabIndicator.getCurrentPosition()).removeFilter();
+                mFilterConfigView.setVisibility(View.GONE);
+                mMovieEditor.getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectDataTypeFilter);
+                mFilterViewPagerAdapter.notifyDataSetChanged();
+            }
+        });
 
-        mFilterRecyclerAdapter.setFilterList(Arrays.asList(Constants.EDITORFILTERS));
-    }
+        mFilterTabIndicator = view.findViewById(R.id.lsq_filter_tabIndicator);
 
-    /**
-     * 滤镜栏视图
-     *
-     * @return
-     */
-    public RecyclerView getFilterListView() {
-        if (mFilterRecyclerView == null) {
-            mFilterRecyclerView = mBottomView.findViewById(R.id.lsq_filter_list_view);
-            mFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getEditorController().getActivity(), LinearLayoutManager.HORIZONTAL, false));
-            mFilterRecyclerAdapter = new FilterRecyclerAdapter();
-            mFilterRecyclerAdapter.setItemCilckListener(itemClickListener);
-            mFilterRecyclerView.setAdapter(mFilterRecyclerAdapter);
+        mFilterViewPager = view.findViewById(R.id.lsq_filter_view_pager);
+        mFilterViewPager.requestDisallowInterceptTouchEvent(true);
+        List<String> tabTitles = new ArrayList<>();
+        List<FilterFragment> fragments = new ArrayList<>();
+        for (FilterGroup group : mFilterGroups){
+            FilterFragment fragment = FilterFragment.newInstance(group);
+            fragment.setOnFilterItemClickListener(new FilterFragment.OnFilterItemClickListener() {
+                @Override
+                public void onFilterItemClick(String code,int position) {
+                    if (TextUtils.equals(mCurrentFilterCode,code)){
+                        mFilterConfigView.setVisibility(mFilterConfigView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    } else {
+                        mCurrentFilterCode = code;
+                        mSelectIndex = position;
+                        //设置滤镜
+                        switchFilter(mCurrentFilterCode);
+                    }
+                }
+            });
+
+            fragments.add(fragment);
+            tabTitles.add(group.getName());
         }
-        return mFilterRecyclerView;
+        mFilterFragments = fragments;
+        mFilterViewPagerAdapter = new FilterViewPagerAdapter(fragmentManager,lifecycle,fragments);
+        mFilterViewPager.setAdapter(mFilterViewPagerAdapter);
+        mFilterTabIndicator.setViewPager(mFilterViewPager,0);
+        mFilterTabIndicator.setDefaultVisibleCounts(tabTitles.size());
+        mFilterTabIndicator.setTabItems(tabTitles);
     }
+
 
     /**
      * 滤镜调节栏
@@ -159,12 +222,12 @@ public class EditorFilterComponent extends EditorComponent {
      * @return
      */
     public FilterConfigView getFilterConfigView() {
-        if (mConfigView == null) {
-            mConfigView = (FilterConfigView) getEditorController().getActivity().findViewById(R.id.lsq_filter_config_view);
-            mConfigView.setSeekBarDelegate(mConfigSeekBarDelegate);
+        if (mFilterConfigView == null) {
+            mFilterConfigView = (FilterConfigView) getEditorController().getActivity().findViewById(R.id.lsq_filter_config_view);
+            mFilterConfigView.setSeekBarDelegate(mConfigSeekBarDelegate);
         }
 
-        return mConfigView;
+        return mFilterConfigView;
     }
 
     /** 滤镜切换回调 */
@@ -175,7 +238,15 @@ public class EditorFilterComponent extends EditorComponent {
 
             SelesParameters params = filter.getFilterParameter();
             filter.setFilterParameter(params);
+            boolean isNeedShow = false;
+            if (getFilterConfigView().getVisibility() == View.VISIBLE){
+                isNeedShow = true;
+            }
             getFilterConfigView().setSelesFilter(filter.getFilter());
+            if (!isNeedShow){
+                getFilterConfigView().setVisibility(View.GONE);
+            }
+
         }
     };
 
@@ -200,7 +271,7 @@ public class EditorFilterComponent extends EditorComponent {
                     : View.GONE));
             if(mSelectIndex == position) return;
             mSelectIndex = position;
-            switchFilter(mFilterRecyclerAdapter.getFilterList().get(position));
+            switchFilter("");
         }
     };
 
@@ -216,9 +287,11 @@ public class EditorFilterComponent extends EditorComponent {
                         getEditorController().getMovieEditor().getEditorEffector().removeMediaEffectData(mSelectEffectData);
                         if (mMementoEffectData != null) {
                             switchFilter((TuSdkMediaFilterEffectData) mMementoEffectData);
-                            mFilterRecyclerAdapter.setCurrentPosition(mMementoEffectIndex);
-                        }else
-                            mFilterRecyclerAdapter.setCurrentPosition(0);
+                        }else{
+                            for (FilterFragment fragment : mFilterFragments){
+                                fragment.removeFilter();
+                            }
+                        }
                     }
 
                     mSelectIndex = -1;

@@ -3,6 +3,8 @@ package org.lasque.tusdkvideodemo.views.props;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -45,6 +47,14 @@ public abstract class PropsItemPageFragment extends Fragment {
         this.mDataSource = dataSource;
     }
 
+    public PropsItemPageFragment() {
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     /**
      * 设置数据源
      * @param dataSource 数据源
@@ -76,14 +86,16 @@ public abstract class PropsItemPageFragment extends Fragment {
      * @param position 位置索引
      */
     public void notifyItemChanged(int position) {
-        mPropsItemRecycleAdapter.notifyItemChanged(position);
+        if (mPropsItemRecycleAdapter != null)
+            mPropsItemRecycleAdapter.notifyItemChanged(position);
     }
 
     /**
      * 刷新数据
      */
     public void notifyDataSetChanged() {
-        mPropsItemRecycleAdapter.notifyDataSetChanged();
+        if (mPropsItemRecycleAdapter != null)
+            mPropsItemRecycleAdapter.notifyDataSetChanged();
     }
 
     // -----------------------   StickerPropsItemPageFragment.DataSource  ----------------//

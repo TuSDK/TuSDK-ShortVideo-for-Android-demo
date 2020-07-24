@@ -1,6 +1,7 @@
 package org.lasque.tusdkvideodemo.editor;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -18,7 +19,7 @@ import org.lasque.tusdk.core.seles.sources.TuSdkEditorTranscoder;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
-import org.lasque.tusdk.core.utils.FileHelper;
+import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
@@ -125,6 +126,7 @@ public class MovieEditorController {
             mProgress.setValue(0);
             mPlayBtn.setVisibility(View.GONE);
             getHomeComponent().setEnable(true);
+            mMovieEditor.setDataSource(outputVideoSource);
         }
 
         @Override
@@ -151,8 +153,8 @@ public class MovieEditorController {
         public void onProgress(long playbackTimeUs, long totalTimeUs, float percentage) {
             TLog.d("[debug] current editor player playbackTimeUs = " + playbackTimeUs + " totalTimeUs = " + totalTimeUs);
             if (playbackTimeUs >= totalTimeUs){
-//                getMovieEditor().getEditorPlayer().pausePreview();
-//                getMovieEditor().getEditorPlayer().seekTimeUs(0);
+                getMovieEditor().getEditorPlayer().pausePreview();
+                getMovieEditor().getEditorPlayer().seekTimeUs(0);
             }
         }
     };
@@ -227,10 +229,19 @@ public class MovieEditorController {
         mMovieEditor.getEditorTransCoder().addTransCoderProgressListener(mOnTranscoderProgressListener);
         //设置播放回调
         mMovieEditor.getEditorPlayer().addProgressListener(mPlayProgressListener);
+
+        mMovieEditor.getEditorPlayer().addPreviewSizeChangeListener(new TuSdkEditorPlayer.TuSdkPreviewSizeChangeListener() {
+            @Override
+            public void onPreviewSizeChanged(TuSdkSize previewSize) {
+                TLog.e("");
+            }
+        });
+
         //初始化视图
         init();
         //之前在裁剪页面预加载过 则不用开启转码
         mMovieEditor.setEnableTranscode(false);
+//        mProgress.setVisibility(View.VISIBLE);
 
         mMovieEditor.getEditorPlayer().setBackGround(TuSdkContext.getColor(R.color.lsq_background_editor_compoent));
 
@@ -272,6 +283,7 @@ public class MovieEditorController {
     public MovieEditorController(MovieEditorActivity activity, VideoContent holderView, ArrayList<TuSdkMediaTimeSlice> timeSlice, TuSdkMovieEditor.TuSdkMovieEditorOptions options) {
         mHolderView = holderView;
         mWeakActivity = new WeakReference<>(activity);
+        mImageTextRankHelper = new EditorTextAndStickerRankHelper();
         mMovieEditor = new TuSdkMovieEditorImpl(activity, holderView, options);
         //设置音效回调
         mMovieEditor.getEditorMixer().addTaskStateListener(mAudioTaskStateListener);
@@ -282,7 +294,7 @@ public class MovieEditorController {
         //初始化视图
         init();
         //之前在裁剪页面预加载过 则不用开启转码
-        mMovieEditor.setEnableTranscode(false);
+        mMovieEditor.setEnableTranscode(true);
 
         //设置需要编辑的时间区间
         mMovieEditor.getEditorPlayer().setEditTimeSlice(timeSlice);
@@ -667,6 +679,7 @@ public class MovieEditorController {
                     break;
                 case TransitionsEffect:
                     componentEnum = EditorComponent.EditorComponentType.TransitionsEffect;
+                    break;
                 default:
                     break;
             }

@@ -32,6 +32,7 @@ import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.core.view.widget.TuSdkEditText;
 import org.lasque.tusdk.core.view.widget.button.TuSdkTextButton;
+import org.lasque.tusdk.impl.components.widget.sticker.StickerDynamicItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerImageItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
@@ -105,6 +106,8 @@ public class EditorTextComponent extends EditorComponent {
 
     private boolean isFirstCallSoftInput = true;
 
+    private TuSdkSize mCurrentPreviewSize = null;
+
     /**
      * 显示区域改变回调
      *
@@ -114,6 +117,7 @@ public class EditorTextComponent extends EditorComponent {
         @Override
         public void onPreviewSizeChanged(final TuSdkSize previewSize) {
             if (mStickerView == null) return;
+            mCurrentPreviewSize = TuSdkSize.create(previewSize.width,previewSize.height);
             ThreadHelper.post(new Runnable() {
                 @Override
                 public void run() {
@@ -132,7 +136,7 @@ public class EditorTextComponent extends EditorComponent {
         }
 
         @Override
-        public boolean canAppendSticker(StickerView stickerView, StickerDynamicData stickerDynamicData) {
+        public boolean canAppendSticker(StickerView view, StickerDynamicData sticker) {
             return false;
         }
 
@@ -146,20 +150,13 @@ public class EditorTextComponent extends EditorComponent {
                 mCurrentColorRectView = mTextBackups.findColorRect(stickerData);
                 mBottomView.mBottomOptions.setOptionsEnable(true);
                 mBackupEntity = mTextBackups.findTextBackupEntity(stickerData);
-                if(mBackupEntity != null){
+                if(mBackupEntity != null)
                     applyBackupEntity(mBackupEntity);
-                    String content = mBackupEntity.textItemView.getTextViewText(mBackupEntity.textItemView.getTextView());
-                    if (!content.equals("请输入文字")){
-                        getEditTextView().setText(content);
-                    } else {
-                        getEditTextView().setText("");
-                    }
-                }
             }
         }
 
         @Override
-        public void onStickerItemViewSelected(StickerDynamicData stickerDynamicData, String s, boolean b) {
+        public void onStickerItemViewSelected(StickerDynamicData stickerData, String text, boolean needReverse) {
 
         }
 
@@ -206,7 +203,7 @@ public class EditorTextComponent extends EditorComponent {
         }
 
         @Override
-        public void onStickerCountChanged(StickerDynamicData stickerDynamicData, StickerItemViewInterface stickerItemViewInterface, int i, int i1) {
+        public void onStickerCountChanged(StickerDynamicData stickerData, StickerItemViewInterface stickerItemViewInterface, int operation, int count) {
 
         }
     };
@@ -442,7 +439,6 @@ public class EditorTextComponent extends EditorComponent {
 
             if (mBottomView.mBottomOptions.mStyleOptions == null) return;
             boolean isReverse = mBottomView.mBottomOptions.mArrayOptions.mNeedReverse;
-//            if (isReverse) text = reverseString(text.toString());
             updateText(text.toString(), isReverse);
         }
 
@@ -636,10 +632,16 @@ public class EditorTextComponent extends EditorComponent {
             }
         };
 
+        /**
+         *
+         */
         protected void handleCompleted() {
             for (StickerItemViewInterface stickerTextItemView : mStickerView.getStickerItems()) {
 
                 if(stickerTextItemView instanceof StickerTextItemView) {
+                    float renderWidth = mCurrentPreviewSize.width;
+                    float renderHeight = mCurrentPreviewSize.height;
+
                     StickerTextItemView stickerItemView = ((StickerTextItemView) stickerTextItemView);
 
                     //生成图片前重置一些视图
@@ -650,29 +652,39 @@ public class EditorTextComponent extends EditorComponent {
                     Bitmap textBitmap = StickerFactory.createBitmapFromView(stickerItemView.getTextView(),5);
 
                     stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_white), 2);
+
+                    StickerView stickerView = getEditorController().getActivity().getImageStickerView();
+                    int[] parentLocaiont = new int[2];
+                    stickerView.getLocationInWindow(parentLocaiont);
                     //获取计算相应的位置
                     int[] locaiont = new int[2];
                     /** 当SDKVersion >= 27 需要使用 getLocationInWindow() 方法 不然会产生极大的误差 小于27时 getLocationInWindow() 与 getLocationOnScreen()方法返回值相同*/
                     stickerItemView.getTextView().getLocationInWindow(locaiont);
-                    int pointX = locaiont[0] - mStickerView.getLeft();
-                    int pointY = locaiont[1] - mStickerView.getTop();
+                    int pointX = locaiont[0] - parentLocaiont[0];
+                    int pointY = (int) (locaiont[1] - parentLocaiont[1]);
+                    TuSdkSize canvasSize = TuSdkSize.create(textBitmap);
+                    /** 归一化计算 */
+                    float offsetX = pointX / renderWidth;
+                    float offsetY = pointY / renderHeight;
+                    float stickerWidth = (float) canvasSize.width / renderWidth;
+                    float stickerHeight = (float) canvasSize.height / renderHeight;
+                    float degree = stickerItemView.getResult(null).degree;
+                    float ratio = (float) canvasSize.width / (float) canvasSize.height;
 
 
                     long starTimeUs = ((StickerTextData) stickerItemView.getSticker()).starTimeUs;
                     long stopTimeUs = ((StickerTextData) stickerItemView.getSticker()).stopTimeUs;
-
-                    //获取StickerView的画布大小
-                    TuSdkSize canvasSize = TuSdkSize.create(mStickerView.getWidth(), mStickerView.getHeight());
-
                     //创建特效对象并且应用
                     TuSdkMediaTextEffectData textMediaEffectData = createTextMeidEffectData(
                             textBitmap, pointX, pointY, stickerItemView.getResult(null).degree,
                             starTimeUs, stopTimeUs, canvasSize);
-                    getEditorEffector().addMediaEffectData(textMediaEffectData);
+
+                    TuSdkMediaTextEffectData textEffectData = createTextMediaEffectData(textBitmap,stickerWidth,stickerHeight,offsetX,offsetY,degree,starTimeUs,stopTimeUs,ratio);
+                    getEditorEffector().addMediaEffectData(textEffectData);
 
                     EditorTextBackups.TextBackupEntity backupEntity = mTextBackups.findTextBackupEntity(stickerItemView);
                     if (backupEntity != null)
-                        backupEntity.textMediaEffectData = textMediaEffectData;
+                        backupEntity.textMediaEffectData = textEffectData;
 
                     stickerItemView.setVisibility(GONE);
                 }else if(stickerTextItemView instanceof StickerImageItemView){
@@ -700,8 +712,26 @@ public class EditorTextComponent extends EditorComponent {
          * @param canvasSize 当前StickerView的宽高（计算比例用）
          * @return
          */
+        @Deprecated
         protected TuSdkMediaTextEffectData createTextMeidEffectData(Bitmap bitmap, float offsetX, float offsetY, float rotation, long startTimeUs, long stopTimeUs, TuSdkSize canvasSize) {
             TuSdkMediaTextEffectData mediaTextEffectData = new TuSdkMediaTextEffectData(bitmap,offsetX,offsetY,rotation,TuSdkSize.create(bitmap.getWidth(), bitmap.getHeight()),canvasSize);
+            mediaTextEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(startTimeUs, stopTimeUs));
+            return mediaTextEffectData;
+        }
+
+        /**
+         * @param bitmap 图片
+         * @param stickerWidth 归一化后 图片的显示宽度
+         * @param stickerHeight 归一化后 图片的显示高度
+         * @param offsetX 归一化后 x轴相对左上角偏移量
+         * @param offsetY 归一化后 y轴相对左上角偏移量
+         * @param rotation 旋转的角度
+         * @param startTimeUs 特效开始的时间
+         * @param stopTimeUs 特效结束的时间
+         * @return
+         */
+        protected TuSdkMediaTextEffectData createTextMediaEffectData(Bitmap bitmap,float stickerWidth,float stickerHeight,float offsetX,float offsetY,float rotation,long startTimeUs,long stopTimeUs,float ratio){
+            TuSdkMediaTextEffectData mediaTextEffectData = new TuSdkMediaTextEffectData(bitmap, stickerWidth, stickerHeight, offsetX, offsetY, rotation,ratio);
             mediaTextEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(startTimeUs, stopTimeUs));
             return mediaTextEffectData;
         }
@@ -748,6 +778,15 @@ public class EditorTextComponent extends EditorComponent {
                         if(imageData.isContains(playPositionTime)){
                             itemView.setVisibility(View.VISIBLE);
                         }else {
+                            itemView.setVisibility(GONE);
+                        }
+                    } else if (itemViewInterface instanceof StickerDynamicItemView){
+                        StickerDynamicItemView itemView = ((StickerDynamicItemView) itemViewInterface);
+                        StickerDynamicData dynamicData = itemView.getCurrentStickerGroup();
+                        itemView.updateStickers(System.currentTimeMillis());
+                        if (dynamicData.isContains(playPositionTime)){
+                            itemView.setVisibility(View.VISIBLE);
+                        } else {
                             itemView.setVisibility(GONE);
                         }
                     }
@@ -1078,7 +1117,7 @@ public class EditorTextComponent extends EditorComponent {
                 mStickerData.stopTimeUs = getEditorPlayer().getOutputTotalTimeUS();
             } else {
                 if (!getEditorPlayer().isReversing())
-                mStickerData.stopTimeUs = mStickerData.starTimeUs + defaultDurationUs;
+                    mStickerData.stopTimeUs = mStickerData.starTimeUs + defaultDurationUs;
                 else{
                     mStickerData.stopTimeUs = mStickerData.starTimeUs;
                     mStickerData.starTimeUs = mStickerData.stopTimeUs - defaultDurationUs;

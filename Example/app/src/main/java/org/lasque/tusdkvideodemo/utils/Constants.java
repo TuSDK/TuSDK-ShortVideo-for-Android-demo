@@ -8,7 +8,17 @@
  */
 package org.lasque.tusdkvideodemo.utils;
 
+import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.seles.tusdk.FilterGroup;
+import org.lasque.tusdk.core.seles.tusdk.FilterLocalPackage;
+import org.lasque.tusdk.core.seles.tusdk.FilterOption;
 import org.lasque.tusdkvideodemo.R;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Constants {
     /**
@@ -31,15 +41,38 @@ public class Constants {
     public static String[] AUDIO_EFFECTS_CODES = new String[]{"none","record","lively", "oldmovie", "relieve"};
 
     /**
-     * 漫画滤镜 filterCode 列表
+     * @param hasCantoon
+     * @return
      */
-    public static String[] COMICSFILTERS = {"None","CHComics_Video","USComics_Video","JPComics_Video","Lightcolor_Video","Ink_Video","Monochrome_Video"};
-    /**
-     * 滤镜 filterCode 列表
-     */
-    public static String[] VIDEOFILTERS = {"None","SkinLotus_1","SkinNatural_1","SkinFair_1",  "SkinBeckoning_1", "SkinTender_1",
-            "SkinLeisurely_1", "SkinRose_1", "SkinWarm_1","SkinClear_1","SkinConfession_1","SkinJapanese_1","SkinExtraordinary_1","SkinHoney_1",
-            "SkinButter_1","SkinDawn_1","SkinSummer_1","SkinSweet_1","SkinPlain_1","SkinDusk_1","SkinNostalgia_1","gaosi_01"};
+    public static List<FilterGroup> getCameraFilters(boolean hasCantoon){
+        List<FilterGroup> filterGroup = FilterLocalPackage.shared().getGroups();
+        List<FilterGroup> result = new ArrayList<>();
+
+        for (FilterGroup group : filterGroup){
+            if (group.groupFiltersType == 0){
+//                Collections.sort(group.filters, new Comparator<FilterOption>() {
+//                    @Override
+//                    public int compare(FilterOption o1, FilterOption o2) {
+//                        return Long.compare(o1.id, o2.id);
+//                    }
+//                });
+                result.add(group);
+            }
+        }
+
+        Collections.sort(result, new Comparator<FilterGroup>() {
+            @Override
+            public int compare(FilterGroup o1, FilterGroup o2) {
+                return Long.compare(o1.groupId, o2.groupId);
+            }
+        });
+
+        if (hasCantoon){
+            FilterGroup cartoon = FilterLocalPackage.shared().getFilterGroup(252);
+            result.add(cartoon);
+        }
+        return result;
+    }
 
     /** -----------注意事项：视频录制使用人像美颜滤镜(带有磨皮、大眼、瘦脸)，编辑组件尽量不要使用人像美颜滤镜，会造成视频处理过度，效果更不好，建议使用纯色偏滤镜 ----------------*/
     /**

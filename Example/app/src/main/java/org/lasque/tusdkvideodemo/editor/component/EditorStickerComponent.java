@@ -8,17 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
+import org.lasque.tusdk.impl.components.widget.sticker.StickerDynamicItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerImageItemView;
+import org.lasque.tusdk.impl.components.widget.sticker.StickerItemViewBase;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerTextItemView;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerDynamicData;
+import org.lasque.tusdk.modules.view.widget.sticker.StickerGroup;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerImageData;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerItemViewInterface;
 import org.lasque.tusdk.modules.view.widget.sticker.StickerTextData;
@@ -75,6 +79,8 @@ public class  EditorStickerComponent extends EditorComponent {
     /** 贴纸备忘管理 **/
     private EditorStickerImageBackups mStickerImageBackups;
 
+    private TuSdkSize mCurrentPreviewSize = null;
+
 
     /**
      * 显示区域改变回调
@@ -82,13 +88,17 @@ public class  EditorStickerComponent extends EditorComponent {
      * @since V3.0.0
      */
     private TuSdkEditorPlayer.TuSdkPreviewSizeChangeListener mOnDisplayChangeListener = new TuSdkEditorPlayer.TuSdkPreviewSizeChangeListener() {
+        /**
+         * @param previewSize 当前预览画布宽高
+         */
         @Override
         public void onPreviewSizeChanged(final TuSdkSize previewSize) {
             if (getEditorController().getActivity().getImageStickerView() == null) return;
+            mCurrentPreviewSize = TuSdkSize.create(previewSize.width,previewSize.height);
             ThreadHelper.post(new Runnable() {
                 @Override
                 public void run() {
-                    getEditorController().getActivity().getImageStickerView().resize(previewSize, getEditorController().getVideoContentView());
+//                    getEditorController().getActivity().getImageStickerView().resize(previewSize, getEditorController().getVideoContentView());
                 }
             });
 
@@ -103,7 +113,7 @@ public class  EditorStickerComponent extends EditorComponent {
         }
 
         @Override
-        public boolean canAppendSticker(StickerView stickerView, StickerDynamicData stickerDynamicData) {
+        public boolean canAppendSticker(StickerView view, StickerDynamicData sticker) {
             return false;
         }
 
@@ -119,7 +129,7 @@ public class  EditorStickerComponent extends EditorComponent {
         }
 
         @Override
-        public void onStickerItemViewSelected(StickerDynamicData stickerDynamicData, String s, boolean b) {
+        public void onStickerItemViewSelected(StickerDynamicData stickerData, String text, boolean needReverse) {
 
         }
 
@@ -151,7 +161,7 @@ public class  EditorStickerComponent extends EditorComponent {
         }
 
         @Override
-        public void onStickerCountChanged(StickerDynamicData stickerDynamicData, StickerItemViewInterface stickerItemViewInterface, int i, int i1) {
+        public void onStickerCountChanged(StickerDynamicData stickerData, StickerItemViewInterface stickerItemViewInterface, int operation, int count) {
 
         }
     };
@@ -231,6 +241,15 @@ public class  EditorStickerComponent extends EditorComponent {
                     if(imageData.isContains(playPositionTime)){
                         itemView.setVisibility(View.VISIBLE);
                     }else {
+                        itemView.setVisibility(GONE);
+                    }
+                }else if (itemViewInterface instanceof StickerDynamicItemView){
+                    StickerDynamicItemView itemView = ((StickerDynamicItemView) itemViewInterface);
+                    StickerDynamicData dynamicData = itemView.getCurrentStickerGroup();
+                    itemView.updateStickers(System.currentTimeMillis());
+                    if (dynamicData.isContains(playPositionTime)){
+                        itemView.setVisibility(View.VISIBLE);
+                    } else {
                         itemView.setVisibility(GONE);
                     }
                 }
@@ -404,6 +423,7 @@ public class  EditorStickerComponent extends EditorComponent {
     public void backUpDatas(){
         getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediEffectDataTypeStickerImage);
         getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeText);
+        getEditorEffector().removeMediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeDynamicSticker);
         ThreadHelper.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -471,43 +491,62 @@ public class  EditorStickerComponent extends EditorComponent {
         mLineView.addBitmap(bitmap);
     }
 
+    /**
+     *
+     */
     protected void handleCompleted() {
-
         for (StickerItemViewInterface stickerItem : getEditorController().getActivity().getImageStickerView().getStickerItems()) {
             if(stickerItem instanceof StickerImageItemView){
+                float renderWidth = mCurrentPreviewSize.width;
+                float renderHeight = mCurrentPreviewSize.height;
+
+//                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mStickerView.getLayoutParams();
+//                float renderWidth = layoutParams.width - layoutParams.leftMargin;
+//                float renderHeight = layoutParams.height - layoutParams.topMargin;
+
+
+//                float renderWidth = mStickerView.getWidth() - mStickerView.getLeft();
+//                float renderHeight = getEditorController().getVideoContentView().getMeasuredHeight() - getEditorController().getVideoContentView().getLeft();
+
+
+
                 StickerImageItemView stickerItemView = ((StickerImageItemView) stickerItem);
 
                 //生成图片前重置一些视图
                 stickerItemView.resetRotation();
                 stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_transparent), 0);
 
-                TuSdkSize sclaSize = stickerItemView.getScaledSize();
+                TuSdkSize sclaSize = stickerItemView.getRenderScaledSize();
                 //生成相应的图片
                 Bitmap textBitmap = stickerItemView.getStickerData().getImage();
 
                 stickerItemView.setStroke(TuSdkContext.getColor(R.color.lsq_color_white), 2);
+                StickerView stickerView = getEditorController().getActivity().getImageStickerView();
+                int[] parentLocaiont = new int[2];
+                stickerView.getLocationInWindow(parentLocaiont);
+
+
                 //获取计算相应的位置
                 int[] locaiont = new int[2];
                 /** 当SDKVersion >= 27 需要使用 getLocationInWindow() 方法 不然会产生极大的误差 小于27时 getLocationInWindow() 与 getLocationOnScreen()方法返回值相同*/
                 stickerItemView.getImageView().getLocationInWindow(locaiont);
-                int pointX = locaiont[0] - getEditorController().getActivity().getImageStickerView().getLeft();
-//                int pointX = locaiont[0] - mStickerView.getLeft();
-                int pointY = (int) (locaiont[1] - getEditorController().getActivity().getImageStickerView().getY());
-//                int pointY = (int) (locaiont[1] - mStickerView.getTop());
-                TLog.d("[Debug] LocationOnScreen = " + Arrays.toString(locaiont) + " pointX = " + pointX + " pointY = " + pointY);
-                //设置初始化的时间
+                int pointX = locaiont[0] - parentLocaiont[0];
+                int pointY = (int) (locaiont[1] - parentLocaiont[1]);
 
+                /** 归一化计算 */
+                float offsetX = pointX / renderWidth;
+                float offsetY = pointY / renderHeight;
+                float stickerWidth = (float) sclaSize.width / renderWidth;
+                float stickerHeight = (float) sclaSize.height / renderHeight;
+                float degree = stickerItemView.getResult(null).degree;
+                float ratio = sclaSize.maxMinRatio();
+
+                //设置初始化的时间
                 long starTimeUs = ((StickerImageData) stickerItemView.getSticker()).starTimeUs;
                 long stopTimeUs = ((StickerImageData) stickerItemView.getSticker()).stopTimeUs;
-
-                //获取StickerView的画布大小
-                TuSdkSize stickerSize = TuSdkSize.create(getEditorController().getActivity().getImageStickerView().getWidth(), getEditorController().getActivity().getImageStickerView().getHeight());
-
                 //创建特效对象并且应用
-                TuSdkMediaStickerImageEffectData stickerImageEffectData = createTileEffectData(
-                        textBitmap,sclaSize, pointX, pointY, stickerItemView.getResult(null).degree,
-                        starTimeUs, stopTimeUs,stickerSize);
-                    getEditorEffector().addMediaEffectData(stickerImageEffectData);
+                TuSdkMediaStickerImageEffectData stickerImageEffectData = createTileEffectData(textBitmap,stickerWidth,stickerHeight,offsetX,offsetY,degree,starTimeUs,stopTimeUs,ratio);
+                getEditorEffector().addMediaEffectData(stickerImageEffectData);
 
                 EditorStickerImageBackups.StickerImageBackupEntity backupEntity = mStickerImageBackups.findTextBackupEntityByMemo(stickerItemView);
                 if (backupEntity != null)
@@ -518,7 +557,7 @@ public class  EditorStickerComponent extends EditorComponent {
                 StickerTextItemView stickerItemView = ((StickerTextItemView) stickerItem);
                 EditorTextBackups.TextBackupEntity backupEntity = getEditorController().getTextComponent().getTextBackups().findTextBackupEntityToMemo(stickerItemView);
                 if(backupEntity != null)
-                getEditorEffector().addMediaEffectData(backupEntity.textMediaEffectData);
+                    getEditorEffector().addMediaEffectData(backupEntity.textMediaEffectData);
                 stickerItemView.setVisibility(GONE);
             }
         }
@@ -542,10 +581,28 @@ public class  EditorStickerComponent extends EditorComponent {
      * @param stickerSize 当前StickerView的宽高（计算比例用）
      * @return
      */
+    @Deprecated
     protected TuSdkMediaStickerImageEffectData createTileEffectData(Bitmap bitmap, TuSdkSize displaySize, float offsetX, float offsetY, float rotation, long startTimeUs, long stopTimeUs ,TuSdkSize stickerSize) {
         TuSdkMediaStickerImageEffectData mediaTextEffectData = new TuSdkMediaStickerImageEffectData(bitmap,offsetX,offsetY,rotation,displaySize,stickerSize);
         mediaTextEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(startTimeUs, stopTimeUs));
         return mediaTextEffectData;
+    }
+
+    /**
+     * @param bitmap 图片
+     * @param stickerWidth 归一化后 图片的显示宽度
+     * @param stickerHeight 归一化后 图片的显示高度
+     * @param offsetX 归一化后 x轴相对左上角偏移量
+     * @param offsetY 归一化后 y轴相对左上角偏移量
+     * @param rotation 旋转的角度
+     * @param startTimeUs 特效开始的时间
+     * @param stopTimeUs 特效结束的时间
+     * @return
+     */
+    protected TuSdkMediaStickerImageEffectData createTileEffectData(Bitmap bitmap,float stickerWidth,float stickerHeight,float offsetX,float offsetY,float rotation,long startTimeUs,long stopTimeUs,float ratio){
+        TuSdkMediaStickerImageEffectData mediaStickerImageEffectData = new TuSdkMediaStickerImageEffectData(bitmap, stickerWidth, stickerHeight, offsetX, offsetY, rotation,ratio);
+        mediaStickerImageEffectData.setAtTimeRange(TuSdkTimeRange.makeTimeUsRange(startTimeUs,stopTimeUs));
+        return mediaStickerImageEffectData;
     }
 
 }

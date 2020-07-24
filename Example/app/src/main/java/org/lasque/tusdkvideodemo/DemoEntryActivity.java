@@ -12,11 +12,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 
+import org.json.JSONException;
 import org.lasque.tusdk.core.TuSdk;
+import org.lasque.tusdk.core.TuSdkBundle;
 import org.lasque.tusdk.core.TuSdkContext;
+import org.lasque.tusdk.core.secret.SdkValid;
 import org.lasque.tusdk.core.secret.StatisticsManger;
 import org.lasque.tusdk.core.seles.tusdk.FilterManager;
 import org.lasque.tusdk.core.utils.ContextUtils;
+import org.lasque.tusdk.core.utils.TLog;
+import org.lasque.tusdk.core.utils.json.JsonHelper;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 import org.lasque.tusdk.impl.activity.TuFragmentActivity;
 import org.lasque.tusdk.impl.view.widget.TuProgressHub;
@@ -75,6 +80,7 @@ public class DemoEntryActivity extends TuFragmentActivity {
 
         RadioButton clipButton = (RadioButton)findViewById(R.id.lsq_app_clip);
         clipButton.setOnClickListener(mClickListener);
+
 
     }
 

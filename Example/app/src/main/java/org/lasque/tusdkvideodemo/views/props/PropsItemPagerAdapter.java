@@ -1,6 +1,7 @@
 package org.lasque.tusdkvideodemo.views.props;
 
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 
 import java.util.Collection;
 
@@ -15,8 +16,8 @@ import java.util.Collection;
 public class PropsItemPagerAdapter<F extends PropsItemPageFragment> extends BaseFragmentPagerAdapter<F> {
 
 
-    public PropsItemPagerAdapter(FragmentManager fm, DataSource<F> dataSource) {
-        super(fm, dataSource);
+    public PropsItemPagerAdapter(FragmentManager fm, Lifecycle lifecycle, DataSource<F> dataSource) {
+        super(fm,lifecycle, dataSource);
     }
 
     /**

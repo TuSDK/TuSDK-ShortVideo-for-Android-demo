@@ -6,8 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -17,6 +15,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdkvideodemo.R;
@@ -29,7 +31,7 @@ import java.util.List;
  * @Date 2018/9/20
  */
 
-public class TabPagerIndicator extends LinearLayout{
+public class TabPagerIndicator extends LinearLayout {
     public static final int DEFAULT_VISIBLE_COUNTS = 2;
 
     /** 线画笔 */
@@ -52,6 +54,8 @@ public class TabPagerIndicator extends LinearLayout{
     /** 移动位置 */
     private int mMoveX;
 
+    private ViewPager2 mViewPager2;
+
     private ViewPager mViewPager;
 
     public TabPagerIndicator(Context context) {
@@ -73,6 +77,12 @@ public class TabPagerIndicator extends LinearLayout{
      * @param viewPager
      * @param currentPos
      */
+    public void setViewPager(ViewPager2 viewPager, int currentPos){
+        mViewPager2 = viewPager;
+        viewPager.registerOnPageChangeCallback(mPageChangeCallback);
+        viewPager.setCurrentItem(currentPos);
+    }
+
     public void setViewPager(ViewPager viewPager,int currentPos){
         mViewPager = viewPager;
         viewPager.addOnPageChangeListener(mListener);
@@ -93,18 +103,20 @@ public class TabPagerIndicator extends LinearLayout{
 
     /**
      * 设置Tab数据集
-     * @param items
+     * @param stickerGroupCategories
      */
-    public void setTabItems(List<String> items){
-        if(items == null)
+    public void setTabItems(List<String> stickerGroupCategories){
+        if(stickerGroupCategories == null)
             return;
         this.removeAllViews();
-
-        for (String title : items){
-            this.addView(generateTitleView(title));
+        for (String categories : stickerGroupCategories){
+            this.addView(generateTitleView(categories));
         }
         setItemClickListener();
-        setHighLightText(mViewPager.getCurrentItem());
+        if (mViewPager2 != null)
+            setHighLightText(mViewPager2.getCurrentItem());
+        if (mViewPager != null)
+            setHighLightText(mViewPager.getCurrentItem());
     }
 
     // 初始化
@@ -121,16 +133,17 @@ public class TabPagerIndicator extends LinearLayout{
      * @param context
      * @param attributeSet
      */
-    private void getAttrs(Context context,AttributeSet attributeSet){
+    private void getAttrs(Context context, AttributeSet attributeSet){
         TypedArray attributes = context.obtainStyledAttributes(attributeSet, R.styleable.TabPagerIndicator);
         mDefaultVisibleCounts = attributes.getInt(R.styleable.TabPagerIndicator_default_display_counts,DEFAULT_VISIBLE_COUNTS);
         mDefaultVisibleCounts = Math.max(DEFAULT_VISIBLE_COUNTS,mDefaultVisibleCounts);
-        mTextSize = attributes.getInt(R.styleable.TabPagerIndicator_text_size,12);
-        mLineColor = attributes.getColor(R.styleable.TabPagerIndicator_line_color,Color.WHITE);
-        mNormalTextColor = attributes.getColor(R.styleable.TabPagerIndicator_normal_text_color,Color.WHITE);
-        mHighLightTextColor = attributes.getColor(R.styleable.TabPagerIndicator_high_light_text_color,Color.WHITE);
-        mLineHeight = attributes.getInt(R.styleable.TabPagerIndicator_line_size,2);
+        mTextSize = attributes.getInt(R.styleable.TabPagerIndicator_text_size,16);
+        mLineColor = attributes.getColor(R.styleable.TabPagerIndicator_line_color, Color.WHITE);
+        mNormalTextColor = attributes.getColor(R.styleable.TabPagerIndicator_normal_text_color, Color.WHITE);
+        mHighLightTextColor = attributes.getColor(R.styleable.TabPagerIndicator_high_light_text_color, Color.WHITE);
+        mLineHeight = attributes.getInt(R.styleable.TabPagerIndicator_line_size,10);
         mLineWidth = (int) attributes.getDimension(R.styleable.TabPagerIndicator_line_width, TuSdkContext.px2dip(getScreenWidth() / mDefaultVisibleCounts));
+        mLineWidth = TuSdkContext.dip2px(mLineWidth);
         // 直线宽度
         attributes.recycle();
     }
@@ -175,7 +188,7 @@ public class TabPagerIndicator extends LinearLayout{
             return;
         for (int i = 0;i < counts; i++){
             View view = getChildAt(i);
-            LinearLayout.LayoutParams params = (LayoutParams) view.getLayoutParams();
+            LayoutParams params = (LayoutParams) view.getLayoutParams();
             params.weight = 0;
             params.width = getMeasuredWidth() / mDefaultVisibleCounts;
             view.setLayoutParams(params);
@@ -223,7 +236,7 @@ public class TabPagerIndicator extends LinearLayout{
             View view = getChildAt(i);
             if(view instanceof TextView){
                 if(i == position) {
-                    ((TextView) view).setTypeface(Typeface.DEFAULT);
+                    ((TextView) view).setTypeface(Typeface.DEFAULT_BOLD);
                     ((TextView) view).setTextColor(mHighLightTextColor);
                 }
                 else {
@@ -233,6 +246,33 @@ public class TabPagerIndicator extends LinearLayout{
             }
         }
     }
+
+    private int mCurrentPosition = -1;
+
+    /**
+     * viewPager滑动
+     */
+    private ViewPager2.OnPageChangeCallback mPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            scroll(position,positionOffset);
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            mCurrentPosition = position;
+            setHighLightText(position);
+            // 必须刷新不然getItemPosition不会更新
+            mViewPager2.getAdapter().notifyDataSetChanged();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+        }
+    };
 
     /**
      * viewPager滑动
@@ -256,6 +296,10 @@ public class TabPagerIndicator extends LinearLayout{
         }
     };
 
+    public int getCurrentPosition(){
+        return mCurrentPosition;
+    }
+
     /**
      * Tab点击事件
      */
@@ -267,7 +311,10 @@ public class TabPagerIndicator extends LinearLayout{
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewPager.setCurrentItem(clickPosition);
+                        if (mViewPager2 != null)
+                            mViewPager2.setCurrentItem(clickPosition);
+                        if (mViewPager != null)
+                            mViewPager.setCurrentItem(clickPosition);
                     }
                 });
             }
@@ -289,12 +336,4 @@ public class TabPagerIndicator extends LinearLayout{
         return (int) (dpValue * scale + 0.5f);
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        for (int i = 0;i < getChildCount();i++){
-            View view = getChildAt(i);
-            view.setEnabled(enabled);
-        }
-    }
 }

@@ -38,11 +38,11 @@
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
         android:background="@color/lsq_alpha_white_26"/>
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/lsq_viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </androidx.viewpager.widget.ViewPager>
+    </androidx.viewpager2.widget.ViewPager2>
 
 </LinearLayout>

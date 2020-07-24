@@ -1,10 +1,12 @@
 package org.lasque.tusdkvideodemo.views.record;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
@@ -14,15 +16,21 @@ import androidx.annotation.DrawableRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.ViewPager;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -39,6 +47,9 @@ import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.components.camera.TuSdkVideoFocusTouchViewBase;
 import org.lasque.tusdk.core.media.camera.TuSdkCameraFocus;
 import org.lasque.tusdk.core.seles.SelesParameters;
+import org.lasque.tusdk.core.seles.tusdk.FilterGroup;
+import org.lasque.tusdk.core.seles.tusdk.FilterLocalPackage;
+import org.lasque.tusdk.core.seles.tusdk.FilterOption;
 import org.lasque.tusdk.core.seles.tusdk.FilterWrap;
 import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TLog;
@@ -66,6 +77,8 @@ import org.lasque.tusdkvideodemo.views.ParamsConfigView;
 import org.lasque.tusdkvideodemo.utils.Constants;
 import org.lasque.tusdkvideodemo.views.FilterRecyclerAdapter;
 import org.lasque.tusdkvideodemo.views.TabPagerIndicator;
+import org.lasque.tusdkvideodemo.views.newFilterUI.FilterFragment;
+import org.lasque.tusdkvideodemo.views.newFilterUI.FilterViewPagerAdapter;
 import org.lasque.tusdkvideodemo.views.props.PropsItemMonsterPageFragment;
 import org.lasque.tusdkvideodemo.views.props.PropsItemPageFragment;
 import org.lasque.tusdkvideodemo.views.props.PropsItemPagerAdapter;
@@ -81,6 +94,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeComic;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeFilter;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypePlasticFace;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSkinFace;
@@ -91,6 +105,9 @@ import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffec
 
 public class RecordView extends RelativeLayout
 {
+
+    public final static String DEFAULT_FILTER_CODE = "default_filter_code";
+    public final static String DEFAULT_FILTER_GROUP = "default_filter_group";
     /**
      * 录制类型状态
      */
@@ -157,6 +174,8 @@ public class RecordView extends RelativeLayout
     private TuSDKMovieRecordDelegate mDelegate;
     /** 拍照获得的Bitmap */
     private Bitmap mCaptureBitmap;
+
+    private SharedPreferences mFilterValueMap;
 
     /******************************* View ********************************/
     /** 顶部按键 */
@@ -232,7 +251,7 @@ public class RecordView extends RelativeLayout
     /** 取消道具 */
     private ImageView mPropsItemCancel;
     /** 道具 Layout */
-    private ViewPager mPropsItemViewPager;
+    private ViewPager2 mPropsItemViewPager;
     /** 道具  PropsItemPagerAdapter */
     private PropsItemPagerAdapter<PropsItemPageFragment> mPropsItemPagerAdapter;
 
@@ -260,6 +279,16 @@ public class RecordView extends RelativeLayout
 
     private int mCurrentCameraEV = 0;
 
+
+    private ViewPager2 mFilterViewPager;
+    private TabPagerIndicator mFilterTabIndicator;
+    private FilterViewPagerAdapter mFilterViewPagerAdapter;
+    private ImageView mFilterReset;
+
+    private List<FilterFragment> mFilterFragments;
+
+    private List<FilterGroup> mFilterGroups;
+
     public RecordView(Context context)
     {
         super(context);
@@ -281,8 +310,7 @@ public class RecordView extends RelativeLayout
         return R.layout.record_view;
     }
 
-    protected void init(Context context)
-    {
+    protected void init(Context context) {
         LayoutInflater.from(context).inflate(getLayoutId(), this,
                 true);
 
@@ -374,14 +402,11 @@ public class RecordView extends RelativeLayout
         // 速度控制条
         mSpeedModeBar = findViewById(R.id.lsq_movie_speed_bar);
         int childCount = mSpeedModeBar.getChildCount();
-        for (int i = 0;i<childCount;i++)
-        {
-            mSpeedModeBar.getChildAt(i).setOnClickListener(new OnClickListener()
-            {
+        for (int i = 0; i < childCount; i++) {
+            mSpeedModeBar.getChildAt(i).setOnClickListener(new OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
-                    selectSpeedMode(Integer.parseInt((String)view.getTag()));
+                public void onClick(View view) {
+                    selectSpeedMode(Integer.parseInt((String) view.getTag()));
                 }
             });
         }
@@ -390,13 +415,13 @@ public class RecordView extends RelativeLayout
         mSmartBeautyTabLayout = findViewById(R.id.lsq_smart_beauty_layout);
         setBeautyLayout(false);
         mBeautyRecyclerView = findViewById(R.id.lsq_beauty_recyclerView);
-        mBeautyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+        mBeautyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         // 美颜类型
         mBeautyRecyclerAdapter = new BeautyRecyclerAdapter(getContext());
         mBeautyRecyclerAdapter.setOnSkinItemClickListener(beautyItemClickListener);
         // 微整形
-        mBeautyPlasticRecyclerAdapter = new BeautyPlasticRecyclerAdapter(getContext(),mBeautyPlastics);
+        mBeautyPlasticRecyclerAdapter = new BeautyPlasticRecyclerAdapter(getContext(), mBeautyPlastics);
         mBeautyPlasticRecyclerAdapter.setOnBeautyPlasticItemClickListener(beautyPlasticItemClickListener);
 
         // 滤镜调节
@@ -412,7 +437,7 @@ public class RecordView extends RelativeLayout
         mExposureSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mCamera== null) return;
+                if (mCamera == null) return;
                 mCurrentCameraEV = progress - mCameraMaxEV;
                 mCamera.setExposureCompensation(mCurrentCameraEV);
             }
@@ -428,8 +453,76 @@ public class RecordView extends RelativeLayout
             }
         });
 
+        mFilterValueMap = getContext().getSharedPreferences("TUTUFilter",Context.MODE_PRIVATE);
+
         initFilterRecyclerView();
         initStickerLayout();
+
+    }
+
+    private String mCurrentFilterCode = "";
+
+
+    public void initFilterGroupsViews(FragmentManager fragmentManager,Lifecycle lifecycle,List<FilterGroup> filterGroups) {
+        mFilterGroups = filterGroups;
+        mFilterReset = findViewById(R.id.lsq_filter_reset);
+        mFilterReset.setOnClickListener(new TuSdkViewHelper.OnSafeClickListener() {
+            @Override
+            public void onSafeClick(View view) {
+                mCamera.removeMediaEffectsWithType(TuSdkMediaEffectDataTypeFilter);
+                mCamera.removeMediaEffectsWithType(TuSdkMediaEffectDataTypeComic);
+                mFilterFragments.get(mFilterTabIndicator.getCurrentPosition()).removeFilter();
+                mFilterConfigView.setVisibility(View.GONE);
+                mFilterViewPagerAdapter.notifyDataSetChanged();
+                mCurrentFilterCode = "";
+
+            }
+        });
+
+        mFilterTabIndicator = findViewById(R.id.lsq_filter_tabIndicator);
+
+        mFilterViewPager = findViewById(R.id.lsq_filter_view_pager);
+        mFilterViewPager.requestDisallowInterceptTouchEvent(true);
+        List<String> tabTitles = new ArrayList<>();
+        List<FilterFragment> fragments = new ArrayList<>();
+        for (FilterGroup group : mFilterGroups){
+            FilterFragment fragment = FilterFragment.newInstance(group);
+            if (group.groupId == 252){
+                fragment.setOnFilterItemClickListener(new FilterFragment.OnFilterItemClickListener() {
+                    @Override
+                    public void onFilterItemClick(String code,int position) {
+                        mCurrentFilterCode = code;
+                        mCurrentPosition = position;
+                        //设置滤镜
+                        changeVideoComicEffectCode(mCurrentFilterCode);
+                    }
+                });
+            } else {
+                fragment.setOnFilterItemClickListener(new FilterFragment.OnFilterItemClickListener() {
+                    @Override
+                    public void onFilterItemClick(String code,int position) {
+                        if (TextUtils.equals(mCurrentFilterCode,code)){
+                            mFilterConfigView.setVisibility(mFilterConfigView.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                        } else {
+                            mCurrentFilterCode = code;
+                            mCurrentPosition = position;
+                            //设置滤镜
+                            changeVideoFilterCode(mCurrentFilterCode);
+                        }
+                    }
+                });
+            }
+
+            fragments.add(fragment);
+            tabTitles.add(group.getName());
+        }
+        mFilterFragments = fragments;
+        mFilterViewPagerAdapter = new FilterViewPagerAdapter(fragmentManager,lifecycle,fragments);
+        mFilterViewPager.setAdapter(mFilterViewPagerAdapter);
+        mFilterTabIndicator.setViewPager(mFilterViewPager,0);
+        mFilterTabIndicator.setDefaultVisibleCounts(tabTitles.size());
+        mFilterTabIndicator.setTabItems(tabTitles);
+
 
     }
 
@@ -476,10 +569,7 @@ public class RecordView extends RelativeLayout
                             if (filterArg != null) filterArgs.add(filterArg);
                             SelesParameters.FilterArg saturationFilterArg = mediaEffectData.getFilterArg("saturation");
                             if (saturationFilterArg != null) filterArgs.add(saturationFilterArg);
-
                             mFilterConfigView.setFilterArgs(mediaEffectData,filterArgs);
-
-
                             break;
 
                     }
@@ -647,63 +737,7 @@ public class RecordView extends RelativeLayout
         });
         setFilterContentVisible(false);
 
-        initFilterListView();
     }
-
-    /**
-     * 滤镜栏视图
-     *
-     * @return
-     */
-    public RecyclerView getFilterListView()
-    {
-        if(mFilterRecyclerView == null){
-            mFilterRecyclerView = findViewById(R.id.lsq_filter_list_view);
-            mFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-            mFilterAdapter = new FilterRecyclerAdapter();
-            mFilterAdapter.setItemCilckListener(mFilterItemClickListener);
-            mFilterAdapter.setCurrentPosition(mCurrentPosition);
-            mFilterRecyclerView.setAdapter(mFilterAdapter);
-        }
-        return mFilterRecyclerView;
-    }
-
-    /**
-     * 漫画滤镜栏视图
-     *
-     * @return
-     */
-    public RecyclerView getComicsFilterListView()
-    {
-        if(mComicsFilterRecyclerView == null){
-            mComicsFilterRecyclerView = findViewById(R.id.lsq_comics_filter_list_view);
-            mComicsFilterRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-            mComicsFilterAdapter = new FilterRecyclerAdapter();
-            mComicsFilterAdapter.isShowImageParameter(false);
-            mComicsFilterAdapter.setItemCilckListener(mComicsFilterItemClickListener);
-            mComicsFilterRecyclerView.setAdapter(mComicsFilterAdapter);
-        }
-        return mComicsFilterRecyclerView;
-    }
-
-    /**
-     * 初始化滤镜栏视图
-     */
-    protected void initFilterListView()
-    {
-        // 普通滤镜
-        getFilterListView().setVisibility(INVISIBLE);
-
-        // 漫画滤镜
-        getComicsFilterListView();
-
-        // 设置动漫滤镜集合
-        this.mComicsFilterAdapter.setFilterList(Arrays.asList(Constants.COMICSFILTERS));
-
-        // 设置普通滤镜集合
-        this.mFilterAdapter.setFilterList(Arrays.asList(Constants.VIDEOFILTERS));
-    }
-
     /**
      * 显示滤镜列表
      */
@@ -721,22 +755,6 @@ public class RecordView extends RelativeLayout
         {
             mFilterConfigView.invalidate();
         }
-
-        TextView lsq_comics_tab = findViewById(R.id.lsq_comics_tab);
-        TextView lsq_filter_tab = findViewById(R.id.lsq_filter_tab);
-
-        // 第一次显示设为漫画滤镜
-        if(lsq_comics_tab.getTag() ==  null){
-            isComicsFilterChecked = false;
-        }
-
-        lsq_comics_tab.setTag(0);
-        lsq_filter_tab.setTag(1);
-
-        lsq_comics_tab.setOnClickListener(onClickListener);
-        lsq_filter_tab.setOnClickListener(onClickListener);
-
-        switchFilterConfigTab(isComicsFilterChecked ? lsq_comics_tab : lsq_filter_tab);
     }
 
     /**
@@ -745,15 +763,11 @@ public class RecordView extends RelativeLayout
     private ParamsConfigView.FilterConfigViewSeekBarDelegate mFilterConfigViewSeekBarDelegate = new ParamsConfigView.FilterConfigViewSeekBarDelegate() {
         @Override
         public void onSeekbarDataChanged(FilterConfigSeekbar seekbar, SelesParameters.FilterArg arg) {
-
-            List<TuSdkMediaEffectData> filterEffects = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter);
-
             float progress = seekbar.getSeekbar().getProgress();
-
-            // 只能添加一个滤镜特效
-            TuSdkMediaFilterEffectData filterEffect = (TuSdkMediaFilterEffectData) filterEffects.get(0);
-            filterEffect.submitParameter(arg.getKey(),progress);
-
+            mFilterValueMap.edit().putFloat(mCurrentFilterCode,progress).apply();
+            if (mCurrentFilter != null){
+                mCurrentFilter.submitParameter(arg.getKey(),progress);
+            }
         }
     };
 
@@ -770,7 +784,6 @@ public class RecordView extends RelativeLayout
         @Override
         public void onVideoCameraStateChanged(TuSdkStillCameraAdapter.CameraState newState) {
             if (newState.equals(TuSdkStillCameraAdapter.CameraState.StateUnknow)) return;
-
             ThreadHelper.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -802,6 +815,7 @@ public class RecordView extends RelativeLayout
                             TLog.e("key -- %s",mDefaultBeautyPercentParams.get(key));
                             submitPlasticFaceParamter(key,mDefaultBeautyPercentParams.get(key));
                         }
+                        plasticFaceEffect.getFilterWrap().setFilterParameter(plasticFaceEffect.getFilterWrap().getFilterParameter());
 
                     }
                 }
@@ -810,7 +824,39 @@ public class RecordView extends RelativeLayout
             ThreadHelper.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    changeVideoFilterCode(Arrays.asList(Constants.VIDEOFILTERS).get(mCurrentPosition));
+                    mFilterViewPager.setCurrentItem(0);
+                    int filterViewPagerPos = 0;
+                    mFilterGroups = Constants.getCameraFilters(true);
+                    String defaultCode = mFilterValueMap.getString(DEFAULT_FILTER_CODE,"");
+                    if (TextUtils.isEmpty(defaultCode)){
+                        defaultCode = mFilterGroups.get(0).getDefaultFilter().code;
+                    }
+                    Long defaultFilterGroupId = mFilterValueMap.getLong(DEFAULT_FILTER_GROUP,-1);
+                    List<FilterOption> defaultGroup = mFilterGroups.get(0).filters;
+                    if (defaultFilterGroupId != -1){
+                        for (FilterGroup group : mFilterGroups){
+                            if (group.groupId == defaultFilterGroupId){
+                                defaultGroup = group.filters;
+                                filterViewPagerPos = mFilterGroups.indexOf(group);
+                                break;
+                            }
+                        }
+                    }
+                    for (int i=0;i<defaultGroup.size();i++){
+                        if (defaultGroup.get(i).code.equals(defaultCode)){
+                            mCurrentPosition = i;
+                            break;
+                        }
+                    }
+                    mCurrentFilterCode = defaultCode;
+                    mFilterViewPager.setCurrentItem(filterViewPagerPos,false);
+                    ThreadHelper.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeVideoFilterCode(mCurrentFilterCode);
+                        }
+                    },100);
+
                 }
             }, 1000);
             if (newState.equals(TuSdkStillCameraAdapter.CameraState.StatePreview)&& mCameraMaxEV == 0){
@@ -821,9 +867,13 @@ public class RecordView extends RelativeLayout
                         mCameraMinEV = mCamera.getMinExposureCompensation();
                         mExposureSeekbar.setMax(mCameraMaxEV + Math.abs(mCameraMinEV));
                         mExposureSeekbar.setProgress(mCameraMaxEV);
+
+
                     }
                 },1000);
             }
+
+
         }
 
         /**
@@ -860,6 +910,8 @@ public class RecordView extends RelativeLayout
         }
     };
 
+    private TuSdkMediaEffectData mCurrentFilter = null;
+
     /**
      * 切换滤镜
      * @param code
@@ -869,17 +921,24 @@ public class RecordView extends RelativeLayout
         if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter) != null && mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter).size() > 0 && mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeFilter).get(0).getFilterWrap().getCode().equals(code)) return;
         TuSdkMediaFilterEffectData filterEffectData = new TuSdkMediaFilterEffectData(code);
         SelesParameters.FilterArg filterArg = filterEffectData.getFilterArg("mixied");// 效果
-        if(filterArg != null){
-            filterArg.setMaxValueFactor(0.7f);// 设置最大值限制
-        }
         mCamera.addMediaEffectData(filterEffectData);
-
-        mFilterAdapter.setCurrentPosition(mCurrentPosition);
-        mFilterRecyclerView.scrollToPosition(mCurrentPosition);
-        mComicsFilterAdapter.setCurrentPosition(0);
-        mComicsFilterRecyclerView.scrollToPosition(0);
-        mComicsCurrentPosition = 0;
-
+        mFilterValueMap.edit().putString(DEFAULT_FILTER_CODE,code).apply();
+        mFilterValueMap.edit().putLong(DEFAULT_FILTER_GROUP,mFilterGroups.get(mFilterViewPager.getCurrentItem()).groupId).apply();
+        if(filterArg != null){
+            Float value = mFilterValueMap.getFloat(code,-1f) == -1f ? 0.75f : mFilterValueMap.getFloat(code,-1f);
+            filterArg.setPrecentValue(value);
+        }
+        filterEffectData.submitParameter(filterArg.getKey(),filterArg.getPrecentValue());
+        mCurrentFilter = filterEffectData;
+        if (mFilterTabIndicator.getCurrentPosition() != -1){
+            for (int i =0;i<mFilterFragments.size();i++){
+                if (i == mFilterTabIndicator.getCurrentPosition()){
+                    mFilterFragments.get(i).setCurrentPosition(mCurrentPosition);
+                } else {
+                    mFilterFragments.get(i).setCurrentPosition(-1);
+                }
+            }
+        }
         // 滤镜名显示
         showHitTitle(TuSdkContext.getString("lsq_filter_" + code));
     }
@@ -920,12 +979,32 @@ public class RecordView extends RelativeLayout
         public void onLeftGesture() {
             // 美颜开启禁止滑动切换
             if(mSmartBeautyTabLayout.getVisibility() == VISIBLE) return;
-            if(!isComicsFilterChecked)
-                changeVideoFilterCode(mFilterAdapter.getFilterList().get(mCurrentPosition < (mFilterAdapter.getFilterList().size() - 1) ?
-                    (mCurrentPosition = mCurrentPosition + 1) : (mCurrentPosition = 0)));
-            else
-                changeVideoComicEffectCode(mComicsFilterAdapter.getFilterList().get(mComicsCurrentPosition < (mComicsFilterAdapter.getFilterList().size() - 1) ?
-                        (mComicsCurrentPosition = mComicsCurrentPosition + 1) : (mComicsCurrentPosition = 0)));
+
+            FilterGroup current = mFilterGroups.get(mFilterTabIndicator.getCurrentPosition());
+            final String filterCode;
+            if(mCurrentPosition == current.filters.size() -1){
+                int targetViewPagerPos =mFilterTabIndicator.getCurrentPosition() +1 == mFilterFragments.size() ? 0 :mFilterTabIndicator.getCurrentPosition() + 1;
+                current = mFilterGroups.get(targetViewPagerPos);
+                mFilterViewPager.setCurrentItem(targetViewPagerPos);
+                mCurrentPosition = 0;
+            } else {
+                ++mCurrentPosition;
+            }
+            filterCode = current.filters.get(mCurrentPosition).code;
+            mCurrentFilterCode = filterCode;
+            final FilterGroup finalCurrent = current;
+            ThreadHelper.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (finalCurrent.groupId == 252){
+                        changeVideoComicEffectCode(filterCode);
+                    } else {
+                        changeVideoFilterCode(filterCode);
+                    }
+                }
+            },100);
+
+
         }
 
         @Override
@@ -933,12 +1012,29 @@ public class RecordView extends RelativeLayout
             // 美颜开启禁止滑动切换
             if(mSmartBeautyTabLayout.getVisibility() == VISIBLE) return;
 
-            if(!isComicsFilterChecked)
-                changeVideoFilterCode(mFilterAdapter.getFilterList().get(mCurrentPosition > 0 ?
-                    (mCurrentPosition = mCurrentPosition - 1) : (mCurrentPosition = mFilterAdapter.getFilterList().size() - 1)));
-            else
-                changeVideoComicEffectCode(mComicsFilterAdapter.getFilterList().get(mComicsCurrentPosition > 0 ?
-                        (mComicsCurrentPosition = mComicsCurrentPosition - 1) : (mComicsCurrentPosition = mComicsFilterAdapter.getFilterList().size() - 1)));
+            FilterGroup current = mFilterGroups.get(mFilterTabIndicator.getCurrentPosition());
+            final String filterCode;
+            if (mCurrentPosition == 0){
+                int targetViewPagerPos =mFilterTabIndicator.getCurrentPosition() -1 == -1 ? mFilterFragments.size() - 1 :mFilterTabIndicator.getCurrentPosition() -1;
+                current = mFilterGroups.get(targetViewPagerPos);
+                mFilterViewPager.setCurrentItem(targetViewPagerPos);
+                mCurrentPosition = current.filters.size() - 1;
+            } else {
+                --mCurrentPosition;
+            }
+            filterCode = current.filters.get(mCurrentPosition).code;
+            mCurrentFilterCode = filterCode;
+            final FilterGroup finalCurrent = current;
+            ThreadHelper.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (finalCurrent.groupId == 252){
+                        changeVideoComicEffectCode(filterCode);
+                    } else {
+                        changeVideoFilterCode(filterCode);
+                    }
+                }
+            },100);
         }
 
         @Override
@@ -952,30 +1048,10 @@ public class RecordView extends RelativeLayout
                 mMoreConfigLayout.setVisibility(GONE);
                 setTextButtonDrawableTop(mMoreButton, R.drawable.video_nav_ic_more);
                 mPropsItemViewPager.getAdapter().notifyDataSetChanged();
-                TLog.e("[Debug] curent ex = " + mCamera.getCurrentExposureCompensation());
                 mCamera.getFocusTouchView().isShowFoucusView(true);
             }
         }
     };
-
-    /**
-     * 切换漫画滤镜、普通滤镜Tab
-     * @param view
-     */
-    private void switchFilterConfigTab(View view)
-    {
-        isComicsFilterChecked = view.getId() == R.id.lsq_comics_tab ? true : false;
-
-        ((TextView)findViewById(R.id.lsq_comics_tab)).setTextColor(getResources().getColor(view.getId() == R.id.lsq_comics_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_66));
-        ((TextView)findViewById(R.id.lsq_filter_tab)).setTextColor(getResources().getColor(view.getId() == R.id.lsq_filter_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_66));
-        findViewById(R.id.lsq_comics_tab_line).setBackgroundResource(view.getId() == R.id.lsq_comics_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_00);
-        findViewById(R.id.lsq_filter_tab_line).setBackgroundResource(view.getId() == R.id.lsq_filter_tab ? R.color.lsq_color_white : R.color.lsq_alpha_white_00);
-
-        getFilterListView().setVisibility(view.getId() == R.id.lsq_filter_tab ? VISIBLE : INVISIBLE);
-        getComicsFilterListView().setVisibility(view.getId() == R.id.lsq_comics_tab ? VISIBLE : INVISIBLE);
-        mFilterConfigView.setVisibility(GONE);
-
-    }
 
     /********************** 动漫 ****************************/
 
@@ -985,14 +1061,21 @@ public class RecordView extends RelativeLayout
      */
     protected void changeVideoComicEffectCode(final String code)
     {
-        mCamera.addMediaEffectData(new TuSdkMediaComicEffectData(code));
-
-        mFilterAdapter.setCurrentPosition(0);
-        mFilterRecyclerView.scrollToPosition(0);
-        mComicsFilterAdapter.setCurrentPosition(mComicsCurrentPosition);
-        mComicsFilterRecyclerView.scrollToPosition(mComicsCurrentPosition);
-        mCurrentPosition = 0;
-
+        TuSdkMediaComicEffectData effectData = new TuSdkMediaComicEffectData(code);
+        mCamera.addMediaEffectData(effectData);
+        mFilterValueMap.edit().putString(DEFAULT_FILTER_CODE,code).apply();
+        mFilterValueMap.edit().putLong(DEFAULT_FILTER_GROUP,mFilterGroups.get(mFilterViewPager.getCurrentItem()).groupId).apply();
+        mCurrentFilter = effectData;
+        if (mFilterTabIndicator.getCurrentPosition() != -1){
+            for (int i =0;i<mFilterFragments.size();i++){
+                if (i == mFilterTabIndicator.getCurrentPosition()){
+                    mFilterFragments.get(i).setCurrentPosition(mCurrentPosition);
+                } else {
+                    mFilterFragments.get(i).setCurrentPosition(-1);
+                }
+            }
+        }
+        mFilterConfigView.setVisibility(View.GONE);
         // 滤镜名显示
         showHitTitle(TuSdkContext.getString("lsq_filter_" + code));
     }
@@ -1098,7 +1181,7 @@ public class RecordView extends RelativeLayout
     /**
      * 设置贴纸适配器
      */
-    public void init(final FragmentManager fm){
+    public void init(final FragmentManager fm,final Lifecycle lifecycle){
 
         // 添加贴纸道具分类数据
         mPropsItemCategories.addAll(PropsItemStickerCategory.allCategories());
@@ -1106,7 +1189,7 @@ public class RecordView extends RelativeLayout
         // 添加哈哈镜道具分类
         mPropsItemCategories.addAll(PropsItemMonsterCategory.allCategories());
 
-        mPropsItemPagerAdapter = new PropsItemPagerAdapter(fm, new PropsItemPagerAdapter.DataSource() {
+        mPropsItemPagerAdapter = new PropsItemPagerAdapter(fm, lifecycle,new PropsItemPagerAdapter.DataSource() {
             @Override
             public Fragment frament(int pageIndex) {
 
@@ -1146,6 +1229,8 @@ public class RecordView extends RelativeLayout
 
 
         mPropsItemTabPagerIndicator.setTabItems(itemTitles);
+
+//        initFilterGroupsViews(fm,lifecycle);
     }
 
     /*********************************** 微整形 ********************/
@@ -1618,14 +1703,6 @@ public class RecordView extends RelativeLayout
                     setStickerVisible(false);
                     showFilterLayout();
                     mCamera.getFocusTouchView().isShowFoucusView(false);
-                    break;
-                // 漫画滤镜
-                case R.id.lsq_comics_tab:
-                    switchFilterConfigTab(v);
-                    break;
-                // 普通滤镜
-                case R.id.lsq_filter_tab:
-                    switchFilterConfigTab(v);
                     break;
                 // 贴纸
                 case R.id.lsq_stickerWrap:
@@ -2192,5 +2269,6 @@ public class RecordView extends RelativeLayout
 
 
     public void onResume(){
+
     }
 }

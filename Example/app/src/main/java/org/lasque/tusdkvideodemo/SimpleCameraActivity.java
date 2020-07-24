@@ -21,10 +21,12 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.utils.ContextUtils;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption;
+import org.lasque.tusdk.core.utils.hardware.CameraConfigs;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs.CameraAntibanding;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderCameraSetting;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCameraImpl;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
+import org.lasque.tusdk.core.utils.image.RatioType;
 import org.lasque.tusdk.core.view.TuSdkViewHelper;
 
 /**
@@ -58,6 +60,9 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
         // 最大预览视图
 //        captureSetting.previewMaxSize = 1280;
         captureSetting.previewMaxSize = 4096;
+
+        captureSetting.facing = CameraConfigs.CameraFacing.Front;
+
         // 指定为全屏画面比例
 //        captureSetting.previewRatio = 0;
 
@@ -75,6 +80,8 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
 		// 设置水印，默认为空
 		mVideoCamera.setWaterMarkImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark));
 		mVideoCamera.setWaterMarkPosition(TuSdkWaterMarkOption.WaterMarkPosition.BottomRight);
+
+
 		
     }
     

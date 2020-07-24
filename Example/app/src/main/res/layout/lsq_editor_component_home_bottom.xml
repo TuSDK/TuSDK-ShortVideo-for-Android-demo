@@ -116,7 +116,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="32dp"
-            android:layout_marginRight="16dp"
             android:layout_toRightOf="@+id/lsq_tab_trim_btn"
             android:layout_weight="1"
             android:drawableTop="@drawable/edit_tab_ic_tr_effect"

@@ -78,6 +78,9 @@ public class PropsItemMonsterPageFragment extends PropsItemPageFragment {
         }
     };
 
+    public PropsItemMonsterPageFragment() {
+    }
+
     // -----------------------   PropsItemStickerViewHolder  ---------------- //
 
     /* 贴纸道具 ViewHolder */

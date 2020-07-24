@@ -39,6 +39,9 @@ import java.util.List;
 public class StickerPropsItemPageFragment extends PropsItemPageFragment {
 
 
+    public StickerPropsItemPageFragment() {
+    }
+
     public interface StickerItemDelegate<ItemData extends PropsItem> extends ItemDelegate{
         /**
          * 移除贴纸道具
@@ -65,6 +68,8 @@ public class StickerPropsItemPageFragment extends PropsItemPageFragment {
 
         return -1;
     }
+
+
 
     /**
      * 初始化

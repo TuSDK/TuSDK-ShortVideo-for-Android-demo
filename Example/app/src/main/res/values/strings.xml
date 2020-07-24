@@ -514,4 +514,95 @@
     <string name="lsq_italic">斜体</string>
 
 
+    <!--    4.0.0新滤镜    -->
+
+    <string name="lsq_filter_group_Portrait_Video">人像</string>
+    <string name="lsq_filter_group_Food_Video">美食</string>
+    <string name="lsq_filter_group_Scenery_Video">风景</string>
+    <string name="lsq_filter_group_Sharp_Video">锐利</string>
+    <string name="lsq_filter_group_Cartoon_ShortVideo">漫画</string>
+
+
+    <string name="lsq_filter_Sharp_Orange_1">橙</string>
+    <string name="lsq_filter_Sharp_Black_1">黑</string>
+    <string name="lsq_filter_Sharp_History_1">历史</string>
+    <string name="lsq_filter_Sharp_Red_1">红</string>
+    <string name="lsq_filter_Sharp_Neon_1">霓虹</string>
+    <string name="lsq_filter_Sharp_Ash_1">茶灰</string>
+    <string name="lsq_filter_Sharp_Pink_1">粉</string>
+    <string name="lsq_filter_Sharp_Past_1">往事</string>
+    <string name="lsq_filter_Sharp_Otimes_1">旧时代</string>
+    <string name="lsq_filter_Sharp_Quiet_1">幽静</string>
+    <string name="lsq_filter_Sharp_Mottled_1">斑驳</string>
+    <string name="lsq_filter_Sharp_Messy_1">杂乱</string>
+    <string name="lsq_filter_Sharp_Imprint_1">印记</string>
+    <string name="lsq_filter_Sharp_Nostalgia_1">怀旧</string>
+    <string name="lsq_filter_Sharp_Dream_1">梦幻</string>
+    <string name="lsq_filter_Sharp_Contrast_1">反差</string>
+    <string name="lsq_filter_Sharp_Dark_1">暗夜</string>
+
+
+
+    <string name="lsq_filter_Scenery_SNight_1">静夜</string>
+    <string name="lsq_filter_Scenery_Flower_1">花海</string>
+    <string name="lsq_filter_Scenery_Rain_1">冷雨</string>
+    <string name="lsq_filter_Scenery_Fresh_1">清新</string>
+    <string name="lsq_filter_Scenery_Izu_1">伊豆</string>
+    <string name="lsq_filter_Scenery_Innocence_1">童真</string>
+    <string name="lsq_filter_Scenery_Tale_1">童话</string>
+    <string name="lsq_filter_Scenery_Picnic_1">野餐</string>
+    <string name="lsq_filter_Scenery_Blue_1">净蓝</string>
+    <string name="lsq_filter_Scenery_Birch_1">白桦</string>
+    <string name="lsq_filter_Scenery_Afternoon_1">午后</string>
+    <string name="lsq_filter_Scenery_City_1">城市</string>
+    <string name="lsq_filter_Scenery_Film_1">电影</string>
+    <string name="lsq_filter_Scenery_Silent_1">寂静</string>
+    <string name="lsq_filter_Scenery_Lautumn_1">晚秋</string>
+    <string name="lsq_filter_Scenery_Sunrise_1">日光</string>
+    <string name="lsq_filter_Scenery_Sunset_1">晚霞</string>
+    <string name="lsq_filter_Scenery_Grace_1">优雅</string>
+    <string name="lsq_filter_Scenery_Withered_1">凋零</string>
+
+
+
+    <string name="lsq_filter_Food_Delicious_1">美味</string>
+    <string name="lsq_filter_Food_Lemon_1">柠檬</string>
+    <string name="lsq_filter_Food_Light_1">淡酒</string>
+    <string name="lsq_filter_Food_Whisky_1">威士忌</string>
+    <string name="lsq_filter_Food_Caramel_1">焦糖</string>
+    <string name="lsq_filter_Food_Peach_1">蜜桃</string>
+    <string name="lsq_filter_Food_Honey_1">蜜糖</string>
+    <string name="lsq_filter_Food_Mangosteen_1">山竹</string>
+    <string name="lsq_filter_Food_Lime_1">青柠</string>
+
+
+    <string name="lsq_filter_Portrait_Natural_1">自然</string>
+    <string name="lsq_filter_Portrait_Pale_1">白皙</string>
+    <string name="lsq_filter_Portrait_Clear_1">清澈</string>
+    <string name="lsq_filter_Portrait_Moisten_1">水润</string>
+    <string name="lsq_filter_Portrait_Spring_1">春天</string>
+    <string name="lsq_filter_Portrait_Bellflower_1">桔梗</string>
+    <string name="lsq_filter_Portrait_Cherry_1">樱桃</string>
+    <string name="lsq_filter_Portrait_First_1">初见</string>
+    <string name="lsq_filter_Portrait_Pure_1">清纯</string>
+    <string name="lsq_filter_Portrait_Bright_1">光洁</string>
+    <string name="lsq_filter_Portrait_Retro_1">复古</string>
+    <string name="lsq_filter_Portrait_Soda_1">苏打</string>
+    <string name="lsq_filter_Portrait_Indifference_1">冷淡</string>
+    <string name="lsq_filter_Portrait_Rosy_1">粉嫩</string>
+    <string name="lsq_filter_Portrait_Icream_1">冰淇淋</string>
+    <string name="lsq_filter_Portrait_Ruddy_1">红润</string>
+    <string name="lsq_filter_Portrait_Dusk_1">黄昏</string>
+    <string name="lsq_filter_Portrait_Cream_1">奶油</string>
+    <string name="lsq_filter_Portrait_Texture_1">质感</string>
+    <string name="lsq_filter_Portrait_Dawn_1">晨光</string>
+    <string name="lsq_filter_Portrait_Milk_1">牛奶</string>
+    <string name="lsq_filter_Portrait_Candy_1">糖果</string>
+    <string name="lsq_filter_Portrait_Warm_1">温暖</string>
+    <string name="lsq_filter_Portrait_Sweet_1">甜系</string>
+    <string name="lsq_filter_Portrait_Fog_1">水雾</string>
+    <string name="lsq_filter_Portrait_Desserts_1">甜点</string>
+
+
+
 </resources>

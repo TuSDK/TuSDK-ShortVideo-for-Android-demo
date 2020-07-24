@@ -36,7 +36,7 @@ public class EditorStickerImageBackups {
     private EditorTextAndStickerRankHelper mRankHelper;
 
 
-    public EditorStickerImageBackups(StickerView mStickerView, TuSdkEditorEffector editorEffector, EditorTextAndStickerRankHelper rankHelper) {
+    public EditorStickerImageBackups(StickerView mStickerView,TuSdkEditorEffector editorEffector,EditorTextAndStickerRankHelper rankHelper) {
         this.mStickerView = mStickerView;
         this.mEditorEffector = editorEffector;
         this.mRankHelper = rankHelper;
@@ -63,6 +63,7 @@ public class EditorStickerImageBackups {
                     mStickerView.addView(item.stickerImageItemView, -1);
                     mStickerView.addSticker(item.stickerImageItemView);
                     item.stickerImageItemView.setTranslation(item.stickerImageItemView.getTranslation().x, item.stickerImageItemView.getTranslation().y);
+                    item.stickerImageItemView.setRotation(item.stickerImageItemView.getResult(null).degree);
                 }
 
                 if (item.colorRectView != null && mLineView != null) {
@@ -397,7 +398,7 @@ public class EditorStickerImageBackups {
         return entity;
     }
 
-    public static DynamicStickerBackupEntity createBackUpEntity(StickerDynamicData stickerData, StickerDynamicItemView stickerDynamicItemView, TuSdkMovieColorRectView colorRectView){
+    public static DynamicStickerBackupEntity createBackUpEntity(StickerDynamicData stickerData,StickerDynamicItemView stickerDynamicItemView,TuSdkMovieColorRectView colorRectView){
         DynamicStickerBackupEntity entity = new DynamicStickerBackupEntity();
         entity.stickerGroup = stickerData;
         entity.stickerDynamicItemView = stickerDynamicItemView;

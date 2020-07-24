@@ -3,6 +3,7 @@ package org.lasque.tusdkvideodemo.views.editor;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.Color;
 import android.view.View;
 
 import org.lasque.tusdk.core.utils.TLog;

@@ -184,7 +184,8 @@ public class ImageAlbumFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mLoadImageTask.cancel(false);
+        if (mLoadImageTask != null)
+            mLoadImageTask.cancel(false);
     }
 
     @Override

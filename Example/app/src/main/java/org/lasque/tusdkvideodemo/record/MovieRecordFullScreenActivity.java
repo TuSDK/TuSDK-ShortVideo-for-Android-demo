@@ -3,6 +3,8 @@ package org.lasque.tusdkvideodemo.record;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
@@ -13,6 +15,7 @@ import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.core.utils.hardware.CameraConfigs;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoCamera;
 import org.lasque.tusdk.core.utils.hardware.TuSdkRecorderVideoEncoderSetting;
+import org.lasque.tusdk.core.utils.image.RatioType;
 import org.lasque.tusdk.core.video.TuSDKVideoResult;
 import org.lasque.tusdkvideodemo.SimpleCameraActivity;
 import org.lasque.tusdkvideodemo.R;
@@ -56,17 +59,23 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
     {
         super.onResume();
         mRecordView.onResume();
+        setWindowBrightness(255);
     }
 
     @Override
     protected void onPause()
     {
-        super.onPause();
-        mVideoCamera.cancelRecording();
-        getRecordView().initRecordProgress();
         // 同步闪关灯状态
         getRecordView().updateFlashMode(CameraConfigs.CameraFlash.Off);
-
+        mVideoCamera.pauseRecording();
+        mVideoCamera.cancelRecording();
+        super.onPause();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getRecordView().initRecordProgress();
+            }
+        });
     }
 
     /**
@@ -79,9 +88,17 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
             mRecordView = (RecordView) findViewById(R.id.lsq_movie_record_view);
             mRecordView.setDelegate(this);
             mRecordView.setUpCamera(this, mVideoCamera);
-            mRecordView.init(getSupportFragmentManager());
+            mRecordView.init(getSupportFragmentManager(),getLifecycle());
+            mRecordView.initFilterGroupsViews(getSupportFragmentManager(),getLifecycle(),Constants.getCameraFilters(true));
         }
         return mRecordView;
+    }
+
+    private void setWindowBrightness(int brightness) {
+        Window window = getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.screenBrightness = brightness / 255.0f;
+        window.setAttributes(lp);
     }
 
     protected void initCamera()
