@@ -467,6 +467,8 @@ public class EditorEffectComponent extends EditorComponent {
             private void onPressSceneEffect(SceneRecyclerAdapter.SceneViewHolder sceneViewHolder, int position) {
                 if (position == 0) return;
 
+                TLog.e("outputTimeUs %s",getEditorPlayer().getOutputTotalTimeUS());
+
                 /** 开始播放视频并预览已设置的特效 */
                 if (getEditorPlayer().getCurrentOutputTimeUs() >= getEditorPlayer().getOutputTotalTimeUS()) {
                     sceneViewHolder.mSelectLayout.setImageResource(TuSdkContext.getColorResId("lsq_color_transparent"));
@@ -921,6 +923,7 @@ public class EditorEffectComponent extends EditorComponent {
                         mMovieEditor.getEditorPlayer().setTimeEffect(null);
                         mCurrentEffectData = null;
                     } else if (position == 1) {
+                        mLineView.seekTo(0);
                         //反复
                         mLineView.setTimeEffectType(0);
                         mLineView.setShowSelectBar(true);
@@ -942,6 +945,7 @@ public class EditorEffectComponent extends EditorComponent {
                         getEditorPlayer().setTimeEffect(slowTimeEffect);
                         mCurrentEffectData = slowTimeEffect;
                         getEditorPlayer().seekOutputTimeUs(0);
+
                     } else if (position == 3) {
                         //时光倒流
                         mLineView.setTimeEffectType(1);

@@ -12,6 +12,7 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
+import org.lasque.tusdk.core.struct.TuSdkSize;
 import org.lasque.tusdk.core.utils.TuSdkWaterMarkOption;
 import org.lasque.tusdk.core.utils.image.BitmapHelper;
 import org.lasque.tusdk.impl.components.widget.sticker.StickerView;
@@ -89,6 +90,7 @@ public class MovieEditorActivity extends FragmentActivity {
                 .setPictureEffectReferTimelineType(TuSdkMediaEffectReferInputTimelineType)//设置时间线模式
                 //设置水印
                 .setWaterImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark), TuSdkWaterMarkOption.WaterMarkPosition.TopRight, true);
+        defaultOptions.outputSize = TuSdkSize.create(1080,1920);
         if(isDirectEdit){
             //时间轴编辑
             mEditorController = new MovieEditorController(this,mVideoContent,mTimeSlice,defaultOptions);

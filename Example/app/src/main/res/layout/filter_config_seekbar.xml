@@ -24,7 +24,7 @@
         android:layout_toRightOf="@+id/lsq_titleWrapView"
         android:layout_toLeftOf="@id/lsq_filterValueView"
         android:layout_centerVertical="true"
-        layout="@layout/widget_seekbar" />
+        layout="@layout/tusdk_widget_seekbar" />
 
     <RelativeLayout
         android:id="@+id/lsq_titleWrapView"

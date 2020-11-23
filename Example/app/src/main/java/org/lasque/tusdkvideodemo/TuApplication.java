@@ -85,6 +85,7 @@ public class TuApplication extends TuSdkApplication
 
 
 		this.initPreLoader(this.getApplicationContext(), "1724c60dc2fd4a86-04-ewdjn1");
+//		this.initPreLoader(this.getApplicationContext(), "9336ffa752d9d160-02-coass1");
 
 
 		/**

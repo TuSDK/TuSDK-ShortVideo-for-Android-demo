@@ -62,7 +62,7 @@ public class HorizontalProgressBar extends View {
     private void getAttrs(Context context,AttributeSet attrs){
         TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.HorizontalProgressBar);
         mProgressColor = attributes.getColor(R.styleable.HorizontalProgressBar_progressColor,Color.BLACK);
-        mBackgroundColor = attributes.getColor(R.styleable.HorizontalProgressBar_background,Color.WHITE);
+        mBackgroundColor = attributes.getColor(R.styleable.HorizontalProgressBar_background_color,Color.WHITE);
         mDefaultHeight = attributes.getDimension(R.styleable.HorizontalProgressBar_defaultHeight,TuSdkContext.dip2px(20f));
         attributes.recycle();
     }

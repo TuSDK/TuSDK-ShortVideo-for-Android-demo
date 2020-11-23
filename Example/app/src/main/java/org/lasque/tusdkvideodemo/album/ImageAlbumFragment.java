@@ -143,7 +143,7 @@ public class ImageAlbumFragment extends Fragment {
         addEffectData(mImageAlbumAdapter.getSelectedVideoInfo());
 //        设置是否保存到相册,与设置OutputFilePath相冲突
 //        tuSDKMediaMovieCompositionComposer.saveToAlbum(true);
-//        tuSDKMediaMovieCompositionComposer.setOutpuFilePath(TuSdk.getAppTempPath().getPath() + "/LSQ_" + System.currentTimeMillis() + ".mp4");
+        tuSDKMediaMovieCompositionComposer.setOutputFilePath(TuSdk.getAppTempPath().getPath() + "/LSQ_" + System.currentTimeMillis() + ".mp4");
         tuSDKMediaMovieCompositionComposer.startExport();
 
 

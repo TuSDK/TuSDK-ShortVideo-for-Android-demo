@@ -23,6 +23,7 @@
     <string name="lsq_filter_set_smoothing">潤滑</string>
     <string name="lsq_filter_set_whitening">白皙</string>
     <string name="lsq_filter_set_mixied">效果</string>
+    <string name="lsq_beauty_mixied">效果</string>
     <string name="lsq_filter_set_vignette">暗角</string>
 
     <string name="beauty_on">美顏已開啟</string>
@@ -385,7 +386,7 @@
     <string name="lsq_time">時間</string>
     <string name="lsq_magic">魔法</string>
 
-    <string name="lsq_beauty_reset">重置</string>
+    <string name="lsq_beauty_reset">無</string>
     <string name="lsq_beauty_eyesize">大眼</string>
     <string name="lsq_beauty_jawsize">下巴</string>
     <string name="lsq_beauty_eyedis">眼距</string>

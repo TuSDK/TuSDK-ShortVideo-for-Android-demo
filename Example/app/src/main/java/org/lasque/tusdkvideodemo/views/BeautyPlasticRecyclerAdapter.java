@@ -88,6 +88,11 @@ public class BeautyPlasticRecyclerAdapter extends RecyclerView.Adapter<BeautyPla
 
         beautyViewHolder.mBeautyLevelImage.setImageResource(TuSdkContext.getDrawableResId("lsq_ic_"+ code));
         beautyViewHolder.mBeautyName.setText(TuSdkContext.getString("lsq_beauty_"+code));
+        if (selected){
+            beautyViewHolder.mBeautyLevelImage.setBackgroundResource(R.drawable.circle_bg_22);
+        } else {
+            beautyViewHolder.mBeautyLevelImage.setBackgroundResource(R.drawable.circle_bg_26);
+        }
 
         beautyViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

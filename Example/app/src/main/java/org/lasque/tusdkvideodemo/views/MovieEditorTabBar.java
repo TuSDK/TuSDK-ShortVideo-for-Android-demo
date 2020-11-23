@@ -32,6 +32,8 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
     protected TuSdkTextButton mTrEffectTabBtn;
 
+    protected TuSdkTextButton mDynamicTabBtn;
+
     //是否启用
     private boolean mEnable = true;
 
@@ -109,6 +111,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
 
         mTrEffectTabBtn = findViewById(R.id.lsq_tab_tr_effect_btn);
         mTrEffectTabBtn.setOnClickListener(this);
+
+        mDynamicTabBtn = findViewById(R.id.lsq_tab_dynamic_sticker_btn);
+        mDynamicTabBtn.setOnClickListener(this);
     }
 
 
@@ -142,6 +147,9 @@ public class MovieEditorTabBar extends TuSdkRelativeLayout implements View.OnCli
                 break;
             case R.id.lsq_tab_tr_effect_btn:
                 mSelectedTabType = TabType.TransitionsEffect;
+                break;
+            case R.id.lsq_tab_dynamic_sticker_btn:
+                mSelectedTabType = TabType.DynamicStickers;
                 break;
         }
 

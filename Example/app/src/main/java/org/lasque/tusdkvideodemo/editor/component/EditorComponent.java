@@ -47,7 +47,9 @@ public abstract class EditorComponent {
         //裁剪
         Trim,
         //转场特效
-        TransitionsEffect
+        TransitionsEffect,
+        //动态贴纸
+        DynamicSticker
     }
 
     // 编辑控制器

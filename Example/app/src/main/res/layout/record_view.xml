@@ -16,13 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:progressColor="@color/lsq_widget_speedbar_button_bg"
-            app:background="@color/lsq_alpha_white_4d"/>
+            app:background_color="@color/lsq_alpha_white_4d"/>
 
         <Button
             android:id="@+id/lsq_minTimeBtn"
             android:layout_width="3dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:background="#fff" />
 
         <RelativeLayout
@@ -192,7 +192,8 @@
             android:layout_height="@dimen/lsq__space_80"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/tusdk_view_widget_record_unpressed" />
+            android:background="@drawable/tusdk_view_widget_record_unpressed"
+            />
 
     </RelativeLayout>
 
@@ -260,7 +261,7 @@
         android:gravity="center"/>
 
     <LinearLayout
-        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:orientation="vertical"

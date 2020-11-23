@@ -23,6 +23,7 @@
     <string name="lsq_filter_set_smoothing">Smoothing</string>
     <string name="lsq_filter_set_whitening">Whitening</string>
     <string name="lsq_filter_set_mixied">Mixied</string>
+    <string name="lsq_beauty_mixied">Mixied</string>
     <string name="lsq_filter_set_vignette">Vignette</string>
 
     <string name="beauty_on">Beauty Mode On</string>
@@ -390,7 +391,7 @@
     <string name="lsq_time">Time</string>
     <string name="lsq_magic">Magic</string>
 
-    <string name="lsq_beauty_reset">reset</string>
+    <string name="lsq_beauty_reset">null</string>
     <string name="lsq_beauty_eyesize">Eye</string>
     <string name="lsq_beauty_jawsize">Jaw</string>
     <string name="lsq_beauty_eyedis">Eye Distance</string>

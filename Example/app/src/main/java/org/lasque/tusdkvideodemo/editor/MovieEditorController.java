@@ -11,6 +11,7 @@ import org.lasque.tusdk.core.TuSdk;
 import org.lasque.tusdk.core.TuSdkContext;
 import org.lasque.tusdk.core.decoder.TuSDKAudioDecoderTaskManager;
 import org.lasque.tusdk.core.decoder.TuSDKVideoInfo;
+import org.lasque.tusdk.core.encoder.video.TuSDKVideoEncoderSetting;
 import org.lasque.tusdk.core.media.codec.extend.TuSdkMediaTimeSlice;
 import org.lasque.tusdk.core.media.codec.suit.mutablePlayer.TuSdkVideoImageExtractor;
 import org.lasque.tusdk.core.seles.sources.TuSdkEditorPlayer;
@@ -20,6 +21,7 @@ import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditor;
 import org.lasque.tusdk.core.seles.sources.TuSdkMovieEditorImpl;
 import org.lasque.tusdk.core.struct.TuSdkMediaDataSource;
 import org.lasque.tusdk.core.struct.TuSdkSize;
+import org.lasque.tusdk.core.utils.FileHelper;
 import org.lasque.tusdk.core.utils.TLog;
 import org.lasque.tusdk.core.utils.ThreadHelper;
 import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
@@ -602,6 +604,8 @@ public class MovieEditorController {
         mMovieEditor.getEditorSaver().addSaverProgressListener(mSaveProgressListener);
         setSaving(true);
         mHolderView.setClickable(false);
+        ((TuSdkMovieEditorImpl) mMovieEditor).getVideoEncoderSetting().videoQuality = TuSDKVideoEncoderSetting.VideoQuality.RECORD_HIGH1;
+        ((TuSdkMovieEditorImpl) mMovieEditor).getVideoEncoderSetting().videoSize = new TuSdkSize(720,960);
         mMovieEditor.saveVideo();
         mProgressContent.setVisibility(View.VISIBLE);
     }
@@ -679,6 +683,9 @@ public class MovieEditorController {
                     break;
                 case TransitionsEffect:
                     componentEnum = EditorComponent.EditorComponentType.TransitionsEffect;
+                    break;
+                case DynamicStickers:
+                    componentEnum = EditorComponent.EditorComponentType.DynamicSticker;
                     break;
                 default:
                     break;
@@ -909,6 +916,7 @@ public class MovieEditorController {
             case Sticker:
             case Trim:
             case TransitionsEffect:
+            case DynamicSticker:
                 if (mEditorAnimator != null) {
                     mEditorAnimator.animatorSwitchComponent(EditorComponent.EditorComponentType.Home);
                 } else {

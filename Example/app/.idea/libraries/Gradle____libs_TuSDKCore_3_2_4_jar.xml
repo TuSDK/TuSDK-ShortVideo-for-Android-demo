@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: ./libs/TuSDKCore-3.2.4.jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/TuSDKCore-3.2.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

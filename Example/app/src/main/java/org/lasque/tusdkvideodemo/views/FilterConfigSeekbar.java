@@ -20,6 +20,7 @@ import org.lasque.tusdk.core.seles.sources.SelesOutInput;
 import org.lasque.tusdk.core.view.TuSdkRelativeLayout;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar;
 import org.lasque.tusdk.impl.view.widget.TuSeekBar.TuSeekBarDelegate;
+import org.lasque.tusdkvideodemo.R;
 
 import java.math.BigDecimal;
 
@@ -75,7 +76,7 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 	}
 
 	// 百分比控制条
-	private TuSeekBar mSeekbar;
+	private TuSeekBarPressure mSeekbar;
 	// 标题视图
 	private TextView mTitleView;
 	// 计数视图
@@ -86,8 +87,9 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 	private FilterArg mFilterArg;
 	// 滤镜配置拖动栏委托
 	private FilterConfigSeekbarDelegate mDelegate;
+
 	// 前缀
-	private String mPrefix = "lsq_filter_set_";
+	private String mPrefix = "lsq_beauty_";
 	/**
 	 * 滤镜强度值
 	 */
@@ -97,7 +99,7 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 	 * 
 	 * @return the mSeekbar
 	 */
-	public TuSeekBar getSeekbar()
+	public TuSeekBarPressure getSeekbar()
 	{
 		if (mSeekbar == null)
 		{
@@ -137,6 +139,7 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 	private void onSeekbarDataChanged(float progress)
 	{
 		this.setProgress(mFilterArg.getKey(),progress);
+
 		if (mDelegate != null)
 		{
 			mDelegate.onSeekbarDataChanged(this, mFilterArg);
@@ -184,14 +187,6 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 		return mNumberView;
 	}
 
-	public String getPrefix(){
-		return mPrefix;
-	}
-
-	public void setPrefix(String prefix){
-		this.mPrefix = prefix;
-	}
-
 	/**
 	 * 滤镜配置拖动栏委托
 	 * 
@@ -223,14 +218,17 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 		mFilterArg = arg;
 		if (mFilterArg == null) return;
 
-		TuSeekBar seekBar = this.getSeekbar();
+		TuSeekBarPressure seekBar = this.getSeekbar();
 		if (seekBar == null) return;
+		seekBar.setDragViewBackgroundResourceId(R.drawable.tusdk_view_widget_seekbar_drag);
+		seekBar.setBottomViewBackgroundResourceId(R.drawable.tusdk_view_widget_seekbar_bottom_bg);
 		seekBar.setProgress(arg.getPrecentValue());
+		seekBar.setSecondProgress(arg.getDefaultValue());
 
 		if (this.getTitleView() != null)
 		{
 			this.getTitleView().setText(
-					TuSdkContext.getString(getPrefix() + arg.getKey()));
+					TuSdkContext.getString("lsq_beauty_" + arg.getKey()));
 		}
 		this.setProgress(arg.getKey(),arg.getPrecentValue());
 		
@@ -238,7 +236,8 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 
 	/**
 	 * 设置百分比信息
-	 * 
+	 *
+	 * @param key
 	 * @param progress
 	 */
 	private void setProgress(String key,float progress)
@@ -253,29 +252,25 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 			this.getNumberView().setText(
 					String.format("%02d", (int) (progress * 100)));
 		}
+
 		if(this.getFilterValueView()!=null)
 		{
 			switch (key) {
 				// 以下为改变显示进度
 				case "mouthWidth":
-					progress = progress - 0.5f;
-					break;
 				case "archEyebrow":
-					progress = progress - 0.5f;
-					break;
 				case "jawSize":
-					progress = progress - 0.5f;
-					break;
 				case "eyeAngle":
-					progress = progress - 0.5f;
-					break;
 				case "eyeDis":
+				case "lips":
+				case "browPosition":
+				case "forehead":
 					progress = progress - 0.5f;
 					break;
 			}
 			BigDecimal bigDecimal = new BigDecimal(progress);
 			progress = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-			this.getFilterValueView().setText((int) (progress * 100)+"%");
+			this.getFilterValueView().setText(String.valueOf((int) (progress * 100) + "%"));
 		}
 	}
 
@@ -303,4 +298,12 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
        
        mFilter.submitParameter();
     }
+
+	public String getPrefix(){
+		return mPrefix;
+	}
+
+	public void setPrefix(String prefix){
+		this.mPrefix = prefix;
+	}
 }

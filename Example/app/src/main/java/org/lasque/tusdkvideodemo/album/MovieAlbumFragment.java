@@ -45,7 +45,7 @@ public class MovieAlbumFragment extends Fragment {
     /* 最小视频时长(单位：ms) */
     private static int MIN_VIDEO_DURATION = 3000;
     /* 最大视频时长(单位：ms) */
-    private static int MAX_VIDEO_DURATION = 60000 * 3;
+    private static int MAX_VIDEO_DURATION = 60000 * 6;
     /** 最大边长限制 **/
     private static final int MAX_SIZE = 4096;
 
@@ -163,7 +163,6 @@ public class MovieAlbumFragment extends Fragment {
         MovieInfo info = mVideoAlbumAdapter.getVideoInfoList().get(position);
         MediaFormat mediaFormat = TuSDKMediaUtils.getVideoFormat(new TuSDKMediaDataSource(info.getPath()));
         TuSdkVideoInfo videoInfo = new TuSdkVideoInfo(mediaFormat);
-
         if (!TuSDKMediaUtils.isVideoSizeSupported(videoInfo.size,mediaFormat.getString(MediaFormat.KEY_MIME)) || videoInfo.size.maxSide() > MAX_SIZE) {
             TuSdkViewHelper.toast(getActivity(), R.string.lsq_loadvideo_failed);
             return true;

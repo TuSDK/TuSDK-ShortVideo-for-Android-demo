@@ -18,10 +18,11 @@
             android:layout_height="match_parent" />
 
         <ImageView
+            android:background="@drawable/circle_bg_26"
             android:id="@+id/lsq_beauty_level_image"
             android:src="@drawable/lsq_ic_parameter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"/>
 
     </FrameLayout>

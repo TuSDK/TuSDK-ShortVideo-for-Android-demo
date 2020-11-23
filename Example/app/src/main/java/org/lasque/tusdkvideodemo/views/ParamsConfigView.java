@@ -168,7 +168,7 @@ public class ParamsConfigView extends TuSdkRelativeLayout{
         parent.addView(seekbar, params);
         return seekbar;
     }
-    private String mPrefix = "lsq_filter_set_";
+    private String mPrefix = "lsq_beauty_";
     public void setPrefix(String prefix){
         this.mPrefix = prefix;
     }

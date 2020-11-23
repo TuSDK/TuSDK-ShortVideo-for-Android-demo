@@ -115,6 +115,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         @Override
         public void onProgress(long playbackTimeUs, TuSdkMediaDataSource mediaDataSource, long totalTimeUs) {
             if(mEditorCutView == null )return;
+            TLog.e("playbackTimeUs %s",playbackTimeUs);
             float playPercent = (float)playbackTimeUs/(float) totalTimeUs;
             mEditorCutView.setVideoPlayPercent(playPercent);
         }
@@ -310,6 +311,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         List<TuSdkMediaDataSource> sourceList = new ArrayList<>();
 
         for (MovieInfo movieInfo : mVideoPaths) {
+            TLog.e("[Debug] video format = %s",TuSDKMediaUtils.getVideoFormat(TuSdkMediaDataSource.create(movieInfo.getPath()).get(0)));
             sourceList.add(TuSdkMediaDataSource.create(movieInfo.getPath()).get(0));
             mDurationTimeUs += TuSDKMediaUtils.getVideoInfo(movieInfo.getPath()).durationTimeUs;
         }
@@ -346,6 +348,7 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
             cuter.stop();
             cuter = null;
         }
+        isNeedRelease = true;
         JVMUtils.runGC();
     }
 
@@ -441,6 +444,8 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
         });
     }
 
+    private boolean isNeedRelease = false;
+
     /** 获取临时文件路径 */
     protected File getOutputTempFilePath() {
         return new File(TuSdk.getAppTempPath(), String.format("lsq_%s.mp4", StringHelper.timeStampString()));
@@ -468,6 +473,11 @@ public class MovieEditorCutActivity extends ScreenAdapterActivity {
                      * @since v3.2.1
                      */
                     public void onOutputFrameImage(final TuSdkVideoImageExtractor.VideoImage videoImage) {
+                        if (isNeedRelease){
+                            imageThumbExtractor.setImageListener(null);
+                            imageThumbExtractor.release();
+                            return;
+                        }
                         ThreadHelper.post(new Runnable() {
                             @Override
                             public void run() {

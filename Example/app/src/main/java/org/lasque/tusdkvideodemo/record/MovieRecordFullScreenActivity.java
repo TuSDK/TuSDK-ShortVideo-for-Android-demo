@@ -59,7 +59,7 @@ public class MovieRecordFullScreenActivity extends SimpleCameraActivity implemen
     {
         super.onResume();
         mRecordView.onResume();
-        setWindowBrightness(255);
+//        setWindowBrightness(255);
     }
 
     @Override

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: ./libs/TuSDKVideo-3.5.7.jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/TuSDKVideo-3.5.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

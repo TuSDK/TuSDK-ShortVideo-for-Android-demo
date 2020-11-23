@@ -77,6 +77,8 @@ public class SimpleCameraActivity extends ScreenAdapterActivity
         // 默认人脸识别距离为1米左右； 设置成0.1f, 人脸识别距离可以增加至2米
 //         mVideoCamera.setDetectScale(0.1f);
 
+        mVideoCamera.setSaveToAlbum(true);
+
 		// 设置水印，默认为空
 		mVideoCamera.setWaterMarkImage(BitmapHelper.getBitmapFormRaw(this, R.raw.sample_watermark));
 		mVideoCamera.setWaterMarkPosition(TuSdkWaterMarkOption.WaterMarkPosition.BottomRight);
