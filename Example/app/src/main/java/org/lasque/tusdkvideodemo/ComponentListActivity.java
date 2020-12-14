@@ -85,7 +85,7 @@ public class ComponentListActivity extends ListActivity implements TuSdkNavigato
 		mNavigatorBar.showBackButton(true);
 		mNavigatorBar.delegate = this;
 		tvCopyrightInfo = findViewById(R.id.tv_copyright_info);
-		tvCopyrightInfo.setText(String.format("TuSDK Video %s \n © 2019 TUTUCLOUD.COM", TuSDKVideo.VIDEO_VERSION));
+		tvCopyrightInfo.setText(String.format("TuSDK Video %s \n © 2020 TUTUCLOUD.COM", TuSDKVideo.VIDEO_VERSION));
 		// 滑动后退手势
 		gdDetector = new GestureDetector(this, gestureListener);
 

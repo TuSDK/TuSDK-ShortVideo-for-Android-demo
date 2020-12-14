@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
+    android:weightSum="5"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:padding="12dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/circle_bg_26"
             android:id="@+id/lsq_reset_image"
             android:src="@drawable/lsq_ic_skin_nix"
             android:layout_margin="10dp"
@@ -26,15 +26,15 @@
             android:textColor="@color/lsq_beauty_name_selector"
             android:textSize="@dimen/lsq_font_size_20"
             android:visibility="visible"
-            android:text="@string/lsq_beauty_reset" />
+            android:text="@string/lsq_beauty_skin_reset" />
 
     </LinearLayout>
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:background="@drawable/circle_bg_26"
             android:id="@+id/lsq_skin_beauty_image"
             android:src="@drawable/lsq_ic_skin_precision_nor"
             android:layout_margin="10dp"
@@ -61,11 +61,11 @@
         android:layout_marginBottom="76dp"
         android:background="@drawable/lsq_circle_point" />
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:background="@drawable/circle_bg_26"
             android:id="@+id/lsq_smoothing_image"
             android:src="@drawable/lsq_ic_smoothing_norl"
             android:layout_margin="10dp"
@@ -85,11 +85,11 @@
 
     </LinearLayout>
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:background="@drawable/circle_bg_26"
             android:id="@+id/lsq_whitening_image"
             android:src="@drawable/lsq_ic_whitening_norl"
             android:layout_margin="10dp"
@@ -109,13 +109,13 @@
 
     </LinearLayout>
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:background="@drawable/circle_bg_26"
             android:id="@+id/lsq_ruddy_image"
-            android:src="@drawable/lsq_ic_ruddy_norl"
+            android:src="@drawable/ic_sharpen_norl"
             android:layout_margin="10dp"
             android:layout_width="40dp"
             android:layout_height="40dp"

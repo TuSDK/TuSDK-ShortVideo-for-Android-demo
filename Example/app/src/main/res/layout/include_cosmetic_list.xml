@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical">
 
             <ImageView
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical">
 
             <ImageView
@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical">
 
             <ImageView
@@ -171,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical">
 
             <ImageView
@@ -211,7 +211,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical">
 
             <ImageView
@@ -252,7 +252,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:minWidth="70dp"
+            android:minWidth="60dp"
             android:orientation="vertical">
 
             <ImageView

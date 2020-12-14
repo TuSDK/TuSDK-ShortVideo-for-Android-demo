@@ -874,7 +874,7 @@ public class RecordView extends RelativeLayout {
                 public void run() {
                     if (!isBeautyClose)
                         // 调用极致美颜
-                        switchConfigSkin(false);
+                        switchConfigSkin(TuSdkMediaSkinFaceEffect.SkinFaceType.Beauty);
                 }
             }, 500);
             ThreadHelper.postDelayed(new Runnable() {
@@ -884,17 +884,17 @@ public class RecordView extends RelativeLayout {
                         // 添加一个默认微整形特效
                         TuSdkMediaPlasticFaceEffect plasticFaceEffect = new TuSdkMediaPlasticFaceEffect();
                         mCamera.addMediaEffectData(plasticFaceEffect);
-                        for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
-                            if (arg.equalsKey("eyeSize")) {// 大眼
-                                arg.setMaxValueFactor(0.85f);// 最大值限制
-                            }
-                            if (arg.equalsKey("chinSize")) {// 瘦脸
-                                arg.setMaxValueFactor(0.9f);// 最大值限制
-                            }
-                            if (arg.equalsKey("noseSize")) {// 瘦鼻
-                                arg.setMaxValueFactor(0.6f);// 最大值限制
-                            }
-                        }
+//                        for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
+//                            if (arg.equalsKey("eyeSize")) {// 大眼
+//                                arg.setMaxValueFactor(0.85f);// 最大值限制
+//                            }
+//                            if (arg.equalsKey("chinSize")) {// 瘦脸
+//                                arg.setMaxValueFactor(0.9f);// 最大值限制
+//                            }
+//                            if (arg.equalsKey("noseSize")) {// 瘦鼻
+//                                arg.setMaxValueFactor(0.6f);// 最大值限制
+//                            }
+//                        }
                         for (String key : mDefaultBeautyPercentParams.keySet()) {
                             TLog.e("key -- %s", mDefaultBeautyPercentParams.get(key));
                             submitPlasticFaceParamter(key, mDefaultBeautyPercentParams.get(key));
@@ -942,7 +942,7 @@ public class RecordView extends RelativeLayout {
         mFilterGroups = Constants.getCameraFilters(true);
         String defaultCode = mFilterValueMap.getString(DEFAULT_FILTER_CODE, "");
         if (TextUtils.isEmpty(defaultCode)) {
-            defaultCode = mFilterGroups.get(0).getDefaultFilter().code;
+            return;
         }
         long defaultFilterGroupId = mFilterValueMap.getLong(DEFAULT_FILTER_GROUP, -1);
         List<FilterOption> defaultFilters = mFilterGroups.get(0).filters;
@@ -1692,17 +1692,25 @@ public class RecordView extends RelativeLayout {
      */
     private HashMap<String, Float> mDefaultBeautyPercentParams = new HashMap<String, Float>() {
         {
-            put("forehead", 0.5f);
+            put("eyeSize", 0.3f);
             put("chinSize", 0.5f);
-            put("browPosition", 0.5f);
-            put("archEyebrow", 0.5f);
-            put("eyeSize", 0.5f);
-            put("eyeAngle", 0.5f);
-            put("eyeDis", 0.5f);
-            put("noseSize", 0.5f);
+            put("cheekNarrow", 0.0f);
+            put("smallFace", 0.0f);
+            put("noseSize", 0.2f);
             put("mouthWidth", 0.5f);
             put("lips", 0.5f);
+            put("philterum", 0.5f);
+            put("archEyebrow", 0.5f);
+            put("browPosition", 0.5f);
             put("jawSize", 0.5f);
+            put("cheekLowBoneNarrow", 0.0f);
+            put("eyeAngle", 0.5f);
+            put("eyeInnerConer", 0.0f);
+            put("eyeOuterConer", 0.0f);
+            put("eyeDis", 0.5f);
+            put("eyeHeight", 0.5f);
+            put("forehead", 0.5f);
+            put("cheekBoneNarrow", 0.0f);
         }
     };
 
@@ -1714,15 +1722,24 @@ public class RecordView extends RelativeLayout {
             add("reset");
             add("eyeSize");
             add("chinSize");
+            add("cheekNarrow");
+            add("smallFace");
             add("noseSize");
+            add("noseHeight");
             add("mouthWidth");
             add("lips");
+            add("philterum");
             add("archEyebrow");
             add("browPosition");
             add("jawSize");
+            add("cheekLowBoneNarrow");
             add("eyeAngle");
+            add("eyeInnerConer");
+            add("eyeOuterConer");
             add("eyeDis");
+            add("eyeHeight");
             add("forehead");
+            add("cheekBoneNarrow");
         }
     };
 
@@ -1746,9 +1763,9 @@ public class RecordView extends RelativeLayout {
     BeautyRecyclerAdapter.OnBeautyItemClickListener beautyItemClickListener =
             new BeautyRecyclerAdapter.OnBeautyItemClickListener() {
                 @Override
-                public void onChangeSkin(View v, String key, boolean useSkinNatural) {
+                public void onChangeSkin(View v, String key, TuSdkMediaSkinFaceEffect.SkinFaceType skinMode) {
                     mBeautyPlasticsConfigView.setVisibility(VISIBLE);
-                    switchConfigSkin(useSkinNatural);
+                    switchConfigSkin(skinMode);
 
                     // 获取key值并显示到调节栏
                     TuSdkMediaEffectData mediaEffectData = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).get(0);
@@ -1792,8 +1809,10 @@ public class RecordView extends RelativeLayout {
             adBuilder.setPositiveButton(R.string.lsq_audioRecording_next, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mCamera.removeMediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace);
-                    dialog.dismiss();
+                    for (String key : mDefaultBeautyPercentParams.keySet()) {
+                        TLog.e("key -- %s", mDefaultBeautyPercentParams.get(key));
+                        submitPlasticFaceParamter(key, mDefaultBeautyPercentParams.get(key));
+                    }                    dialog.dismiss();
                 }
             });
             adBuilder.show();
@@ -1948,33 +1967,33 @@ public class RecordView extends RelativeLayout {
     /**
      * 切换美颜预设按键
      *
-     * @param useSkinNatural true 自然(精准)美颜 false 极致美颜
+     * @param skinMode true 自然(精准)美颜 false 极致美颜
      */
-    private void switchConfigSkin(boolean useSkinNatural) {
-        TuSdkMediaSkinFaceEffect skinFaceEffect = new TuSdkMediaSkinFaceEffect(useSkinNatural);
+    private void switchConfigSkin(TuSdkMediaSkinFaceEffect.SkinFaceType skinMode) {
+        TuSdkMediaSkinFaceEffect skinFaceEffect = new TuSdkMediaSkinFaceEffect(skinMode);
 
 
         // 美白
-        SelesParameters.FilterArg whiteningArgs = skinFaceEffect.getFilterArg("whitening");
-        whiteningArgs.setMaxValueFactor(useSkinNatural ? 0.4f : 0.5f);//设置最大值限制
+        SelesParameters.FilterArg whiteningArgs = skinFaceEffect.getFilterArg("whitening");//whiten whitening
+        whiteningArgs.setMaxValueFactor(1.0f);//设置最大值限制
         whiteningArgs.setDefaultPercent(0.3f);
         // 磨皮
-        SelesParameters.FilterArg smoothingArgs = skinFaceEffect.getFilterArg("smoothing");
+        SelesParameters.FilterArg smoothingArgs = skinFaceEffect.getFilterArg("smoothing");//smooth smoothing
         smoothingArgs.setMaxValueFactor(1.0f);//设置最大值限制
-        smoothingArgs.setDefaultPercent(0.7f);
+        smoothingArgs.setDefaultPercent(0.8f);
         // 红润
-        SelesParameters.FilterArg ruddyArgs = skinFaceEffect.getFilterArg("ruddy");
-        ruddyArgs.setMaxValueFactor(useSkinNatural ? 0.35f : 0.65f);//设置最大值限制
-        ruddyArgs.setDefaultPercent(0.2f);
+        SelesParameters.FilterArg ruddyArgs = skinFaceEffect.getFilterArg(skinMode!= TuSdkMediaSkinFaceEffect.SkinFaceType.Beauty ? "ruddy" : "sharpen");//sharpen ruddy
+        ruddyArgs.setMaxValueFactor(1.0f);//设置最大值限制
+        ruddyArgs.setDefaultPercent(skinMode!= TuSdkMediaSkinFaceEffect.SkinFaceType.Beauty ? 0.4f : 0.6f);
+
+        whiteningArgs.setPrecentValue(0.3f);//设置默认显示
+
+        smoothingArgs.setPrecentValue(0.8f);//设置默认显示
+
+        ruddyArgs.setPrecentValue(skinMode!= TuSdkMediaSkinFaceEffect.SkinFaceType.Beauty ? 0.4f : 0.6f);
 
         if (mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace) == null ||
                 mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeSkinFace).size() == 0) {
-
-            whiteningArgs.setPrecentValue(0.3f);//设置默认显示
-
-            smoothingArgs.setPrecentValue(0.7f);//设置默认显示
-
-            ruddyArgs.setPrecentValue(0.2f);
 
             mCamera.addMediaEffectData(skinFaceEffect);
         } else {
@@ -1983,17 +2002,30 @@ public class RecordView extends RelativeLayout {
 
             for (SelesParameters.FilterArg filterArg : oldSkinFaceEffect.getFilterArgs()) {
                 SelesParameters.FilterArg arg = skinFaceEffect.getFilterArg(filterArg.getKey());
-                arg.setPrecentValue(filterArg.getPrecentValue());
+                if (arg != null)
+                    arg.setPrecentValue(filterArg.getPrecentValue());
             }
 
             skinFaceEffect.submitParameters();
 
             if (!oldSkinFaceEffect.getFilterWrap().equals(skinFaceEffect.getFilterWrap())) {
                 // 滤镜名显示
-                showHitTitle(TuSdkContext.getString(useSkinNatural ? "lsq_beauty_skin_precision" : "lsq_beauty_skin_extreme"));
+                showHitTitle(TuSdkContext.getString(getSkinModeTitle(skinMode)));
             }
         }
         isBeautyClose = false;
+    }
+
+    private String getSkinModeTitle(TuSdkMediaSkinFaceEffect.SkinFaceType skinMode){
+        switch (skinMode){
+            case SkinNatural:
+                return "lsq_beauty_skin_precision";
+            case SkinMoist:
+                return "lsq_beauty_skin_extreme";
+            case Beauty:
+                return "lsq_beauty_skin_beauty";
+        }
+        return "";
     }
 
     /**
@@ -2022,18 +2054,18 @@ public class RecordView extends RelativeLayout {
             // 添加一个默认微整形特效
             TuSdkMediaPlasticFaceEffect plasticFaceEffect = new TuSdkMediaPlasticFaceEffect();
             mCamera.addMediaEffectData(plasticFaceEffect);
-            for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
-                if (arg.equalsKey("eyeSize")) {// 大眼
-                    arg.setMaxValueFactor(0.85f);// 最大值限制
-                }
-                if (arg.equalsKey("chinSize")) {// 瘦脸
-                    arg.setMaxValueFactor(0.9f);// 最大值限制
-                }
-                if (arg.equalsKey("noseSize")) {// 瘦鼻
-                    arg.setMaxValueFactor(0.6f);// 最大值限制
-                }
-
-            }
+//            for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
+//                if (arg.equalsKey("eyeSize")) {// 大眼
+//                    arg.setMaxValueFactor(0.85f);// 最大值限制
+//                }
+//                if (arg.equalsKey("chinSize")) {// 瘦脸
+//                    arg.setMaxValueFactor(0.9f);// 最大值限制
+//                }
+//                if (arg.equalsKey("noseSize")) {// 瘦鼻
+//                    arg.setMaxValueFactor(0.6f);// 最大值限制
+//                }
+//
+//            }
             for (String key : mDefaultBeautyPercentParams.keySet()) {
                 TLog.e("key -- %s", mDefaultBeautyPercentParams.get(key));
                 submitPlasticFaceParamter(key, mDefaultBeautyPercentParams.get(key));

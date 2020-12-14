@@ -265,6 +265,8 @@ public class FilterConfigSeekbar extends TuSdkRelativeLayout
 				case "lips":
 				case "browPosition":
 				case "forehead":
+				case "eyeHeight":
+				case "philterum":
 					progress = progress - 0.5f;
 					break;
 			}
