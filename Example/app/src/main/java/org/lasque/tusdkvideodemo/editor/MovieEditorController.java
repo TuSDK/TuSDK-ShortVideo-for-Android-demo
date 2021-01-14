@@ -28,6 +28,7 @@ import org.lasque.tusdk.video.editor.TuSdkMediaAudioEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.editor.component.EditorComponent;
+import org.lasque.tusdkvideodemo.editor.component.EditorDynamicStickerComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorEffectComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorFilterComponent;
 import org.lasque.tusdkvideodemo.editor.component.EditorHomeComponent;
@@ -105,6 +106,8 @@ public class MovieEditorController {
     private EditorTrimComponent mTrimComponent;
     //转场特效组件
     private EditorEffectTransitionsComponent mTransitionsComponent;
+
+    private EditorDynamicStickerComponent mDynamicStickerComponent;
     //缩略图集合
     private List<Bitmap> mThumbBitmapList;
     //是否正在保存
@@ -268,6 +271,9 @@ public class MovieEditorController {
             if(mCurrentComponent == getStickerComponent()){
                 getStickerComponent().backUpDatas();
             }
+            if (mCurrentComponent == getDynamicStickerComponent()){
+                getDynamicStickerComponent().backUpDatas();
+            }
             mCurrentComponent.onAnimationEnd();
         }
 
@@ -340,6 +346,7 @@ public class MovieEditorController {
                                     getEffectComponent().addCoverBitmap(videoImage.bitmap);
                                     getStickerComponent().addCoverBitmap(videoImage.bitmap);
                                     getTransitionsComponent().addCoverBitmap(videoImage.bitmap);
+                                    getDynamicStickerComponent().addCoverBitmap(videoImage.bitmap);
                                 }
                             });
                         }
@@ -568,6 +575,8 @@ public class MovieEditorController {
                 //切换到转场特效
                 mCurrentComponent = getTransitionsComponent();
                 break;
+            case DynamicSticker:
+                mCurrentComponent = getDynamicStickerComponent();
             default:
                 break;
         }
@@ -820,6 +829,13 @@ public class MovieEditorController {
             mTransitionsComponent = new EditorEffectTransitionsComponent(this);
         }
         return mTransitionsComponent;
+    }
+
+    public EditorDynamicStickerComponent getDynamicStickerComponent(){
+        if (mDynamicStickerComponent == null){
+            mDynamicStickerComponent = new EditorDynamicStickerComponent(this);
+        }
+        return mDynamicStickerComponent;
     }
 
 

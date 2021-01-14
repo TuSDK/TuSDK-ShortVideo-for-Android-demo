@@ -436,6 +436,14 @@
     <string name="lsq_beauty_eyeheight">眼移动</string>
     <string name="lsq_beauty_forehead">发际线</string>
     <string name="lsq_beauty_cheekbonenarrow">瘦颚骨</string>
+    <string name="lsq_beauty_eyelidalpha">双眼皮</string>
+    <string name="lsq_beauty_eyemazingalpha">卧蚕</string>
+    <string name="lsq_beauty_whitenteethalpha">白牙</string>
+    <string name="lsq_beauty_eyedetailalpha">亮眼</string>
+    <string name="lsq_beauty_removepouchalpha">黑眼圈</string>
+    <string name="lsq_beauty_removewrinklesalpha">法令纹</string>
+
+
     <string name="lsq_beauty_skin_extreme">极致美肤</string>
     <string name="lsq_beauty_skin_precision">精准美肤</string>
     <string name="lsq_beauty_skin_beauty">自然美肤</string>
@@ -625,6 +633,7 @@
     <string name="lsq_cosmetic_eyeshadow">眼影</string>
     <string name="lsq_cosmetic_eyeliner">眼线</string>
     <string name="lsq_cosmetic_eyelash">睫毛</string>
+    <string name="lsq_cosmetic_facial">修容</string>
     <string name="lsq_cosmetic_clear_all">一键卸妆</string>
 
     <string name="lsq_lipstick_matte">雾面</string>
@@ -782,12 +791,29 @@
     <string name="lsq_eyeline_14">14</string>
     <string name="lsq_eyeline_15">15</string>
 
+
+    <string name="lsq_facial_01">01</string>
+    <string name="lsq_facial_02">02</string>
+    <string name="lsq_facial_03">03</string>
+    <string name="lsq_facial_04">04</string>
+    <string name="lsq_facial_05">05</string>
+    <string name="lsq_facial_06">06</string>
+    <string name="lsq_facial_07">07</string>
+    <string name="lsq_facial_08">08</string>
+    <string name="lsq_facial_09">09</string>
+    <string name="lsq_facial_10">10</string>
+    <string name="lsq_facial_11">11</string>
+    <string name="lsq_facial_12">12</string>
+    <string name="lsq_facial_13">13</string>
+    <string name="lsq_facial_14">14</string>
+
     <string name="lsq_beauty_lipalpha">透明度</string>
     <string name="lsq_beauty_blushalpha">透明度</string>
     <string name="lsq_beauty_eyebrowalpha">透明度</string>
     <string name="lsq_beauty_eyeshadowalpha">透明度</string>
     <string name="lsq_beauty_eyelashalpha">透明度</string>
     <string name="lsq_beauty_eyelinealpha">透明度</string>
+    <string name="lsq_beauty_facialalpha">透明度</string>
 
 
 

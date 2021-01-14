@@ -64,6 +64,7 @@ import org.lasque.tusdk.video.editor.TuSdkMediaCosmeticEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaFilterEffectData;
 import org.lasque.tusdk.video.editor.TuSdkMediaPlasticFaceEffect;
+import org.lasque.tusdk.video.editor.TuSdkMediaReshapeEffect;
 import org.lasque.tusdk.video.editor.TuSdkMediaSkinFaceEffect;
 import org.lasque.tusdkvideodemo.R;
 import org.lasque.tusdkvideodemo.views.BeautyPlasticRecyclerAdapter;
@@ -99,6 +100,7 @@ import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffec
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeCosmetic;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeFilter;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypePlasticFace;
+import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeReshape;
 import static org.lasque.tusdk.video.editor.TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeSkinFace;
 
 /**
@@ -884,6 +886,9 @@ public class RecordView extends RelativeLayout {
                         // 添加一个默认微整形特效
                         TuSdkMediaPlasticFaceEffect plasticFaceEffect = new TuSdkMediaPlasticFaceEffect();
                         mCamera.addMediaEffectData(plasticFaceEffect);
+
+                        TuSdkMediaReshapeEffect effect = new TuSdkMediaReshapeEffect();
+                        mCamera.addMediaEffectData(effect);
 //                        for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
 //                            if (arg.equalsKey("eyeSize")) {// 大眼
 //                                arg.setMaxValueFactor(0.85f);// 最大值限制
@@ -898,10 +903,12 @@ public class RecordView extends RelativeLayout {
                         for (String key : mDefaultBeautyPercentParams.keySet()) {
                             TLog.e("key -- %s", mDefaultBeautyPercentParams.get(key));
                             submitPlasticFaceParamter(key, mDefaultBeautyPercentParams.get(key));
-                            plasticFaceEffect.getFilterArg(key).setDefaultPercent(mDefaultBeautyPercentParams.get(key));
+                            if (plasticFaceEffect.getFilterArg(key) != null){
+                                plasticFaceEffect.getFilterArg(key).setDefaultPercent(mDefaultBeautyPercentParams.get(key));
+                            } else if (effect.getFilterArg(key) != null){
+                                effect.getFilterArg(key).setDefaultPercent(mDefaultBeautyPercentParams.get(key));
+                            }
                         }
-                        plasticFaceEffect.getFilterWrap().setFilterParameter(plasticFaceEffect.getFilterWrap().getFilterParameter());
-
                     }
                 }
             }, 700);
@@ -1339,8 +1346,8 @@ public class RecordView extends RelativeLayout {
 
     private RelativeLayout mCosmeticList;
 
-    private LinearLayout mLipstick, mBlush, mEyebrow, mEyeshadow, mEyeliner, mEyelash, mCosmeticClear;
-    private RelativeLayout mLipstickPanel, mBlushPanel, mEyebrowPanel, mEyeshadowPanel, mEyelinerPanel, mEyelashPanel;
+    private LinearLayout mLipstick, mBlush, mEyebrow, mEyeshadow, mEyeliner, mEyelash,mFacial, mCosmeticClear;
+    private RelativeLayout mLipstickPanel, mBlushPanel, mEyebrowPanel, mEyeshadowPanel, mEyelinerPanel, mEyelashPanel,mFacialPanel;
 
     private CosmeticPanelController mController;
 
@@ -1373,6 +1380,9 @@ public class RecordView extends RelativeLayout {
                 case Eyelash:
                     viewID = R.id.lsq_eyelash_add;
                     break;
+                case Facial:
+                    viewID = R.id.lsq_facial_add;
+                    break;
             }
             findViewById(viewID).setVisibility(View.GONE);
             mBeautyPlasticsConfigView.setVisibility(View.GONE);
@@ -1399,6 +1409,9 @@ public class RecordView extends RelativeLayout {
                     break;
                 case Eyelash:
                     mEyelashPanel.setVisibility(View.GONE);
+                    break;
+                case Facial:
+                    mFacialPanel.setVisibility(View.GONE);
                     break;
             }
             mCurrentType = null;
@@ -1429,6 +1442,9 @@ public class RecordView extends RelativeLayout {
                 case Eyelash:
                     viewID = R.id.lsq_eyelash_add;
                     break;
+                case Facial:
+                    viewID = R.id.lsq_facial_add;
+                    break;
             }
             findViewById(viewID).setVisibility(View.VISIBLE);
             mBeautyPlasticsConfigView.setVisibility(View.VISIBLE);
@@ -1458,6 +1474,7 @@ public class RecordView extends RelativeLayout {
                     mEyeshadowPanel.setVisibility(View.GONE);
                     mEyelinerPanel.setVisibility(View.GONE);
                     mEyelashPanel.setVisibility(View.GONE);
+                    mFacialPanel.setVisibility(View.GONE);
                     if (mLipstickPanel.getVisibility() == View.VISIBLE) {
                         mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_lipstick_add).getVisibility());
                         mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("lipAlpha")));
@@ -1482,6 +1499,7 @@ public class RecordView extends RelativeLayout {
                     mEyeshadowPanel.setVisibility(View.GONE);
                     mEyelinerPanel.setVisibility(View.GONE);
                     mEyelashPanel.setVisibility(View.GONE);
+                    mFacialPanel.setVisibility(View.GONE);
                     if (mBlushPanel.getVisibility() == View.VISIBLE) {
                         mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_blush_add).getVisibility());
                         mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("blushAlpha")));
@@ -1506,6 +1524,7 @@ public class RecordView extends RelativeLayout {
                     mEyeshadowPanel.setVisibility(View.GONE);
                     mEyelinerPanel.setVisibility(View.GONE);
                     mEyelashPanel.setVisibility(View.GONE);
+                    mFacialPanel.setVisibility(View.GONE);
                     if (mEyebrowPanel.getVisibility() == View.VISIBLE) {
                         mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_eyebrow_add).getVisibility());
                         mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("eyebrowAlpha")));
@@ -1530,6 +1549,7 @@ public class RecordView extends RelativeLayout {
                     mEyeshadowPanel.setVisibility(mEyeshadowPanel.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     mEyelinerPanel.setVisibility(View.GONE);
                     mEyelashPanel.setVisibility(View.GONE);
+                    mFacialPanel.setVisibility(View.GONE);
                     if (mEyeshadowPanel.getVisibility() == View.VISIBLE) {
                         mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_eyeshadow_add).getVisibility());
                         mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("eyeshadowAlpha")));
@@ -1554,6 +1574,7 @@ public class RecordView extends RelativeLayout {
                     mEyeshadowPanel.setVisibility(View.GONE);
                     mEyelinerPanel.setVisibility(mEyelinerPanel.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
                     mEyelashPanel.setVisibility(View.GONE);
+                    mFacialPanel.setVisibility(View.GONE);
                     if (mEyelinerPanel.getVisibility() == View.VISIBLE) {
                         mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_eyeliner_add).getVisibility());
                         mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("eyelineAlpha")));
@@ -1578,6 +1599,7 @@ public class RecordView extends RelativeLayout {
                     mEyeshadowPanel.setVisibility(View.GONE);
                     mEyelinerPanel.setVisibility(View.GONE);
                     mEyelashPanel.setVisibility(mEyelashPanel.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    mFacialPanel.setVisibility(View.GONE);
                     if (mEyelashPanel.getVisibility() == View.VISIBLE) {
                         mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_eyelash_add).getVisibility());
                         mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("eyelashAlpha")));
@@ -1585,6 +1607,33 @@ public class RecordView extends RelativeLayout {
                             @Override
                             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                                 mCosmeticScroll.scrollTo(mEyelashPanel.getLeft(), 0);
+                                findViewById(R.id.list_panel).removeOnLayoutChangeListener(this);
+                            }
+                        });
+                    } else {
+                        mBeautyPlasticsConfigView.setVisibility(View.GONE);
+
+                    }
+                    break;
+
+                case R.id.lsq_cosmetic_item_facial:
+                    mCurrentType = CosmeticTypes.Types.Facial;
+                    mFacial.setVisibility(View.GONE);
+                    mPreButton = mFacial;
+                    mLipstickPanel.setVisibility(View.GONE);
+                    mBlushPanel.setVisibility(View.GONE);
+                    mEyebrowPanel.setVisibility(View.GONE);
+                    mEyeshadowPanel.setVisibility(View.GONE);
+                    mEyelinerPanel.setVisibility(View.GONE);
+                    mEyelashPanel.setVisibility(View.GONE);
+                    mFacialPanel.setVisibility(mFacialPanel.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                    if (mFacialPanel.getVisibility() == View.VISIBLE) {
+                        mBeautyPlasticsConfigView.setVisibility(findViewById(R.id.lsq_facial_add).getVisibility());
+                        mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("facialAlpha")));
+                        findViewById(R.id.list_panel).addOnLayoutChangeListener(new OnLayoutChangeListener() {
+                            @Override
+                            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                                mCosmeticScroll.scrollTo(mFacialPanel.getLeft(), 0);
                                 findViewById(R.id.list_panel).removeOnLayoutChangeListener(this);
                             }
                         });
@@ -1659,9 +1708,13 @@ public class RecordView extends RelativeLayout {
         mEyelash.setOnClickListener(mCosmeticClick);
         mEyelashPanel = findViewById(R.id.lsq_eyelash_panel);
         mEyelashPanel.addView(mController.getEyelashPanel().getPanel());
-        mEyelashPanel.setVisibility(View.VISIBLE);
-        mEyelashPanel.requestLayout();
-        mEyelashPanel.setVisibility(View.GONE);
+
+        mFacial = findViewById(R.id.lsq_cosmetic_item_facial);
+        mFacial.setOnClickListener(mCosmeticClick);
+        mFacialPanel = findViewById(R.id.lsq_facial_panel);
+        mFacialPanel.addView(mController.getFacialPanel().getPanel());
+
+
 
         mCosmeticScroll = findViewById(R.id.lsq_cosmetic_scroll_view);
     }
@@ -1711,6 +1764,27 @@ public class RecordView extends RelativeLayout {
             put("eyeHeight", 0.5f);
             put("forehead", 0.5f);
             put("cheekBoneNarrow", 0.0f);
+
+            put("eyelidAlpha", 0.0f);
+            put("eyemazingAlpha", 0.0f);
+
+            put("whitenTeethAlpha", 0.0f);
+            put("eyeDetailAlpha", 0.0f);
+            put("removePouchAlpha", 0.0f);
+            put("removeWrinklesAlpha", 0.0f);
+
+        }
+    };
+
+    private List<String> mReshapePlastics = new ArrayList() {
+        {
+            add("eyelidAlpha");
+            add("eyemazingAlpha");
+
+            add("whitenTeethAlpha");
+            add("eyeDetailAlpha");
+            add("removePouchAlpha");
+            add("removeWrinklesAlpha");
         }
     };
 
@@ -1740,6 +1814,14 @@ public class RecordView extends RelativeLayout {
             add("eyeHeight");
             add("forehead");
             add("cheekBoneNarrow");
+
+            add("eyelidAlpha");
+            add("eyemazingAlpha");
+
+            add("whitenTeethAlpha");
+            add("eyeDetailAlpha");
+            add("removePouchAlpha");
+            add("removeWrinklesAlpha");
         }
     };
 
@@ -1904,6 +1986,9 @@ public class RecordView extends RelativeLayout {
                         case Eyelash:
                             mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("eyelashAlpha")));
                             break;
+                        case Facial:
+                            mBeautyPlasticsConfigView.setFilterArgs(mController.getEffect(), Arrays.asList(mController.getEffect().getFilterArg("facialAlpha")));
+                            break;
                     }
                 } else {
                     hideBeautyBarLayout();
@@ -2054,6 +2139,9 @@ public class RecordView extends RelativeLayout {
             // 添加一个默认微整形特效
             TuSdkMediaPlasticFaceEffect plasticFaceEffect = new TuSdkMediaPlasticFaceEffect();
             mCamera.addMediaEffectData(plasticFaceEffect);
+
+            TuSdkMediaReshapeEffect effect = new TuSdkMediaReshapeEffect();
+            mCamera.addMediaEffectData(effect);
 //            for (SelesParameters.FilterArg arg : plasticFaceEffect.getFilterArgs()) {
 //                if (arg.equalsKey("eyeSize")) {// 大眼
 //                    arg.setMaxValueFactor(0.85f);// 最大值限制
@@ -2073,12 +2161,20 @@ public class RecordView extends RelativeLayout {
 
         }
 
-        TuSdkMediaEffectData effectData = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace).get(0);
-        SelesParameters.FilterArg filterArg = effectData.getFilterArg(mBeautyPlastics.get(position));
+        if (mReshapePlastics.contains(mBeautyPlastics.get(position))){
+            TuSdkMediaEffectData effectData = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypeReshape).get(0);
+            SelesParameters.FilterArg filterArg = effectData.getFilterArg(mBeautyPlastics.get(position));
+            mBeautyPlasticsConfigView.setFilterArgs(null, Arrays.asList(filterArg));
+
+        } else {
+            TuSdkMediaEffectData effectData = mCamera.mediaEffectsWithType(TuSdkMediaEffectDataTypePlasticFace).get(0);
+            SelesParameters.FilterArg filterArg = effectData.getFilterArg(mBeautyPlastics.get(position));
 
 //        TLog.e("filterArg -- %s",filterArg.getPrecentValue());
 
-        mBeautyPlasticsConfigView.setFilterArgs(null, Arrays.asList(filterArg));
+            mBeautyPlasticsConfigView.setFilterArgs(null, Arrays.asList(filterArg));
+        }
+
     }
 
     /**
@@ -2095,6 +2191,13 @@ public class RecordView extends RelativeLayout {
         // 只能添加一个滤镜特效
         TuSdkMediaPlasticFaceEffect filterEffect = (TuSdkMediaPlasticFaceEffect) filterEffects.get(0);
         filterEffect.submitParameter(key, progress);
+
+        filterEffects = mCamera.mediaEffectsWithType(TuSdkMediaEffectData.TuSdkMediaEffectDataType.TuSdkMediaEffectDataTypeReshape);
+        if (filterEffects.size() == 0) return;
+
+        TuSdkMediaReshapeEffect effect = (TuSdkMediaReshapeEffect) filterEffects.get(0);
+        effect.submitParameter(key,progress);
+
     }
 
 

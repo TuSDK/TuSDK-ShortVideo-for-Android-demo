@@ -13,6 +13,7 @@ import org.lasque.tusdkvideodemo.views.cosmetic.panel.eyebrow.EyebrowPanel;
 import org.lasque.tusdkvideodemo.views.cosmetic.panel.eyelash.EyelashPanel;
 import org.lasque.tusdkvideodemo.views.cosmetic.panel.eyeliner.EyelinerPanel;
 import org.lasque.tusdkvideodemo.views.cosmetic.panel.eyeshadow.EyeshadowPanel;
+import org.lasque.tusdkvideodemo.views.cosmetic.panel.facial.FacialPanel;
 import org.lasque.tusdkvideodemo.views.cosmetic.panel.lipstick.LipstickPanel;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class CosmeticPanelController {
             put("eyeshadowAlpha",0.5f);
             put("eyelineAlpha",0.5f);
             put("eyelashAlpha",0.5f);
+            put("facialAlpha",0.5f);
         }
     };
 
@@ -49,6 +51,7 @@ public class CosmeticPanelController {
             put("eyeshadowAlpha",1.0f);
             put("eyelineAlpha",1.0f);
             put("eyelashAlpha",1.0f);
+            put("facialAlpha",1.0f);
         }
     };
 
@@ -81,6 +84,11 @@ public class CosmeticPanelController {
      * 眼线类型
      */
     public static List<CosmeticTypes.EyelinerType> mEyelinerTypes = Arrays.asList(CosmeticTypes.EyelinerType.values());
+
+    /**
+     * 修容类型
+     */
+    public static List<CosmeticTypes.FacialType> mFacialTypes = Arrays.asList(CosmeticTypes.FacialType.values());
 
 
 
@@ -139,6 +147,13 @@ public class CosmeticPanelController {
         return mEyelashPanel;
     }
 
+    public FacialPanel getFacialPanel(){
+        if (mFacialPanel == null){
+            mFacialPanel = new FacialPanel(this);
+        }
+        return mFacialPanel;
+    }
+
     public BasePanel getPanel(CosmeticTypes.Types types){
         BasePanel panel = null;
         switch (types){
@@ -160,6 +175,9 @@ public class CosmeticPanelController {
             case Eyelash:
                 panel = getEyelashPanel();
                 break;
+            case Facial:
+                panel = getFacialPanel();
+                break;
         }
         return panel;
     }
@@ -170,6 +188,7 @@ public class CosmeticPanelController {
     private EyeshadowPanel mEyeshadowPanel;
     private EyelinerPanel mEyelinerPanel;
     private EyelashPanel mEyelashPanel;
+    private FacialPanel mFacialPanel;
 
 
     public Context getContext(){
@@ -187,6 +206,7 @@ public class CosmeticPanelController {
         getEyeshadowPanel().setOnPanelClickListener(listener);
         getEyelinerPanel().setOnPanelClickListener(listener);
         getEyelashPanel().setOnPanelClickListener(listener);
+        getFacialPanel().setOnPanelClickListener(listener);
     }
 
     public void clearAllCosmetic(){

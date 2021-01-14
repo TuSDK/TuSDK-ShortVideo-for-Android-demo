@@ -28,7 +28,8 @@ public class CosmeticTypes {
         Eyebrow(R.drawable.makeup_eyebrow_ic, R.string.lsq_cosmetic_eyebrow),
         Eyeshadow(R.drawable.makeup_eyeshadow_ic, R.string.lsq_cosmetic_eyeshadow),
         Eyeliner(R.drawable.makeup_eyeliner_ic, R.string.lsq_cosmetic_eyeliner),
-        Eyelash(R.drawable.makeup_eyelash_ic, R.string.lsq_cosmetic_eyelash);
+        Eyelash(R.drawable.makeup_eyelash_ic, R.string.lsq_cosmetic_eyelash),
+        Facial(R.drawable.makeup_shading_powder_ic, R.string.lsq_cosmetic_facial);
 
 
         public int mIconId;
@@ -286,6 +287,32 @@ public class CosmeticTypes {
         public long mGroupId;
 
         private EyelinerType(int titleId, int iconId, long groupId) {
+            mTitleId = titleId;
+            mIconId = iconId;
+            mGroupId = groupId;
+        }
+    }
+
+    public enum FacialType{
+
+        F_01(R.string.lsq_facial_01,R.raw.lsq_ic_makeup_facial_a,2117),
+        F_02(R.string.lsq_facial_02,R.raw.lsq_ic_makeup_facial_b,2118),
+        F_03(R.string.lsq_facial_03,R.raw.lsq_ic_makeup_facial_c,2119),
+        F_04(R.string.lsq_facial_04,R.raw.lsq_ic_makeup_facial_d,2120),
+        F_05(R.string.lsq_facial_05,R.raw.lsq_ic_makeup_facial_e,2121),
+        F_06(R.string.lsq_facial_06,R.raw.lsq_ic_makeup_facial_f,2122),
+        F_07(R.string.lsq_facial_07,R.raw.lsq_ic_makeup_facial_g,2123),
+        F_08(R.string.lsq_facial_08,R.raw.lsq_ic_makeup_facial_h,2124),
+        F_09(R.string.lsq_facial_09,R.raw.lsq_ic_makeup_facial_i,2125),
+        F_10(R.string.lsq_facial_10,R.raw.lsq_ic_makeup_facial_j,2126),
+        F_11(R.string.lsq_facial_11,R.raw.lsq_ic_makeup_facial_k,2127),
+        F_12(R.string.lsq_facial_12,R.raw.lsq_ic_makeup_facial_l,2128),
+
+        ;
+        public int mTitleId;
+        public int mIconId;
+        public long mGroupId;
+        private FacialType(int titleId,int iconId,long groupId){
             mTitleId = titleId;
             mIconId = iconId;
             mGroupId = groupId;

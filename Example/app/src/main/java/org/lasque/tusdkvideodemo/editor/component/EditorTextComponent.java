@@ -692,6 +692,13 @@ public class EditorTextComponent extends EditorComponent {
                     EditorStickerImageBackups.StickerImageBackupEntity stickerImageBackupEntity = getEditorController().getStickerComponent().getStickerImageBackups().findTextBackupEntityByMemo(imageItemView);
                     getEditorEffector().addMediaEffectData(stickerImageBackupEntity.stickerImageMediaEffectData);
                     imageItemView.setVisibility(GONE);
+                } else if(stickerTextItemView instanceof StickerDynamicItemView){
+                    StickerDynamicItemView itemView = ((StickerDynamicItemView) stickerTextItemView);
+                    EditorStickerImageBackups.DynamicStickerBackupEntity entity = getEditorController().getDynamicStickerComponent().getStickerImageBackups().findDynamicStickerBackupEntityByMemo(itemView);
+                    if (entity != null){
+                        getEditorEffector().addMediaEffectData(entity.effectData);
+                    }
+                    itemView.setVisibility(GONE);
                 }
             }
 

@@ -286,5 +286,45 @@
             android:layout_height="match_parent"
             android:visibility="gone">
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/lsq_cosmetic_item_facial"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:minWidth="60dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/makeup_shading_powder_ic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
+                android:text="@string/lsq_cosmetic_facial"
+                android:textColor="@color/lsq_color_white"
+                android:textSize="10sp" />
+
+            <View
+                android:id="@+id/lsq_facial_add"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/circle_bg_yellow"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/lsq_facial_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+        </RelativeLayout>
     </LinearLayout>
 </HorizontalScrollView>
